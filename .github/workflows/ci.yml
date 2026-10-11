@@ -14,10 +14,6 @@ jobs:
   infrastructure:
     runs-on: ubuntu-24.04
     timeout-minutes: 15
-    defaults:
-      run:
-        working-directory: bike-demand
-
     steps:
       - uses: actions/checkout@v6
         with:
