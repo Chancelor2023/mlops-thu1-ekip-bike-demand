@@ -36,10 +36,21 @@ COUNTS = ("cnt", "casual", "registered")
 
 
 def check_domains(frame: pd.DataFrame) -> None:
-    raise NotImplementedError(
-        "TODO(Week 1, Lab 2): validate domains, finite ranges and date "
-        "windows. See README 'Expected failures'."
-    )
+    for field, (low, high) in DOMAINS.items():
+        values = frame[field]
+        if not ((values % 1 == 0) & values.between(low, high)).all():
+            raise ValueError(f"{field}: require integers in [{low}, {high}]")
+    for field in NORMALISED:
+        values = frame[field]
+        if not (np.isfinite(values) & values.between(0, 1)).all():
+            raise ValueError(f"{field}: require finite numbers in [0, 1]")
+    for field in COUNTS:
+        values = frame[field]
+        if not ((values % 1 == 0) & (values >= 0)).all():
+            raise ValueError(f"{field}: require nonnegative integers")
+    first, last = pd.Timestamp("2011-01-01"), pd.Timestamp("2012-12-31")
+    if not frame["dteday"].between(first, last).all():
+        raise ValueError("dteday: require dates from 2011-01-01 to 2012-12-31")
 
 
 def load_data(path: Path | str) -> pd.DataFrame:
