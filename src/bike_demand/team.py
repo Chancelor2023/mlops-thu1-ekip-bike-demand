@@ -1,6 +1,9 @@
-def normalize_team_slug(team_name: str) -> str:
-    if not team_name.strip():
-        raise ValueError(
-            "Team name must contain at least one non-whitespace character."
-        )
-    return team_name.strip().lower().replace(" ", "-")
+
+import re
+
+
+def normalize_team_slug(name: str) -> str:
+    cleaned = name.strip()
+    if not cleaned:
+        raise ValueError("Team name must contain non-whitespace characters")
+    return re.sub(r"\s+", "-", cleaned).lower()
