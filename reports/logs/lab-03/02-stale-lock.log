@@ -1,0 +1,23 @@
+diff --git a/pyproject.toml b/pyproject.toml
+index 80dd489..fd95989 100644
+--- a/pyproject.toml
++++ b/pyproject.toml
+@@ -9,7 +9,7 @@ dependencies = [
+     "mlflow>=3,<4",
+     "joblib>=1.4,<2",
+     "PyYAML>=6,<7",
+-    "numpy>=1.26,<3",
++    "numpy>=2.1,<3",
+ ]
+ 
+ [build-system]
+Resolved 98 packages in 74ms
+error: The lockfile at `uv.lock` needs to be updated, but `--check` was provided.
+
+hint: To update the lockfile, run `uv lock`.
+exit=1
+Resolved 98 packages in 77ms
+error: The lockfile at `uv.lock` needs to be updated, but `--locked` was provided.
+
+hint: To update the lockfile, run `uv lock`.
+exit=1
