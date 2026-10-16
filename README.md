@@ -102,6 +102,54 @@ uv run --locked mlflow server --backend-store-uri sqlite:///tracking/mlflow.db -
 committed as evidence; never commit credentials or individual private reports.
 CI currently checks only infrastructure/quality; expand it in Week 3.
 
+## Build and rerun with Docker
+
+This section documents how to rebuild and rerun the Lab 2 baseline in a clean Docker container.
+
+### Prerequisites
+
+- Git, to clone the repository.
+- Docker Desktop installed and running.
+- The committed `pyproject.toml` and `uv.lock`.
+
+### Build the image
+
+Run the following command from the repository root:
+
+```bash
+docker build -t bike-demand:lab3 .
+```
+
+The image must use the committed dependency lock and the project's own Dockerfile. The build must not depend on the host's `.venv`, cached outputs or local tracking database.
+
+### Run the baseline
+
+The container must run the Lab 2 baseline using the same input data, configuration, features and chronological split as the original experiment.
+
+The exact run command will be documented once the Dockerfile and its default command have been reviewed.
+
+### Run the tests
+
+The full test suite must also be executable inside the image. The exact command will be confirmed against the final Dockerfile.
+
+### Collect and inspect outputs
+
+Keep the container available until the outputs have been copied to the host. Record:
+
+- Both validation MAE values.
+- The MLflow run IDs for the two model runs.
+- The saved model artifact and metadata.
+- The commit SHA used to build the image.
+
+The exact `docker cp` commands and container paths will be added once the output locations are confirmed.
+
+### Compare with Lab 2
+
+Use the same data, configuration and chronological split as Lab 2. Do not tune the models or evaluate on the held-out test period.
+
+Compare the observed validation MAEs and run metadata with the Lab 2 results. Explain any observed differences rather than assuming byte-identical results across environments.
+
+
 ## Support and individual reports
 
 If setup remains blocked after five minutes, contact the instructor using the
