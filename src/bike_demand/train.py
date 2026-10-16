@@ -10,6 +10,7 @@ import joblib
 import numpy as np
 import pandas as pd
 import yaml
+from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import mean_absolute_error
 
 from bike_demand.preflight import check_snapshot, sha256
@@ -45,26 +46,40 @@ def load_config(path: Path) -> dict:
 
 
 def select_features(frame: pd.DataFrame, features: list[str]) -> pd.DataFrame:
-    raise NotImplementedError(
-        "TODO(Week 1, Lab 2): select only the ordered predictors, excluding "
-        "labels and identities. See README 'Expected failures'."
-    )
+    banned = {"cnt", "casual", "registered", "instant", "dteday"}
+    if banned & set(features):
+        raise ValueError(f"features: banned columns detected {banned & set(features)}")
+    if features != list(FEATURES):
+        raise ValueError("features: must match expected contract order and predictors")
+    return frame.loc[:, features].copy()
 
 
 def compare_mean(
     train_target: pd.Series, validation_target: pd.Series
 ) -> tuple[float, float]:
-    raise NotImplementedError(
-        "TODO(Week 1, Lab 2): fit the comparator on training targets and "
-        "compute validation MAE. See README 'Expected failures'."
+    train_mean = float(train_target.mean())
+    baseline_predictions = np.full_like(
+        validation_target, fill_value=train_mean, dtype=float
     )
+    val_mae = float(mean_absolute_error(validation_target, baseline_predictions))
+    return train_mean, val_mae
 
 
 def fit_evaluate(train: pd.DataFrame, validation: pd.DataFrame, config: dict):
-    raise NotImplementedError(
-        "TODO(Week 1, Lab 2): fit the RF on train and evaluate only on "
-        "validation rows. See README 'Expected failures'."
-    )
+    features = config["features"]
+    x_train = select_features(train, features)
+    y_train = train["cnt"]
+
+    x_val = select_features(validation, features)
+    y_val = validation["cnt"]
+
+    model = RandomForestRegressor(**config["model"])
+    model.fit(x_train, y_train)
+
+    predictions = model.predict(x_val)
+    model_mae = float(mean_absolute_error(y_val, predictions))
+
+    return model, predictions, model_mae
 
 
 def reload_validation(
