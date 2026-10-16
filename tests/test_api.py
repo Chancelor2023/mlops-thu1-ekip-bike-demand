@@ -1,5 +1,6 @@
 import pytest
 from pydantic import ValidationError
+
 from bike_demand.api import BikeDemandFeatures, PredictionResponse
 
 VALID_SAMPLE = {
@@ -17,10 +18,12 @@ VALID_SAMPLE = {
     "windspeed": 0.15,
 }
 
+
 def test_valid_input_passes():
     obj = BikeDemandFeatures(**VALID_SAMPLE)
     assert obj.season == 1
     assert obj.hr == 10
+
 
 @pytest.mark.parametrize("target", ["cnt", "casual", "registered"])
 def test_leakage_fields_raise_error(target):
@@ -28,26 +31,32 @@ def test_leakage_fields_raise_error(target):
     with pytest.raises(ValidationError):
         BikeDemandFeatures(**payload)
 
-@pytest.mark.parametrize("field,value", [
-    ("season", 0),
-    ("season", 5),
-    ("yr", 2),
-    ("mnth", 13),
-    ("hr", 24),
-    ("temp", 1.5),
-    ("hum", -0.05),
-    ("windspeed", float("nan")),
-    ("windspeed", float("inf")),
-])
+
+@pytest.mark.parametrize(
+    "field,value",
+    [
+        ("season", 0),
+        ("season", 5),
+        ("yr", 2),
+        ("mnth", 13),
+        ("hr", 24),
+        ("temp", 1.5),
+        ("hum", -0.05),
+        ("windspeed", float("nan")),
+        ("windspeed", float("inf")),
+    ],
+)
 def test_out_of_bounds_and_non_finite_rejected(field, value):
     payload = {**VALID_SAMPLE, field: value}
     with pytest.raises(ValidationError):
         BikeDemandFeatures(**payload)
 
+
 def test_prediction_response_schema():
     res = PredictionResponse(prediction=12.5, model_version="baseline_v1")
     assert res.prediction == 12.5
     assert res.model_version == "baseline_v1"
+
 
 def test_negative_prediction_rejected():
     with pytest.raises(ValidationError):

@@ -1,4 +1,5 @@
 import math
+
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
 
@@ -34,7 +35,9 @@ class PredictionResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
     prediction: float = Field(ge=0.0, description="Finite non-negative prediction")
-    model_version: str = Field(min_length=1, description="Metadata model version string")
+    model_version: str = Field(
+        min_length=1, description="Metadata model version string"
+    )
 
     @field_validator("prediction")
     @classmethod
