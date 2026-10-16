@@ -1,0 +1,25 @@
+# Environnements et caches locaux
+.venv/
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+
+# Gestion de version et secrets
+.git/
+.gitignore
+.gitattributes
+.env
+*.env
+
+# Données et base de tracking locales
+artifacts/
+tracking/
+mlruns/
+mlflow.db
+.coverage
+htmlcov/
