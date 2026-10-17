@@ -1,0 +1,6 @@
+$ GET /health
+{"status":"ok"} HTTP 200
+$ POST /predict (valid)
+{"prediction":147.18202647792197,"model_version":"baseline-4df84bfe8121"} HTTP 200
+$ POST /predict (hr=24, invalid)
+{"detail":[{"type":"less_than_equal","loc":["body","hr"],"msg":"Input should be less than or equal to 23","input":24,"ctx":{"le":23}}]} HTTP 422

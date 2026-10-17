@@ -1,0 +1,2 @@
+$ GET /health (no model)
+{"detail":"Model unavailable"} HTTP 503
