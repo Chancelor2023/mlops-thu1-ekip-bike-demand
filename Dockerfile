@@ -37,5 +37,9 @@ COPY tests/ ./tests/
 # Install the project itself in the environment
 RUN uv sync --locked
 
-# Run the baseline training in exec form with the baseline configuration
-CMD ["uv", "run", "--locked", "python", "-m", "bike_demand.train", "--config", "configs/baseline.yaml"]
+# The service only loads an already trained model from MODEL_DIR; it never trains
+ENV MODEL_DIR=/app/artifacts
+EXPOSE 8000
+
+# Serve the prediction API in exec form, listening on all interfaces in the container
+CMD ["uv", "run", "--locked", "uvicorn", "bike_demand.api:app", "--host", "0.0.0.0", "--port", "8000"]

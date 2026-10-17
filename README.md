@@ -102,53 +102,91 @@ uv run --locked mlflow server --backend-store-uri sqlite:///tracking/mlflow.db -
 committed as evidence; never commit credentials or individual private reports.
 CI currently checks only infrastructure/quality; expand it in Week 3.
 
-## Build and rerun with Docker
+## Build, train and serve with Docker
 
-This section documents how to rebuild and rerun the Lab 2 baseline in a clean Docker container.
+The image contains the code, configuration, data snapshot and tests, installed strictly
+from `uv.lock`. It does **not** contain a model: the model is trained once into a Docker
+volume, and the API only loads it from there (read-only). The service never trains.
 
 ### Prerequisites
 
-- Git, to clone the repository.
-- Docker Desktop installed and running.
-- The committed `pyproject.toml` and `uv.lock`.
+- Git and Docker Desktop (engine running: `docker info` must answer).
+- Run every command from the repository root, in Git Bash.
+  In Windows PowerShell, use `curl.exe` instead of `curl`.
 
-### Build the image
-
-Run the following command from the repository root:
+### 1. Build the image and link it to its commit
 
 ```bash
-docker build -t bike-demand:lab3 .
+git rev-parse HEAD
+docker build -t bike-demand:$(git rev-parse --short HEAD) -t bike-demand:latest .
+docker image inspect --format '{{.Id}} {{.Architecture}}' bike-demand:latest
 ```
 
-The image must use the committed dependency lock and the project's own Dockerfile. The build must not depend on the host's `.venv`, cached outputs or local tracking database.
+`.git/` is excluded from the build context, so runs inside the container report
+`"training_commit": "unavailable"`. Record the commit SHA and the image ID above instead;
+the image tag carries the short SHA.
 
-### Run the baseline
+### 2. Run the tests inside the image
 
-The container must run the Lab 2 baseline using the same input data, configuration, features and chronological split as the original experiment.
+```bash
+docker run --rm bike-demand:latest uv run --locked pytest -q
+```
 
-The exact run command will be documented once the Dockerfile and its default command have been reviewed.
+### 3. Train the Lab 2 baseline into a volume
 
-### Run the tests
+Same data, configuration, features and chronological split as Lab 2; no tuning and no
+test-set evaluation.
 
-The full test suite must also be executable inside the image. The exact command will be confirmed against the final Dockerfile.
+```bash
+docker volume create bike-artifacts
+docker run --rm -v bike-artifacts:/app/artifacts bike-demand:latest \
+  uv run --locked python -m bike_demand.train --config configs/baseline.yaml
+```
 
-### Collect and inspect outputs
+The output prints both validation MAEs (`naive_train_mean`, `random_forest`), both MLflow
+run IDs and the `model_version`. Compare them with Lab 2; differences between machines
+(e.g. arm64 vs amd64) must be explained, not hidden.
 
-Keep the container available until the outputs have been copied to the host. Record:
+### 4. Serve the API
 
-- Both validation MAE values.
-- The MLflow run IDs for the two model runs.
-- The saved model artifact and metadata.
-- The commit SHA used to build the image.
+```bash
+docker run --rm -d --name bike-api -p 127.0.0.1:8000:8000 \
+  -v bike-artifacts:/app/artifacts:ro bike-demand:latest
+curl -s -w " HTTP %{http_code}\n" http://127.0.0.1:8000/health
+curl -s -w " HTTP %{http_code}\n" -X POST http://127.0.0.1:8000/predict \
+  -H "Content-Type: application/json" \
+  -d '{"season":1,"yr":1,"mnth":3,"hr":8,"holiday":0,"weekday":2,"workingday":1,"weathersit":1,"temp":0.4,"atemp":0.4,"hum":0.6,"windspeed":0.2}'
+docker logs bike-api
+docker stop bike-api
+```
 
-The exact `docker cp` commands and container paths will be added once the output locations are confirmed.
+Expected: `/health` returns `200`; `/predict` returns `200` with
+`{"prediction": <finite, non-negative number>, "model_version": "baseline-..."}`,
+where `model_version` comes from `model-metadata.json`. The interactive contract is at
+http://127.0.0.1:8000/docs.
 
-### Compare with Lab 2
+API contract: one flat JSON object with exactly the twelve training features.
+Missing fields, wrong types, out-of-range values, extra fields and target fields
+(`cnt`, `casual`, `registered`) are rejected with `422` before inference.
 
-Use the same data, configuration and chronological split as Lab 2. Do not tune the models or evaluate on the held-out test period.
+### 5. Check the missing-model behaviour
 
-Compare the observed validation MAEs and run metadata with the Lab 2 results. Explain any observed differences rather than assuming byte-identical results across environments.
+Start the same image **without** the volume:
 
+```bash
+docker run --rm -d --name bike-api-nomodel -p 127.0.0.1:8000:8000 bike-demand:latest
+curl -s -w " HTTP %{http_code}\n" http://127.0.0.1:8000/health
+docker stop bike-api-nomodel
+```
+
+Expected: `503` with `{"detail":"Model unavailable"}` on `/health` and `/predict`.
+
+### 6. Clean up
+
+```bash
+docker volume rm bike-artifacts
+docker image rm bike-demand:latest
+```
 
 ## Support and individual reports
 

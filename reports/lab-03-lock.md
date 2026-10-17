@@ -18,12 +18,15 @@ The team repository's `pyproject.toml` and `uv.lock` were never modified.
 
 ## Explanation
 
-<!-- Avec tes mots, 3-5 phrases :
-- Que garantit --locked ? (exp. 1, 2 et 4)
-- Pourquoi --frozen n'est pas une réparation ? (exp. 3 : exit 0 alors que le lock ne correspond plus)
-- Note : en exp. 3, le .venv de la copie contenait déjà les paquets d'un essai précédent ;
-  seul bike-demand a été réinstallé, mais la commande n'a fait aucune vérification.
--->
+`--locked` compares `pyproject.toml` with the committed `uv.lock` before installing
+anything. When they disagree (experiment 2) or when the lock is missing (experiment 4),
+uv stops with exit code 1, so nobody can silently install versions that were never
+reviewed. `--frozen` skips that comparison: in experiment 3 it returned exit code 0 with
+a stale lock, so the mismatch was hidden instead of fixed. (In that copy the `.venv`
+already held the packages from an earlier attempt, so only `bike-demand` was reinstalled,
+but no consistency check was made.) Running `uv lock` just to make the error disappear
+would rewrite the lock with unreviewed versions, which is why the team rule below exists.
+
 
 ## CI change
 
