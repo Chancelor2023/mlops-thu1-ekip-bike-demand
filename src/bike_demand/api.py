@@ -1,13 +1,47 @@
 import json
 import math
 import os
+import time
+import uuid
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 
 import joblib
 import pandas as pd
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field, field_validator
+
+CODE_REVISION = os.getenv("CODE_REVISION", "unknown")
+
+MODEL_DIR = Path(os.getenv("MODEL_DIR", "artifacts"))
+MODEL_PATH = MODEL_DIR / "model.joblib"
+METADATA_PATH = MODEL_DIR / "model-metadata.json"
+
+
+def write_log(
+    *,
+    event: str,
+    request_id: str | None = None,
+    status: int | str | None = None,
+    duration_ms: float | None = None,
+    model_version: str | None = None,
+    method: str | None = None,
+    path: str | None = None,
+) -> None:
+    """Write one structured JSON log entry without request data or secrets."""
+    entry = {
+        "ts": datetime.now(timezone.utc).isoformat(),
+        "event": event,
+        "request_id": request_id,
+        "status": status,
+        "duration_ms": duration_ms,
+        "model_version": model_version,
+        "code_revision": CODE_REVISION,
+        "method": method,
+        "path": path,
+    }
+    print(json.dumps(entry), flush=True)
 
 
 class BikeDemandFeatures(BaseModel):
@@ -21,7 +55,6 @@ class BikeDemandFeatures(BaseModel):
     weekday: int = Field(ge=0, le=6)
     workingday: int = Field(ge=0, le=1)
     weathersit: int = Field(ge=1, le=4)
-
     temp: float = Field(ge=0.0, le=1.0)
     atemp: float = Field(ge=0.0, le=1.0)
     hum: float = Field(ge=0.0, le=1.0)
@@ -49,14 +82,6 @@ class PredictionResponse(BaseModel):
         return value
 
 
-MODEL_DIR = Path(os.getenv("MODEL_DIR", "artifacts"))
-MODEL_PATH = MODEL_DIR / "model.joblib"
-METADATA_PATH = MODEL_DIR / "model-metadata.json"
-
-# Git commit the image was built from, set at build time (see Dockerfile GIT_SHA)
-CODE_REVISION = os.getenv("CODE_REVISION", "unknown")
-
-
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.model = None
@@ -72,10 +97,21 @@ async def lifespan(app: FastAPI):
 
         app.state.model = model
         app.state.model_version = model_version
-    except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError):
-        # The API starts, but reports that it cannot serve without a usable model.
+
+        write_log(
+            event="startup",
+            status="loaded",
+            model_version=model_version,
+        )
+
+    except (OSError, ValueError, KeyError, TypeError):
         app.state.model = None
         app.state.model_version = None
+
+        write_log(
+            event="startup",
+            status="unavailable",
+        )
 
     yield
 
@@ -86,10 +122,64 @@ async def lifespan(app: FastAPI):
 app = FastAPI(lifespan=lifespan)
 
 
+@app.middleware("http")
+async def log_requests(request: Request, call_next):
+    request_id = str(uuid.uuid4())
+    request.state.request_id = request_id
+    start_time = time.perf_counter()
+    status = 500
+    event = "request"
+
+    try:
+        response = await call_next(request)
+        status = response.status_code
+
+        if status == 503:
+            event = "model_unavailable"
+        elif status >= 500:
+            event = "error"
+        elif status >= 400:
+            event = "rejected"
+        elif request.url.path == "/predict":
+            event = "predicted"
+        elif request.url.path == "/health":
+            event = "health"
+
+        response.headers["X-Request-ID"] = request_id
+        return response
+
+    except Exception:
+        # Do not log exception details or request contents.
+        event = "error"
+        status = 500
+        raise
+
+    finally:
+        duration_ms = round(
+            (time.perf_counter() - start_time) * 1000,
+            2,
+        )
+
+        write_log(
+            event=event,
+            request_id=request_id,
+            status=status,
+            duration_ms=duration_ms,
+            model_version=getattr(
+                request.app.state,
+                "model_version",
+                None,
+            ),
+            method=request.method,
+            path=request.url.path,
+        )
+
+
 @app.get("/health")
 def health():
     if app.state.model is None:
         raise HTTPException(status_code=503, detail="Model unavailable")
+
     return {
         "status": "ok",
         "model_version": app.state.model_version,
@@ -100,14 +190,14 @@ def health():
 @app.post("/predict", response_model=PredictionResponse)
 def predict(features: BikeDemandFeatures):
     model = app.state.model
+
     if model is None:
         raise HTTPException(status_code=503, detail="Model unavailable")
 
-    # A DataFrame preserves the named input features used by many sklearn models.
     input_data = pd.DataFrame([features.model_dump()])
     prediction_values = model.predict(input_data)
-
     prediction = float(prediction_values[0])
+
     if not math.isfinite(prediction) or prediction < 0:
         raise HTTPException(
             status_code=500,
