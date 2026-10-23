@@ -1,0 +1,1 @@
+{"detail":[{"type":"less_than_equal","loc":["body","hr"],"msg":"Input should be less than or equal to 23","input":24,"ctx":{"le":23}}]} HTTP 422
