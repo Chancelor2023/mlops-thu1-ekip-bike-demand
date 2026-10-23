@@ -1,21 +1,46 @@
-
 import json
+import logging
 import math
 import os
 import time
+import uuid
 from contextlib import asynccontextmanager
+from datetime import datetime, timezone
 from pathlib import Path
 
 import joblib
 import pandas as pd
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Request
 from pydantic import BaseModel, ConfigDict, Field, field_validator
 
-CODE_REVISION = os.getenv("GIT_SHA", "unknown")
+CODE_REVISION = os.getenv("CODE_REVISION", "unknown")
 
 MODEL_DIR = Path(os.getenv("MODEL_DIR", "artifacts"))
 MODEL_PATH = MODEL_DIR / "model.joblib"
 METADATA_PATH = MODEL_DIR / "model-metadata.json"
+
+logger = logging.getLogger("bike_demand.api")
+
+
+def write_log(
+    *,
+    event: str,
+    request_id: str | None = None,
+    status: int | str | None = None,
+    duration_ms: float | None = None,
+    model_version: str | None = None,
+) -> None:
+    """Write one structured JSON log entry without request data or secrets."""
+    entry = {
+        "ts": datetime.now(timezone.utc).isoformat(),
+        "event": event,
+        "request_id": request_id,
+        "status": status,
+        "duration_ms": duration_ms,
+        "model_version": model_version,
+        "code_revision": CODE_REVISION,
+    }
+    print(json.dumps(entry), flush=True)
 
 
 class BikeDemandFeatures(BaseModel):
@@ -29,30 +54,30 @@ class BikeDemandFeatures(BaseModel):
     weekday: int = Field(ge=0, le=6)
     workingday: int = Field(ge=0, le=1)
     weathersit: int = Field(ge=1, le=4)
-    temp: float = Field(ge=0, le=1)
-    atemp: float = Field(ge=0, le=1)
-    hum: float = Field(ge=0, le=1)
-    windspeed: float = Field(ge=0, le=1)
+    temp: float = Field(ge=0.0, le=1.0)
+    atemp: float = Field(ge=0.0, le=1.0)
+    hum: float = Field(ge=0.0, le=1.0)
+    windspeed: float = Field(ge=0.0, le=1.0)
 
     @field_validator("temp", "atemp", "hum", "windspeed")
     @classmethod
-    def validate_finite(cls, value: float) -> float:
+    def check_finite(cls, value: float) -> float:
         if not math.isfinite(value):
-            raise ValueError("Value must be finite")
+            raise ValueError("Numeric inputs must be finite numbers")
         return value
 
 
 class PredictionResponse(BaseModel):
     model_config = ConfigDict(extra="forbid")
 
-    prediction: float = Field(ge=0)
+    prediction: float = Field(ge=0.0)
     model_version: str = Field(min_length=1)
 
     @field_validator("prediction")
     @classmethod
-    def validate_finite(cls, value: float) -> float:
+    def check_finite(cls, value: float) -> float:
         if not math.isfinite(value):
-            raise ValueError("Prediction must be finite")
+            raise ValueError("Numeric inputs must be finite numbers")
         return value
 
 
@@ -72,9 +97,20 @@ async def lifespan(app: FastAPI):
         app.state.model = model
         app.state.model_version = model_version
 
-    except (OSError, ValueError, KeyError, TypeError, json.JSONDecodeError):
+        write_log(
+            event="startup",
+            status="loaded",
+            model_version=model_version,
+        )
+
+    except (OSError, ValueError, KeyError, TypeError):
         app.state.model = None
         app.state.model_version = None
+
+        write_log(
+            event="startup",
+            status="unavailable",
+        )
 
     yield
 
@@ -86,33 +122,50 @@ app = FastAPI(lifespan=lifespan)
 
 
 @app.middleware("http")
-async def log_requests(request, call_next):
+async def log_requests(request: Request, call_next):
+    request_id = str(uuid.uuid4())
+    request.state.request_id = request_id
     start_time = time.perf_counter()
-    status_code = 500
+    status = 500
+    event = "request"
 
     try:
         response = await call_next(request)
-        status_code = response.status_code
+        status = response.status_code
+
+        if status == 503:
+            event = "model_unavailable"
+        elif status == 422:
+            event = "rejected"
+        elif request.url.path == "/predict" and status < 400:
+            event = "predicted"
+        elif request.url.path == "/health":
+            event = "health"
+        elif status >= 400:
+            event = "rejected"
+
+        response.headers["X-Request-ID"] = request_id
         return response
+
     except Exception:
-        # Do not log exception details or sensitive request information.
-        status_code = 500
+        # Do not log exception details or request contents.
+        event = "request_error"
+        status = 500
         raise
+
     finally:
         duration_ms = round(
             (time.perf_counter() - start_time) * 1000,
             2,
         )
 
-        log_entry = {
-            "event": "http_request",
-            "method": request.method,
-            "path": request.url.path,
-            "status_code": status_code,
-            "duration_ms": duration_ms,
-        }
-
-        print(json.dumps(log_entry), flush=True)
+        write_log(
+            event=event,
+            request_id=request_id,
+            status=status,
+            duration_ms=duration_ms,
+            model_version=getattr(request.app.state, "model_version", None),
+        )
 
 
 @app.get("/health")
