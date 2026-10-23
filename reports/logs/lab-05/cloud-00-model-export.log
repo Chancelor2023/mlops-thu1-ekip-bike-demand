@@ -1,0 +1,9 @@
+total 5128
+-rw-r--r-- 1 Jerry 197121    1793 Oct 17 16:23 model-metadata.json
+-rw-r--r-- 1 Jerry 197121 5243633 Oct 17 16:23 model.joblib
+d24c050e3631d5b4c2feb8cb571bef6382d8c975c42a5c11edd28de78a0b8c07 *model.joblib
+b09c2b06b0a90b829c3d1a89c3d544f9d0020f0a74b22a4931e0e676596dbd8f *model-metadata.json
+  "timestamp": "2026-10-17T14:23:31.598494+00:00",
+  "model_version": "baseline-4df84bfe8121",
+  "model_run_id": "aa6f708d4fd646818b6a836544aacff3",
+  "model_sha256": "d24c050e3631d5b4c2feb8cb571bef6382d8c975c42a5c11edd28de78a0b8c07"

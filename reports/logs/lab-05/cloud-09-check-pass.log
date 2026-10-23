@@ -1,0 +1,7 @@
+PASS health HTTP 200: observed HTTP 200
+PASS ready: observed status='ok'
+PASS model: expected 'baseline-4df84bfe8121', observed 'baseline-4df84bfe8121'
+PASS revision: expected '7cd8e8299722667212cdf5f6dc5f3879c3d62d30', observed '7cd8e8299722667212cdf5f6dc5f3879c3d62d30'
+PASS valid prediction: observed HTTP 200
+PASS invalid request rejected: observed HTTP 422
+exit=0

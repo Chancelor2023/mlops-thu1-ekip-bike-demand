@@ -93,4 +93,8 @@ Extracted from `docker logs --since 5m bike-api`:
 
 ### 4. Operational Boundaries
 
-- Cloud Run IAM access is restricted to Jerry on the instructor's project `mlops-ece-group2-and-group3`. Cloud Run verification was validated via screen sharing with the team.
+- Cloud Run IAM access is restricted to Jerry on the instructor's project `mlops-ece-group2-and-group3` (instructor's choice), so Jerry runs every Cloud Run check from Cloud Shell.
+- Final Cloud Run check on `c3bb080` (2026-10-23, 20:12 UTC), run by Jerry while Romain watched over screen sharing: 6 PASS, exit 0 (`logs/lab-05/cloud-12-final-check-c3bb080.log`). The JSON request lines (`health`, `predicted`, `rejected`) are in Cloud Logging (`cloud-12c-cold-start-2010utc.log`); no `Bearer`/`Authorization` appears in the logs (`cloud-11-no-token-in-logs.log`).
+- The first attempt failed with `TimeoutError` (`cloud-12a-final-check-timeout-cold-start.log`): after a night at 0 instances, the cold start took ~27.6 s, because `uv run` rebuilt the project and recompiled 8811 files in 19.98 s (`cloud-12c`), longer than the check's 15 s timeout. The first deployment shows the same pattern (~17.6 s, `cloud-12b-first-deploy-startup-17s.log`). Follow-up: start the server without re-syncing (`uv run --no-sync` or `.venv/bin/uvicorn`) and make the check timeout configurable. Rejected: `min-instances=1` (constant cost on the instructor's credits).
+- Model file integrity: `model.joblib` exported from the Lab 4 volume has sha256 `d24c050e…0b8c07`, equal to `model_sha256` in its metadata and to the copy read back from the bucket (`cloud-00-model-export.log`, `cloud-03-bucket-model-sha256.log`).
+
