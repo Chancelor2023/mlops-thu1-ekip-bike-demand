@@ -150,7 +150,7 @@ async def log_requests(request: Request, call_next):
 
     except Exception:
         # Do not log exception details or request contents.
-        event = "rejected"
+        event = "error"
         status = 500
         raise
 
