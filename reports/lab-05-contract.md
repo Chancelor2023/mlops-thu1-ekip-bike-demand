@@ -22,5 +22,6 @@ Each PR of Lab 5 must follow these names. Changing one requires telling the team
 | External check script (decision 4) | Brett | Romain |
 | Logging (decision 5) | Mathis | Jerry |
 | README "Deploy" + team report Lab 5 | Romain | Mathis |
+| Cloud Run deployment (decision 7) | Jerry | Brett |
 
 Merge order: start-up → check → logging → README.
