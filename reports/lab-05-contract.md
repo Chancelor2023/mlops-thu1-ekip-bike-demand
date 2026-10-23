@@ -25,3 +25,72 @@ Each PR of Lab 5 must follow these names. Changing one requires telling the team
 | Cloud Run deployment (decision 7) | Jerry | Brett |
 
 Merge order: start-up → check → logging → README.
+
+## Evidence and Verification Record
+
+### 1. Provenance Chain (Commit -> Image -> Run)
+
+#### Commit
+```bash
+$ git rev-parse HEAD
+7cd8e8299722667212cdf5f6dc5f3879c3d62d30
+```
+
+#### Image
+```bash
+$ docker inspect --format '{{.Id}}' bike-demand:local
+sha256:e4c6dc9df8e9170e702e0997fe4cb5bbeacc04639e2f60b081451d37cacb3c80
+```
+
+#### Run (Local External Check)
+```text
+$ python check_service.py \
+    --url [http://127.0.0.1:8000](http://127.0.0.1:8000) \
+    --expected-model baseline-856e775606d2 \
+    --expected-revision 7cd8e8299722667212cdf5f6dc5f3879c3d62d30 \
+    --valid-payload '{"season":1,"yr":1,"mnth":3,"hr":8,"holiday":0,"weekday":2,"workingday":1,"weathersit":1,"temp":0.4,"atemp":0.4,"hum":0.6,"windspeed":0.2}' \
+    --invalid-payload '{"season":1,"yr":1,"mnth":3,"hr":24,"holiday":0,"weekday":2,"workingday":1,"weathersit":1,"temp":0.4,"atemp":0.4,"hum":0.6,"windspeed":0.2}'
+
+PASS health HTTP 200: observed HTTP 200
+PASS ready: observed status='ok'
+PASS model: expected 'baseline-856e775606d2', observed 'baseline-856e775606d2'
+PASS revision: expected '7cd8e8299722667212cdf5f6dc5f3879c3d62d30', observed '7cd8e8299722667212cdf5f6dc5f3879c3d62d30'
+PASS valid prediction: observed HTTP 200
+PASS invalid request rejected: observed HTTP 422
+```
+
+![Check Output PASS](images/week-3-lab-5-check-pass.png)
+
+---
+
+### 2. Structured Log Evidence (JSON on stdout)
+
+Extracted from `docker logs --since 5m bike-api`:
+
+```json
+{"ts":"2026-10-23T15:44:41.484521+00:00","event":"health","request_id":"844d5890-9aa7-429d-b4c7-5cb66864e4ad","status":200,"duration_ms":2.82,"model_version":"baseline-856e775606d2","code_revision":"7cd8e8299722667212cdf5f6dc5f3879c3d62d30","method":"GET","path":"/health"}
+{"ts":"2026-10-23T15:44:41.517188+00:00","event":"predicted","request_id":"15c15f89-f340-43bf-9bd6-e4d2065b605c","status":200,"duration_ms":28.07,"model_version":"baseline-856e775606d2","code_revision":"7cd8e8299722667212cdf5f6dc5f3879c3d62d30","method":"POST","path":"/predict"}
+{"ts":"2026-10-23T15:44:41.523638+00:00","event":"rejected","request_id":"69907182-3dc6-4274-878b-e1caf2279c09","status":422,"duration_ms":2.36,"model_version":"baseline-856e775606d2","code_revision":"7cd8e8299722667212cdf5f6dc5f3879c3d62d30","method":"POST","path":"/predict"}
+```
+
+![Structured Docker Logs](images/week-3-lab-5-docker-logs.png)
+
+---
+
+### 3. Observed and Understood Failures
+
+1. **Missing Artifacts Volume (HTTP 503):** Starting without the mounted volume returned HTTP 503 and emitted structured log events `startup: unavailable` and `model_unavailable`.
+2. **Cloud Run Port Mismatch (8080 vs 8000):** Cloud Run routes to port 8080 by default. Aligning the container port setting to 8000 fixed the startup crash.
+3. **Missing GCS Permissions:** The Cloud Run service account required `roles/storage.objectViewer` on the bucket `thu1-ekip-bike-demand-model` to mount artifacts without retraining.
+4. **Deliberate Failure (Altered Code Revision):** Starting an image built with `GIT_SHA=badsha000` resulted in an immediate revision mismatch caught by the check script (exit code 1):
+   ```text
+   FAIL revision: expected '7cd8e8299722667212cdf5f6dc5f3879c3d62d30', observed 'badsha000'
+   ```
+
+![Check Output FAIL](images/week-3-lab-5-check-fail.png)
+
+---
+
+### 4. Operational Boundaries
+
+- Cloud Run IAM access is restricted to Jerry on the instructor's project `mlops-ece-group2-and-group3`. Cloud Run verification was validated via screen sharing with the team.
