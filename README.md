@@ -124,11 +124,12 @@ docker image inspect --format '{{.Id}} {{.Architecture}}' bike-demand:latest
 ```
 
 `.git/` is excluded from the build context, so runs inside the container report
+`"training_commit": "unavailable"`. Record the commit SHA and the image ID above instead;
+the image tag carries the short SHA.
+
 The full commit SHA is passed at build time as `GIT_SHA` and is reported by
 `/health` as `code_revision` (`"unknown"` if the image was built without it).
 
-`"training_commit": "unavailable"`. Record the commit SHA and the image ID above instead;
-the image tag carries the short SHA.
 
 ### 2. Run the tests inside the image
 
