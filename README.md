@@ -260,7 +260,7 @@ This section defines what a verified deployment means, details the execution and
 3. **Execute the external check script:**
    The check script performs pure HTTP network requests (no `TestClient` or app internals) and evaluates both expected claims and failure rejection:
    ```bash
-   python scripts/check_service.py \
+   python check_service.py \
      --url [http://127.0.0.1:8000](http://127.0.0.1:8000) \
      --expected-model $(jq -r .model_version artifacts/model-metadata.json) \
      --expected-revision $(git rev-parse HEAD) \
@@ -290,9 +290,9 @@ This section defines what a verified deployment means, details the execution and
    ```
 
 2. **Execute remote verification:**
-   `scripts/check_service.py` securely reads `ID_TOKEN` from the environment without printing it or logging headers:
+   `check_service.py` securely reads `ID_TOKEN` from the environment without printing it or logging headers:
    ```bash
-   python scripts/check_service.py \
+   python check_service.py \
      --url "$SERVICE_URL" \
      --expected-model baseline-9bce50fb333e \
      --expected-revision $(git rev-parse origin/main) \
