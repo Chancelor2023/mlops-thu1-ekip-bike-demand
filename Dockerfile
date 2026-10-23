@@ -39,6 +39,11 @@ RUN uv sync --locked
 
 # The service only loads an already trained model from MODEL_DIR; it never trains
 ENV MODEL_DIR=/app/artifacts
+
+# Record which commit this image was built from; declared late so it does not bust the cache
+ARG GIT_SHA=unknown
+ENV CODE_REVISION=${GIT_SHA}
+
 EXPOSE 8000
 
 # Serve the prediction API in exec form, listening on all interfaces in the container

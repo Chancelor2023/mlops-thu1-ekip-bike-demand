@@ -73,6 +73,18 @@ def test_health_returns_200_when_model_is_loaded(client_with_model):
     assert response.status_code == 200
 
 
+def test_health_reports_model_and_code_identity(client_with_model, monkeypatch):
+    monkeypatch.setattr(api, "CODE_REVISION", "abc1234")
+
+    body = client_with_model.get("/health").json()
+
+    assert body == {
+        "status": "ok",
+        "model_version": "test_v1",
+        "code_revision": "abc1234",
+    }
+
+
 def test_valid_prediction_returns_prediction_and_version(client_with_model):
     response = client_with_model.post("/predict", json=VALID_SAMPLE)
 

@@ -53,6 +53,9 @@ MODEL_DIR = Path(os.getenv("MODEL_DIR", "artifacts"))
 MODEL_PATH = MODEL_DIR / "model.joblib"
 METADATA_PATH = MODEL_DIR / "model-metadata.json"
 
+# Git commit the image was built from, set at build time (see Dockerfile GIT_SHA)
+CODE_REVISION = os.getenv("CODE_REVISION", "unknown")
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
@@ -87,7 +90,11 @@ app = FastAPI(lifespan=lifespan)
 def health():
     if app.state.model is None:
         raise HTTPException(status_code=503, detail="Model unavailable")
-    return {"status": "ok"}
+    return {
+        "status": "ok",
+        "model_version": app.state.model_version,
+        "code_revision": CODE_REVISION,
+    }
 
 
 @app.post("/predict", response_model=PredictionResponse)

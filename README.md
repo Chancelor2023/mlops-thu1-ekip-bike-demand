@@ -118,13 +118,18 @@ volume, and the API only loads it from there (read-only). The service never trai
 
 ```bash
 git rev-parse HEAD
-docker build -t bike-demand:$(git rev-parse --short HEAD) -t bike-demand:latest .
+docker build --build-arg GIT_SHA=$(git rev-parse HEAD) \
+  -t bike-demand:$(git rev-parse --short HEAD) -t bike-demand:latest .
 docker image inspect --format '{{.Id}} {{.Architecture}}' bike-demand:latest
 ```
 
 `.git/` is excluded from the build context, so runs inside the container report
 `"training_commit": "unavailable"`. Record the commit SHA and the image ID above instead;
 the image tag carries the short SHA.
+
+The full commit SHA is passed at build time as `GIT_SHA` and is reported by
+`/health` as `code_revision` (`"unknown"` if the image was built without it).
+
 
 ### 2. Run the tests inside the image
 
@@ -160,7 +165,8 @@ docker logs bike-api
 docker stop bike-api
 ```
 
-Expected: `/health` returns `200`; `/predict` returns `200` with
+Expected: `/health` returns `200` with
+`{"status": "ok", "model_version": "baseline-...", "code_revision": "<full commit SHA>"}`; `/predict` returns `200` with
 `{"prediction": <finite, non-negative number>, "model_version": "baseline-..."}`,
 where `model_version` comes from `model-metadata.json`. The interactive contract is at
 http://127.0.0.1:8000/docs.
