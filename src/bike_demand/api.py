@@ -1,5 +1,4 @@
 import json
-import logging
 import math
 import os
 import time
@@ -19,8 +18,6 @@ MODEL_DIR = Path(os.getenv("MODEL_DIR", "artifacts"))
 MODEL_PATH = MODEL_DIR / "model.joblib"
 METADATA_PATH = MODEL_DIR / "model-metadata.json"
 
-logger = logging.getLogger("bike_demand.api")
-
 
 def write_log(
     *,
@@ -29,6 +26,8 @@ def write_log(
     status: int | str | None = None,
     duration_ms: float | None = None,
     model_version: str | None = None,
+    method: str | None = None,
+    path: str | None = None,
 ) -> None:
     """Write one structured JSON log entry without request data or secrets."""
     entry = {
@@ -39,6 +38,8 @@ def write_log(
         "duration_ms": duration_ms,
         "model_version": model_version,
         "code_revision": CODE_REVISION,
+        "method": method,
+        "path": path,
     }
     print(json.dumps(entry), flush=True)
 
@@ -77,7 +78,7 @@ class PredictionResponse(BaseModel):
     @classmethod
     def check_finite(cls, value: float) -> float:
         if not math.isfinite(value):
-            raise ValueError("Numeric inputs must be finite numbers")
+            raise ValueError("Prediction must be finite")
         return value
 
 
@@ -127,7 +128,7 @@ async def log_requests(request: Request, call_next):
     request.state.request_id = request_id
     start_time = time.perf_counter()
     status = 500
-    event = "request"
+    event = "rejected"
 
     try:
         response = await call_next(request)
@@ -135,21 +136,19 @@ async def log_requests(request: Request, call_next):
 
         if status == 503:
             event = "model_unavailable"
-        elif status == 422:
+        elif status == 422 or status >= 400:
             event = "rejected"
-        elif request.url.path == "/predict" and status < 400:
+        elif request.url.path == "/predict":
             event = "predicted"
         elif request.url.path == "/health":
             event = "health"
-        elif status >= 400:
-            event = "rejected"
 
         response.headers["X-Request-ID"] = request_id
         return response
 
     except Exception:
         # Do not log exception details or request contents.
-        event = "request_error"
+        event = "rejected"
         status = 500
         raise
 
@@ -164,7 +163,13 @@ async def log_requests(request: Request, call_next):
             request_id=request_id,
             status=status,
             duration_ms=duration_ms,
-            model_version=getattr(request.app.state, "model_version", None),
+            model_version=getattr(
+                request.app.state,
+                "model_version",
+                None,
+            ),
+            method=request.method,
+            path=request.url.path,
         )
 
 
