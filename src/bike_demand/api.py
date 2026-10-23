@@ -136,7 +136,9 @@ async def log_requests(request: Request, call_next):
 
         if status == 503:
             event = "model_unavailable"
-        elif status == 422 or status >= 400:
+        elif status >= 500:
+            event = "error"
+        elif status >= 400:
             event = "rejected"
         elif request.url.path == "/predict":
             event = "predicted"
