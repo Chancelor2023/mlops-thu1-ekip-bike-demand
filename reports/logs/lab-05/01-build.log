@@ -1,0 +1,93 @@
+00f46a9f1b87d67e345daecb79d6c16a396d9dba
+#0 building with "desktop-linux" instance using docker driver
+
+#1 [internal] load build definition from Dockerfile
+#1 transferring dockerfile: 1.65kB 0.0s done
+#1 DONE 0.0s
+
+#2 [internal] load metadata for docker.io/library/python:3.12.9-slim
+#2 ...
+
+#3 [internal] load metadata for ghcr.io/astral-sh/uv:0.12.19
+#3 DONE 1.4s
+
+#2 [internal] load metadata for docker.io/library/python:3.12.9-slim
+#2 DONE 1.4s
+
+#4 [internal] load .dockerignore
+#4 transferring context: 358B 0.0s done
+#4 DONE 0.1s
+
+#5 [stage-0  1/14] FROM docker.io/library/python:3.12.9-slim@sha256:48a11b7ba705fd53bf15248d1f94d36c39549903c5d59edcfa2f3f84126e7b44
+#5 resolve docker.io/library/python:3.12.9-slim@sha256:48a11b7ba705fd53bf15248d1f94d36c39549903c5d59edcfa2f3f84126e7b44 0.1s done
+#5 DONE 0.1s
+
+#6 FROM ghcr.io/astral-sh/uv:0.12.19@sha256:04d046b13e60d6bcec73cbc5e1cad25d680dea90c8573340950a0ac2d1aef424
+#6 resolve ghcr.io/astral-sh/uv:0.12.19@sha256:04d046b13e60d6bcec73cbc5e1cad25d680dea90c8573340950a0ac2d1aef424 0.1s done
+#6 DONE 0.1s
+
+#7 [internal] load build context
+#7 transferring context: 39.26kB 0.1s done
+#7 DONE 0.1s
+
+#8 [stage-0  2/14] RUN apt-get update && apt-get install -y --no-install-recommends     git     && rm -rf /var/lib/apt/lists/*
+#8 CACHED
+
+#9 [stage-0  4/14] WORKDIR /app
+#9 CACHED
+
+#10 [stage-0  7/14] COPY .python-version README.md ./
+#10 CACHED
+
+#11 [stage-0  3/14] COPY --from=ghcr.io/astral-sh/uv:0.12.19 /uv /bin/uv
+#11 CACHED
+
+#12 [stage-0  6/14] RUN uv sync --locked --no-install-project
+#12 CACHED
+
+#13 [stage-0  5/14] COPY pyproject.toml uv.lock ./
+#13 CACHED
+
+#14 [stage-0  8/14] COPY .github/ ./.github/
+#14 CACHED
+
+#15 [stage-0  9/14] COPY reports/ ./reports/
+#15 DONE 0.1s
+
+#16 [stage-0 10/14] COPY src/ ./src/
+#16 DONE 0.1s
+
+#17 [stage-0 11/14] COPY configs/ ./configs/
+#17 DONE 0.1s
+
+#18 [stage-0 12/14] COPY data/ ./data/
+#18 DONE 0.1s
+
+#19 [stage-0 13/14] COPY tests/ ./tests/
+#19 DONE 0.2s
+
+#20 [stage-0 14/14] RUN uv sync --locked
+#20 1.351 Resolved 100 packages in 9ms
+#20 1.482    Building bike-demand @ file:///app
+#20 2.774       Built bike-demand @ file:///app
+#20 2.788 Prepared 1 package in 1.31s
+#20 2.797 Installed 1 package in 7ms
+#20 3.904 Bytecode compiled 8811 files in 1.10s
+#20 3.904  + bike-demand==0.1.0 (from file:///app)
+#20 DONE 4.0s
+
+#21 exporting to image
+#21 exporting layers
+#21 exporting layers 0.6s done
+#21 exporting manifest sha256:be3eda2300c668579ff7b58ebaf0cc7cbbae9b2f3dacfb2cdee082cc76c837e2 0.0s done
+#21 exporting config sha256:9e7bdc8326ad8e1cfde25aac78888b1b680b93a7c9ad4e21c7f1873dd2cef3f3 0.0s done
+#21 exporting attestation manifest sha256:1caca79a91fed53a658dd489d450d2c386d373a1a1a2ff8d7132bb5c0dd62de7 0.0s done
+#21 exporting manifest list sha256:5b5aea087880205adbd4dbce23d7fe85fa2f2f258a58fe7e050e24c615c27efd
+#21 exporting manifest list sha256:5b5aea087880205adbd4dbce23d7fe85fa2f2f258a58fe7e050e24c615c27efd 0.0s done
+#21 naming to docker.io/library/bike-demand:00f46a9 done
+#21 unpacking to docker.io/library/bike-demand:00f46a9
+#21 unpacking to docker.io/library/bike-demand:00f46a9 0.3s done
+#21 naming to docker.io/library/bike-demand:latest done
+#21 unpacking to docker.io/library/bike-demand:latest 0.0s done
+#21 DONE 1.1s
+sha256:5b5aea087880205adbd4dbce23d7fe85fa2f2f258a58fe7e050e24c615c27efd arm64
