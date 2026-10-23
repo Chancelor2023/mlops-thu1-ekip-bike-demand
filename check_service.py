@@ -39,7 +39,9 @@ def main() -> int:
     parser.add_argument("--expected-model", required=True)
     parser.add_argument("--expected-revision", required=True)
     parser.add_argument("--valid-payload", required=True, help="Valid /predict JSON")
-    parser.add_argument("--invalid-payload", required=True, help="Invalid /predict JSON")
+    parser.add_argument(
+        "--invalid-payload", required=True, help="Invalid /predict JSON"
+    )
     args = parser.parse_args()
 
     base_url = args.url.rstrip("/")
@@ -47,20 +49,29 @@ def main() -> int:
 
     try:
         status, health = request_json(f"{base_url}/health", "GET")
-        checks.extend([
-            ("health HTTP 200", status == 200, f"observed HTTP {status}"),
-            ("ready", status == 200 and health.get("status") == "ok",
-             f"observed status={health.get('status')!r}"),
-            ("model", health.get("model_version") == args.expected_model,
-             f"expected {args.expected_model!r}, observed {health.get('model_version')!r}"),
-            ("revision", health.get("code_revision") == args.expected_revision,
-             f"expected {args.expected_revision!r}, observed {health.get('code_revision')!r}"),
-        ])
+        checks.extend(
+            [
+                ("health HTTP 200", status == 200, f"observed HTTP {status}"),
+                (
+                    "ready",
+                    status == 200 and health.get("status") == "ok",
+                    f"observed status={health.get('status')!r}",
+                ),
+                (
+                    "model",
+                    health.get("model_version") == args.expected_model,
+                    f"expected {args.expected_model!r}, observed {health.get('model_version')!r}",
+                ),
+                (
+                    "revision",
+                    health.get("code_revision") == args.expected_revision,
+                    f"expected {args.expected_revision!r}, observed {health.get('code_revision')!r}",
+                ),
+            ]
+        )
 
         valid_payload = json.loads(args.valid_payload)
-        status, prediction = request_json(
-            f"{base_url}/predict", "POST", valid_payload
-        )
+        status, prediction = request_json(f"{base_url}/predict", "POST", valid_payload)
         valid_ok = (
             status == 200
             and isinstance(prediction.get("prediction"), (int, float))
@@ -70,8 +81,9 @@ def main() -> int:
 
         invalid_payload = json.loads(args.invalid_payload)
         status, _ = request_json(f"{base_url}/predict", "POST", invalid_payload)
-        checks.append(("invalid request rejected", status == 422,
-                       f"observed HTTP {status}"))
+        checks.append(
+            ("invalid request rejected", status == 422, f"observed HTTP {status}")
+        )
 
     except (URLError, TimeoutError, json.JSONDecodeError, TypeError, ValueError) as exc:
         # Do not print request headers or environment values; ID_TOKEN stays secret.
