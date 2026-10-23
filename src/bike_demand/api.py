@@ -128,7 +128,7 @@ async def log_requests(request: Request, call_next):
     request.state.request_id = request_id
     start_time = time.perf_counter()
     status = 500
-    event = "rejected"
+    event = "request"
 
     try:
         response = await call_next(request)
