@@ -1,0 +1,4 @@
+FAIL service check: TimeoutError: The read operation timed out
+exit=1
+# Note: the FAIL line was printed on stderr, which `tee` did not capture; it is copied
+# from the Cloud Shell terminal of the same run (2026-10-23, ~20:10 UTC). exit=1 was captured by tee.

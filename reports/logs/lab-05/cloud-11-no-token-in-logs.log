@@ -1,0 +1,2 @@
+# gcloud logging read 'resource.labels.service_name="mlops-thu1-ekip-bike-demand" AND timestamp>="<last 60 min>" AND ("Bearer" OR "Authorization")' --limit=5
+# Output: (empty, no matching log entry), 2026-10-23 ~20:15 UTC

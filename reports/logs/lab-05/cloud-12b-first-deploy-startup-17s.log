@@ -1,0 +1,31 @@
+2026-10-23T09:18:32.471527Z			
+2026-10-23T09:18:34.588351Z			
+2026-10-23T09:18:35.675464Z	Starting new instance. Reason: DEPLOYMENT_ROLLOUT - Instance started due to traffic shifting between revisions due to deployment, traffic split adjustment, or deployment health check.		
+2026-10-23T09:18:36.935788Z	2026/10/23 09:18:36 Hello from Cloud Run! The container started successfully and is listening for HTTP requests on port 8080		
+2026-10-23T09:18:36.938645Z	Default STARTUP TCP probe succeeded after 1 attempt for container "placeholder-1" on port 8080.		
+2026-10-23T09:18:37.017256Z			
+2026-10-23T09:18:37.796090Z	Starting new instance. Reason: DEPLOYMENT_ROLLOUT - Instance started due to traffic shifting between revisions due to deployment, traffic split adjustment, or deployment health check.		
+2026-10-23T09:18:38.202628Z	2026/10/23 09:18:38 Hello from Cloud Run! The container started successfully and is listening for HTTP requests on port 8080		
+2026-10-23T09:18:38.205454Z	Default STARTUP TCP probe succeeded after 1 attempt for container "placeholder-1" on port 8080.		
+2026-10-23T09:18:38.315382Z			
+2026-10-23T09:18:39.706743Z			
+2026-10-23T09:22:49.103513Z			
+2026-10-23T09:23:22.947380Z	Starting new instance. Reason: DEPLOYMENT_ROLLOUT - Instance started due to traffic shifting between revisions due to deployment, traffic split adjustment, or deployment health check.		
+2026-10-23T09:23:25.295106Z	   Building bike-demand @ file:///app		
+2026-10-23T09:23:25.671512Z	      Built bike-demand @ file:///app		
+2026-10-23T09:23:25.690005Z	Uninstalled 1 package in 6ms		
+2026-10-23T09:23:25.691252Z	Installed 1 package in 1ms		
+2026-10-23T09:23:36.782321Z	Bytecode compiled 8811 files in 11.09s		
+2026-10-23T09:23:40.545642Z	INFO:     Started server process [19]		
+2026-10-23T09:23:40.545720Z	INFO:     Waiting for application startup.		
+2026-10-23T09:23:40.547854Z	INFO:     Application startup complete.		
+2026-10-23T09:23:40.548981Z	INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)		
+2026-10-23T09:27:23.515735Z	Default STARTUP TCP probe failed 1 time consecutively for container "placeholder-1" on port 8080. The instance was not started.
+Connection failed with status DEADLINE_EXCEEDED.		
+2026-10-23T09:27:23.618243Z	INFO:     Shutting down		
+2026-10-23T09:27:23.719665Z	INFO:     Waiting for application shutdown.		
+2026-10-23T09:27:23.719878Z	INFO:     Application shutdown complete.		
+2026-10-23T09:27:23.719986Z	INFO:     Finished server process [19]		
+2026-10-23T09:27:24.726148Z			
+2026-10-23T09:27:24.800409Z			
+2026-10-23T09:29:26.377376Z			
