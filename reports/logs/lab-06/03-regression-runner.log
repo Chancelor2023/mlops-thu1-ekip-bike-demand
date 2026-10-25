@@ -1,0 +1,8 @@
+# GitHub Actions run: https://github.com/Chancelor2023/mlops-thu1-ekip-bike-demand/actions/runs/40201048510/job/121192101500
+# PR #28, commit 4b1a4c7007a43482adbb260a7c1a406fc7918347, job quality-and-tests (ubuntu-24.04, Linux amd64), step "Tests (regression)"
+# Copied from the run log (succeeded in 56s)
+Run uv run --locked pytest -q -m regression -s
+
+recomputed validation MAE: naive=154.23179306864967 random_forest=86.84685685591091
+..
+2 passed, 72 deselected, 1 warning in 2.95s
