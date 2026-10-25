@@ -156,8 +156,8 @@ run IDs and the `model_version`. Compare them with Lab 2; differences between ma
 ```bash
 docker run --rm -d --name bike-api -p 127.0.0.1:8000:8000 \
   -v bike-artifacts:/app/artifacts:ro bike-demand:latest
-curl -s -w " HTTP %{http_code}\n" [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
-curl -s -w " HTTP %{http_code}\n" -X POST [http://127.0.0.1:8000/predict](http://127.0.0.1:8000/predict) \
+curl -s -w " HTTP %{http_code}\n" http://127.0.0.1:8000/health
+curl -s -w " HTTP %{http_code}\n" -X POST http://127.0.0.1:8000/predict \
   -H "Content-Type: application/json" \
   -d '{"season":1,"yr":1,"mnth":3,"hr":8,"holiday":0,"weekday":2,"workingday":1,"weathersit":1,"temp":0.4,"atemp":0.4,"hum":0.6,"windspeed":0.2}'
 docker logs bike-api
@@ -180,7 +180,7 @@ Start the same image **without** the volume:
 
 ```bash
 docker run --rm -d --name bike-api-nomodel -p 127.0.0.1:8000:8000 bike-demand:latest
-curl -s -w " HTTP %{http_code}\n" [http://127.0.0.1:8000/health](http://127.0.0.1:8000/health)
+curl -s -w " HTTP %{http_code}\n" http://127.0.0.1:8000/health
 docker stop bike-api-nomodel
 ```
 
@@ -261,7 +261,7 @@ This section defines what a verified deployment means, details the execution and
    The check script performs pure HTTP network requests (no `TestClient` or app internals) and evaluates both expected claims and failure rejection:
    ```bash
    python check_service.py \
-     --url [http://127.0.0.1:8000](http://127.0.0.1:8000) \
+     --url [http://127.0.0.1:8000] \
      --expected-model $(jq -r .model_version artifacts/model-metadata.json) \
      --expected-revision $(git rev-parse HEAD) \
      --valid-payload '{"season":1,"yr":1,"mnth":3,"hr":8,"holiday":0,"weekday":2,"workingday":1,"weathersit":1,"temp":0.4,"atemp":0.4,"hum":0.6,"windspeed":0.2}' \
@@ -294,7 +294,7 @@ This section defines what a verified deployment means, details the execution and
    ```bash
    python check_service.py \
      --url "$SERVICE_URL" \
-     --expected-model baseline-9bce50fb333e \
+     --expected-model baseline-4df84bfe8121 \
      --expected-revision $(git rev-parse origin/main) \
      --valid-payload '{"season":1,"yr":1,"mnth":3,"hr":8,"holiday":0,"weekday":2,"workingday":1,"weathersit":1,"temp":0.4,"atemp":0.4,"hum":0.6,"windspeed":0.2}' \
      --invalid-payload '{"season":1,"yr":1,"mnth":3,"hr":24,"holiday":0,"weekday":2,"workingday":1,"weathersit":1,"temp":0.4,"atemp":0.4,"hum":0.6,"windspeed":0.2}'
@@ -324,13 +324,56 @@ This section defines what a verified deployment means, details the execution and
 
 1. **Cloud Run Port Mismatch (8080 vs 8000):** Cloud Run defaults to routing container traffic to port `8080`. If the container port setting is not explicitly aligned to `8000`, instance startup fails with:
    `The user-provided container failed to start and listen on the port defined provided by the PORT=8080 environment variable`.
-2. **Missing Storage Bucket Permissions:** If the Cloud Run service identity lacks the `Storage Object Viewer` IAM role on the artifacts bucket, the service starts but immediately returns HTTP 503 on `/health` and `/predict`.
+2. **Missing Storage Bucket Permissions:** If the Cloud Run service identity lacks the `Storage Object Viewer` IAM role on the bucket, volume mounting fails at launch. Cloud Run cannot bind the mount point and the revision never starts (`Container failed to start. Failed to mount Cloud Storage bucket`).
 3. **Premature Requests (HTTP 000 / Connection Refused):** Calling the service before the application worker completes deserialization drops the connection. Verification scripts must use adequate timeout handling.
 4. **Deliberate Revision Fault:** Starting the container with an invalid `GIT_SHA` displays the following in `check_service.py`:
    ```text
    PASS health HTTP 200: observed HTTP 200
    PASS ready: observed status='ok'
-   PASS model: expected 'baseline-9bce50fb333e', observed 'baseline-9bce50fb333e'
-   FAIL revision: expected 'e3b0c44...', observed 'badsha000'
+   PASS model: expected 'baseline-856e775606d2', observed 'baseline-856e775606d2'
+   FAIL revision: expected '7cd8e8299722667212cdf5f6dc5f3879c3d62d30', observed 'badsha000'
    ```
    Exit status is `1`.
+
+
+## CI: Lab 6 Architecture & Decisions
+
+| # | Question | Choice | Rejected option and why |
+|---|---|---|---|
+| 1 | **Coverage** | Training reproducibility, data validation, and API schemas are tested; the sealed holdout test period (Jul–Dec 2012) is never touched by CI. | Evaluating on the holdout test set in CI (violates course rules and risks data leakage). |
+| 2 | **Machine** | Clean ephemeral GitHub Actions runner (`ubuntu-latest`), strictly installed via `uv.lock`, without cached state or GPU dependencies. | Self-hosted or stateful runner preserving artifacts across runs (hides missing setup steps). |
+| 3 | **Trigger** | `pull_request` to `main`, `push` to `main`, and manual `workflow_dispatch`; no `paths` filters to prevent silent skips. | Filtering on `paths: src/**` (would miss configuration, Dockerfile, or dependency changes). |
+| 4 | **Order** | `lock` -> `ruff check` -> `ruff format` -> `preflight` -> markers (`infra` -> `lab1` -> `exercise` -> `api` -> `regression`) -> full `pytest` -> `container`. | Parallel execution without dependencies (wastes Docker builds and hides the root-cause step). |
+| 5 | **Evidence** | CI proves strict numerical reproducibility of RF validation MAE and schema conformance across environments. | Claiming CI proves future model accuracy or business value under production drift. |
+| 6 | **Defects** | Individual tests target distinct failure classes (`test_fault_b` for corrupted records, `test_api` for payload bounds, `regression` for MAE drift). | A single monolithic black-box test (makes diagnosing the failure location difficult). |
+| 7 | **Failing** | Verified via reviewer-driven defect injection PRs (each check was observed failing on intentional defects before passing). | Trusting always-green tests without defect injection (tests could be tautological). |
+| 8 | **Tolerance** | Numerically measured across Windows arm64, container, and Linux amd64: set to `1e-6` (float noise) if identical, or ~2x measured delta. | Arbitrary +/- 5% margin (would mask significant model degradation). |
+| 9 | **Repair** | Diagnose root cause directly in terminal/GitHub logs, followed by an explicit fix commit on the same PR (red-to-green). | Rerunning without code modifications or relaxing assertion bounds. |
+| 10 | **Records** | Raw error and passing logs stored as plain text in `reports/logs/lab-06/` versioned in Git. | Relying solely on GitHub Actions URLs (logs expire after 90 days). |
+
+### What CI Proves and Does Not Prove About the Model
+1. CI proves that the Random Forest model trains reproducibly from locked dependencies and matches the expected validation MAE within floating-point tolerance.
+2. CI proves that the packaged FastAPI application loads the model artifacts and enforces API validation contracts (returning HTTP 422 on malformed payloads).
+3. CI **does not prove** model performance or generalization on unseen real-world distributions, nor does it detect production data drift.
+
+
+### Reproducing CI Checks Locally
+
+Run the complete sequence using locked dependencies:
+```bash
+uv sync --locked
+uv run --locked ruff check .
+uv run --locked ruff format --check .
+uv run --locked python -m bike_demand.preflight
+uv run --locked pytest -q -m infra
+uv run --locked pytest -q -m lab1
+uv run --locked pytest -q -m exercise
+uv run --locked pytest -q -m api
+uv run --locked pytest -q -m regression
+uv run --locked pytest -q
+```
+### To reproduce a failure on a specific marker, run with -x (stop at first failure):
+
+```bash
+uv run --locked pytest -q -m regression -x
+```
