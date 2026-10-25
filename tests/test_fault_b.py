@@ -4,7 +4,6 @@ import pytest
 
 from bike_demand.validate import load_data
 
-
 pytestmark = pytest.mark.exercise
 
 FIXTURES = Path(__file__).parent / "fixtures"
