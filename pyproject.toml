@@ -42,4 +42,6 @@ markers = [
     "infra: supplied plumbing; passes before the exercises are implemented",
     "lab1: Week 1 Lab 1 team-helper behavior contract; one supplied test fails until repaired",
     "exercise: Week 1 Lab 2 data/split/baseline exercises",
+    "api: tests de l'API",
+    "regression: tests de non-régression",
 ]

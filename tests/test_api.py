@@ -6,6 +6,8 @@ from pydantic import ValidationError
 
 from bike_demand import api
 
+pytestmark = pytest.mark.api
+
 VALID_SAMPLE = {
     "season": 1,
     "yr": 0,
