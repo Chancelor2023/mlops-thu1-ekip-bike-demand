@@ -47,6 +47,8 @@ jobs:
         run: uv run --locked pytest -q -m lab1
       - name: Tests (exercise)
         run: uv run --locked pytest -q -m exercise
+      - name: Tests (api)
+        run: uv run --locked pytest -q -m api
 
       # Last: the whole suite, so a test without a marker still runs
       - name: Full test suite
