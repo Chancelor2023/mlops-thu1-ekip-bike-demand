@@ -1,0 +1,173 @@
+
+name: Container
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: container-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  container:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6.1.0
+        with:
+          persist-credentials: false
+
+      - name: Prepare evidence directory
+        run: mkdir -p reports/logs/lab-06
+
+      - name: Build image
+        env:
+          GIT_SHA: ${{ github.sha }}
+        run: |
+          set -o pipefail
+          docker build \
+            --build-arg GIT_SHA="${GIT_SHA}" \
+            -t "bike-demand-ci:${GIT_SHA}" \
+            . 2>&1 | tee reports/logs/lab-06/container-build.log
+
+      - name: Run tests inside the image
+        env:
+          IMAGE: bike-demand-ci:${{ github.sha }}
+        run: |
+          set -o pipefail
+          docker run --rm "${IMAGE}" \
+            uv run --locked pytest -q \
+            2>&1 | tee reports/logs/lab-06/container-pytest.log
+
+      - name: Verify missing-model behavior returns 503
+        env:
+          IMAGE: bike-demand-ci:${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          docker run -d \
+            --name bike-api-nomodel \
+            -p 127.0.0.1:8000:8000 \
+            "${IMAGE}"
+
+          status=000
+          for attempt in $(seq 1 30); do
+            status="$(curl -sS -o /tmp/health-nomodel.json \
+              -w '%{http_code}' \
+              http://127.0.0.1:8000/health || true)"
+
+            if [ "${status}" = "503" ]; then
+              break
+            fi
+
+            sleep 2
+          done
+
+          cat /tmp/health-nomodel.json
+          echo "Observed HTTP status: ${status}"
+          test "${status}" = "503"
+
+          docker logs bike-api-nomodel 2>&1 \
+            | tee reports/logs/lab-06/container-no-model.log
+
+          docker stop bike-api-nomodel
+
+      - name: Train baseline into a Docker volume
+        env:
+          IMAGE: bike-demand-ci:${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          docker volume create bike-artifacts
+
+          set -o pipefail
+          docker run --rm \
+            -v bike-artifacts:/app/artifacts \
+            "${IMAGE}" \
+            uv run --locked python -m bike_demand.train \
+              --config configs/baseline.yaml \
+            2>&1 | tee reports/logs/lab-06/container-train.log
+
+          MODEL_VERSION="$(python3 -c 'import pathlib,re; s=pathlib.Path("reports/logs/lab-06/container-train.log").read_text(); m=re.search(r"\"model_version\"\s*:\s*\"([^\"]+)\"", s); print(m.group(1) if m else "")')"
+
+          if [ -z "${MODEL_VERSION}" ]; then
+            echo "Could not extract model_version from training output"
+            exit 1
+          fi
+
+          echo "MODEL_VERSION=${MODEL_VERSION}" >> "${GITHUB_ENV}"
+          echo "Trained model version: ${MODEL_VERSION}"
+
+      - name: Start API with trained model
+        env:
+          IMAGE: bike-demand-ci:${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          docker run -d \
+            --name bike-api \
+            -p 127.0.0.1:8000:8000 \
+            -v bike-artifacts:/app/artifacts:ro \
+            "${IMAGE}"
+
+          status=000
+          for attempt in $(seq 1 30); do
+            status="$(curl -sS -o /tmp/health-model.json \
+              -w '%{http_code}' \
+              http://127.0.0.1:8000/health || true)"
+
+            if [ "${status}" = "200" ]; then
+              break
+            fi
+
+            sleep 2
+          done
+
+          cat /tmp/health-model.json
+          echo "Observed HTTP status: ${status}"
+          test "${status}" = "200"
+
+      - name: Check running service identity and API
+        env:
+          EXPECTED_REVISION: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+
+          set -o pipefail
+          python3 check_service.py \
+            --url http://127.0.0.1:8000 \
+            --expected-model "${MODEL_VERSION}" \
+            --expected-revision "${EXPECTED_REVISION}" \
+            --valid-payload '{"season":1,"yr":1,"mnth":3,"hr":8,"holiday":0,"weekday":2,"workingday":1,"weathersit":1,"temp":0.4,"atemp":0.4,"hum":0.6,"windspeed":0.2}' \
+            --invalid-payload '{"season":1,"yr":1,"mnth":3,"hr":24,"holiday":0,"weekday":2,"workingday":1,"weathersit":1,"temp":0.4,"atemp":0.4,"hum":0.6,"windspeed":0.2}' \
+            2>&1 | tee reports/logs/lab-06/container-service-check.log
+
+      - name: Capture API logs
+        if: always()
+        run: |
+          docker logs bike-api 2>&1 \
+            | tee reports/logs/lab-06/container-api.log || true
+
+      - name: Clean up Docker resources
+        if: always()
+        run: |
+          docker stop bike-api bike-api-nomodel 2>/dev/null || true
+          docker rm bike-api bike-api-nomodel 2>/dev/null || true
+          docker volume rm bike-artifacts 2>/dev/null || true
+
+      - name: Upload container logs
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: container-logs
+          path: reports/logs/lab-06/*.log
+          if-no-files-found: warn
