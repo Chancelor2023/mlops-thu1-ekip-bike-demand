@@ -1,0 +1,15 @@
+{
+  "verified_at": "2026-11-05T17:16:12.217472+00:00",
+  "archive_versioned_uri": "gs://thu1-ekip-bike-demand-model/lab7-archives/baseline-4df84bfe8121/20261105T154814Z/accepted-reference.tar.gz#1793897068536566",
+  "archive_sha256": "5ab5085191491febe7fe9ad919ebc81d9afd3f7c2e745ba4565a292936a74ad3",
+  "model_version": "baseline-4df84bfe8121",
+  "bundle_checksums": {
+    "model.joblib": "d24c050e3631d5b4c2feb8cb571bef6382d8c975c42a5c11edd28de78a0b8c07",
+    "model-metadata.json": "b09c2b06b0a90b829c3d1a89c3d544f9d0020f0a74b22a4931e0e676596dbd8f"
+  },
+  "result": "passed",
+  "scope": "Download, extraction and file integrity verification",
+  "retraining_performed": false,
+  "model_loaded": false,
+  "cloud_run_modified": false
+}
