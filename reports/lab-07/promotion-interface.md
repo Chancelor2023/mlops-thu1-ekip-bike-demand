@@ -1,19 +1,22 @@
-# Promotion preflight: proposed interface for Brett and Mathis
+# Promotion preflight: gate integration on Jerry's branch
 
 Owner: Jerry. Reviewer: Mathis.
 
-This is a proposed integration interface, not evidence of agreement by the team.
+The integration below is implemented on Jerry's branch and still needs review
+by Mathis and Brett. It is not evidence of team approval or real model eligibility.
 `bike_demand.promote` supports a read-only dry-run, local preparation and
 versioned local installation. None loads a joblib, switches current accepted
 state or deploys.
 
-## Decision fields to coordinate before integration
+## Decision fields and integration
 
-The pipeline already preserves `model_version`, `status`, `reasons`, `checks`,
-`model_sha256` and `model_run_id`. The preflight additionally expects:
+The pipeline preserves the gate result, adding the candidate's `model_version`,
+`model_sha256` and `model_run_id`. The preflight expects:
 
-- `checks.quality.passed`, `checks.operation.passed`, `checks.integrity.passed`:
-  JSON boolean true, with every additional reported check also passed.
+- Native Brett check records: `checks.<name>.status == "pass"`, including
+  quality, performance and every integrity/provenance control listed in
+  `promote.REQUIRED_CHECKS`. Every additional reported check must pass too.
+  No translated `passed: true` fields or renamed performance checks are needed.
 - `accepted_reference`: exactly `state_id`, `model_version`, `checksums` from
   `artifacts/accepted/current.json`, captured before candidate evaluation. The
   gate must verify that these identify the accepted bundle it actually compares.
@@ -21,10 +24,22 @@ The pipeline already preserves `model_version`, `status`, `reasons`, `checks`,
 - `evidence_sha256`: SHA-256 values for `model.joblib`, `model-metadata.json`,
   and `metrics.json`, captured from the final evaluated candidate files.
 
-Brett needs to produce these fields after running all mandatory checks. Mathis
-needs to preserve the three additional fields in the final `decision.json`;
-the existing pipeline currently drops fields outside its explicit allowlist.
-The promotion component must not invent or fill missing gate evidence.
+The pipeline verifies and captures current accepted state before training and
+passes it to the gate. The gate binds this snapshot to the actual accepted
+bundle and checks it again after evaluation. It hashes candidate files before
+evaluation and checks those bytes and the policy again before deciding. The
+pipeline preserves this evidence and preflights an eligible result before
+returning success. Missing provenance is never filled by the promotion component.
+
+A direct standalone gate evaluation without `accepted_state` remains supported
+for isolated evaluation/tests, with `promotion_evidence_complete: false`. Its
+verdict cannot pass promotion preflight because the binding check is absent.
+The pipeline is the entry point for producing bound promotion evidence.
+
+For the downloaded accepted baseline, the gate reads the existing
+`reference-evidence/validation-reevaluation.json` when `metrics.json` is absent.
+The accepted MAE is still recomputed on the same validation rows; no original
+bundle file or metadata is rewritten and no historical metric is invented.
 
 ## Run locally once actual gate evidence is available
 
@@ -105,7 +120,7 @@ and before/after observations must support recovery if either side is interrupte
 
 ## Remaining work
 
-- Agree the interface with Brett and Mathis and integrate their outputs.
+- Have Brett and Mathis review the gate/pipeline integration changes.
 - Integrate real gate evidence and verify installation from reviewed main.
 - Add safe current-manifest finalization after verified cloud traffic switch.
 - Add cloud deployment without production traffic, identity verification,
@@ -115,3 +130,10 @@ and before/after observations must support recovery if either side is interrupte
 Tests live in `tests/test_promote.py`. They are intentionally unmarked for now:
 the existing full-suite CI step runs them, without claiming they are API,
 baseline-regression or starter-infrastructure tests.
+
+`tests/test_pipeline_promotion.py` connects real CSV validation, chronological
+splitting, pipeline serialization, gate evaluation and promotion preflight on
+temporary synthetic data. Training, MLflow persistence and timing are stubbed;
+these tests do not consume the real candidate budget or prove service latency.
+Real latency measurement in the agreed container environment and real gate
+decisions remain to be captured after review; no Cloud Run call is made here.

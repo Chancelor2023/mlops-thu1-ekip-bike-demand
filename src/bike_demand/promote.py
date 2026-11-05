@@ -14,7 +14,21 @@ from uuid import uuid4
 EXIT_BLOCKED = 3
 BUNDLE_FILES = ("model.joblib", "model-metadata.json")
 EVALUATED_FILES = (*BUNDLE_FILES, "metrics.json")
-REQUIRED_CHECKS = {"quality", "operation", "integrity"}
+REQUIRED_CHECKS = {
+    "policy",
+    "candidate_artifacts",
+    "accepted_evidence",
+    "dataset_checksum_and_split",
+    "metadata_consistency",
+    "feature_contract",
+    "model_reload",
+    "model_sha256",
+    "predictions",
+    "quality",
+    "performance",
+    "accepted_reference",
+    "evaluation_integrity",
+}
 
 
 def read_object(path: Path) -> dict:
@@ -79,9 +93,9 @@ def preflight(root: Path, candidate: Path, policy: Path) -> dict:
         raise ValueError("Only an eligible candidate can pass promotion preflight")
     checks = decision.get("checks")
     if not isinstance(checks, dict) or not REQUIRED_CHECKS.issubset(checks):
-        raise ValueError("Missing mandatory gate checks: quality, operation, integrity")
+        raise ValueError("Missing mandatory gate checks")
     for name, check in checks.items():
-        if not isinstance(check, dict) or check.get("passed") is not True:
+        if not isinstance(check, dict) or check.get("status") != "pass":
             raise ValueError(f"Gate check not passed: {name}")
 
     reference = decision.get("accepted_reference")

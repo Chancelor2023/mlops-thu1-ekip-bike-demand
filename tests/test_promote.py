@@ -55,7 +55,7 @@ def scenario(tmp_path):
         "model_version": "candidate-v2",
         "model_run_id": "synthetic-run",
         "model_sha256": promote.sha256(candidate / "model.joblib"),
-        "checks": {name: {"passed": True} for name in promote.REQUIRED_CHECKS},
+        "checks": {name: {"status": "pass"} for name in promote.REQUIRED_CHECKS},
         "accepted_reference": {
             key: current[key] for key in ("state_id", "model_version", "checksums")
         },
@@ -131,10 +131,10 @@ def test_tampered_accepted_model_is_refused(scenario):
 def test_incomplete_checks_are_refused(scenario, problem):
     root, candidate, policy, decision = scenario
     if problem == "missing":
-        del decision["checks"]["integrity"]
+        del decision["checks"]["model_sha256"]
     else:
-        decision["checks"]["integrity"]["passed"] = (
-            False if problem == "false" else "true"
+        decision["checks"]["model_sha256"]["status"] = (
+            "fail" if problem == "false" else True
         )
     write_json(candidate / "decision.json", decision)
     with pytest.raises(ValueError, match="gate checks|Gate check"):
