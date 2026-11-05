@@ -12,7 +12,6 @@ import numpy as np
 import pandas as pd
 import pytest
 from sklearn.ensemble import RandomForestRegressor
-import statistics
 
 REPO = Path(__file__).resolve().parents[1]
 
