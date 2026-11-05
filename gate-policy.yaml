@@ -1,0 +1,9 @@
+# Immutable Lab 7 gate policy. Dataset/model promotion is never performed here.
+quality:
+  epsilon: 0.000001
+performance:
+  warmup: 20
+  requests: 100
+  repeats: 3
+  max_ratio: 1.25
+# Default manifest convention: <dataset filename>.sha256 (GNU sha256sum format).
