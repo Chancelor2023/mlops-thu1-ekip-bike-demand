@@ -1,6 +1,8 @@
 """Synthetic bytes only: these tests never train, unpickle, promote or deploy."""
 
 import json
+from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 
@@ -245,3 +247,169 @@ def test_inputs_changed_during_preparation_cannot_be_prepared(
     (stage,) = (root / "artifacts/promotions").iterdir()
     assert not (stage / "01-prepared.json").exists()
     assert (stage / "99-blocked.json").is_file()
+
+
+@pytest.fixture
+def installation(scenario, monkeypatch):
+    root, candidate, policy, _ = scenario
+    prepared = promote.prepare_promotion(root, candidate, policy, "state-1")
+    # Git branch/revision guards are covered separately below. These tests only
+    # exercise installation of synthetic bytes into a temporary filesystem.
+    monkeypatch.setattr(promote, "require_main_checkout", lambda *args: None)
+    return root, candidate, policy, root / prepared["staging_path"]
+
+
+def test_install_keeps_current_and_previous_bundle_unchanged(installation):
+    root, _, _, stage = installation
+    current = (root / "artifacts/accepted/current.json").read_bytes()
+    previous = snapshot(root / "artifacts/accepted/accepted-v1")
+    result = promote.install_local(root, stage, "state-1", "main-commit")
+    target = root / result["installed_bundle_path"]
+    for name in (*promote.EVALUATED_FILES, "decision.json"):
+        assert (target / name).read_bytes() == (stage / "bundle" / name).read_bytes()
+    assert result["status"] == "installed_local_pending_cloud"
+    assert result["current_manifest_updated"] is False
+    assert result["promoted"] is False and result["deployed"] is False
+    assert (root / "artifacts/accepted/current.json").read_bytes() == current
+    assert snapshot(root / "artifacts/accepted/accepted-v1") == previous
+
+
+def test_install_retry_is_idempotent(installation):
+    root, _, _, stage = installation
+    first = promote.install_local(root, stage, "state-1", "main-commit")
+    before = snapshot(root)
+    second = promote.install_local(root, stage, "state-1", "main-commit")
+    assert first == second
+    assert snapshot(root) == before
+
+
+def test_install_refuses_existing_version_from_another_operation(installation):
+    root, _, _, stage = installation
+    destination = root / "artifacts/accepted/candidate-v2"
+    destination.mkdir()
+    marker = destination / "preserve.txt"
+    marker.write_text("existing version", encoding="utf-8")
+    before = snapshot(destination)
+    with pytest.raises(ValueError, match="Missing regular bundle file"):
+        promote.install_local(root, stage, "state-1", "main-commit")
+    assert snapshot(destination) == before
+    assert not (stage / "02-installed-local.json").exists()
+
+
+@pytest.mark.parametrize("changed", ["state", "policy", "staged-model", "journal"])
+def test_install_revalidates_prepared_evidence(installation, changed):
+    root, _, policy, stage = installation
+    if changed == "state":
+        path = root / "artifacts/accepted/current.json"
+        current = promote.read_object(path)
+        current["state_id"] = "new-state"
+        write_json(path, current)
+    elif changed == "policy":
+        policy.write_text("changed: true\n", encoding="utf-8")
+    elif changed == "staged-model":
+        (stage / "bundle/model.joblib").write_bytes(b"modified staged model")
+    else:
+        path = stage / "01-prepared.json"
+        value = promote.read_object(path)
+        value["evidence_sha256"]["model.joblib"] = "changed"
+        write_json(path, value)
+    with pytest.raises(ValueError):
+        promote.install_local(root, stage, "state-1", "main-commit")
+    assert not (root / "artifacts/accepted/candidate-v2").exists()
+    assert not (stage / "02-installed-local.json").exists()
+
+
+def test_install_copy_failure_never_exposes_partial_final_bundle(
+    installation, monkeypatch
+):
+    root, _, _, stage = installation
+    current = (root / "artifacts/accepted/current.json").read_bytes()
+
+    def interrupted(*args):
+        raise OSError("simulated installation copy failure")
+
+    monkeypatch.setattr(promote.shutil, "copyfile", interrupted)
+    with pytest.raises(OSError, match="installation copy failure"):
+        promote.install_local(root, stage, "state-1", "main-commit")
+    assert not (root / "artifacts/accepted/candidate-v2").exists()
+    assert not (stage / "02-installed-local.json").exists()
+    assert list(stage.glob("install-failed-*.json"))
+    assert (root / "artifacts/accepted/current.json").read_bytes() == current
+    assert not (root / "artifacts/.promotion.lock").exists()
+
+
+def test_install_can_resume_after_rename_before_receipt(installation, monkeypatch):
+    root, _, _, stage = installation
+    original = Path.rename
+
+    def interrupted_after_rename(source, target):
+        original(source, target)
+        raise OSError("simulated interruption after directory rename")
+
+    with monkeypatch.context() as patch:
+        patch.setattr(Path, "rename", interrupted_after_rename)
+        with pytest.raises(OSError, match="after directory rename"):
+            promote.install_local(root, stage, "state-1", "main-commit")
+    assert (root / "artifacts/accepted/candidate-v2/model.joblib").is_file()
+    assert not (stage / "02-installed-local.json").exists()
+    result = promote.install_local(root, stage, "state-1", "main-commit")
+    assert result["status"] == "installed_local_pending_cloud"
+    assert promote.check_current(root)["model_version"] == "accepted-v1"
+
+
+@pytest.mark.parametrize("problem", ["branch", "head", "remote", "dirty", "git-error"])
+def test_main_guard_refuses_unverified_checkout(tmp_path, monkeypatch, problem):
+    outputs = {
+        ("branch", "--show-current"): "main",
+        ("rev-parse", "HEAD"): "expected-commit",
+        ("rev-parse", "refs/remotes/origin/main"): "expected-commit",
+        ("status", "--porcelain"): "",
+    }
+    key = {
+        "branch": ("branch", "--show-current"),
+        "head": ("rev-parse", "HEAD"),
+        "remote": ("rev-parse", "refs/remotes/origin/main"),
+        "dirty": ("status", "--porcelain"),
+        "git-error": ("branch", "--show-current"),
+    }[problem]
+    outputs[key] = "unexpected"
+
+    def git(command, **kwargs):
+        return SimpleNamespace(
+            returncode=1 if problem == "git-error" else 0,
+            stdout=outputs[tuple(command[3:])],
+        )
+
+    monkeypatch.setattr(promote.subprocess, "run", git)
+    with pytest.raises(ValueError):
+        promote.require_main_checkout(tmp_path, "expected-commit")
+
+
+def test_main_guard_accepts_matching_clean_checkout(tmp_path, monkeypatch):
+    outputs = {
+        ("branch", "--show-current"): "main",
+        ("rev-parse", "HEAD"): "expected-commit",
+        ("rev-parse", "refs/remotes/origin/main"): "expected-commit",
+        ("status", "--porcelain"): "",
+    }
+    monkeypatch.setattr(
+        promote.subprocess,
+        "run",
+        lambda command, **kwargs: SimpleNamespace(
+            returncode=0, stdout=outputs[tuple(command[3:])]
+        ),
+    )
+    promote.require_main_checkout(tmp_path, "expected-commit")
+
+
+def test_install_enforces_main_guard_before_any_writes(installation, monkeypatch):
+    root, _, _, stage = installation
+
+    def refuse(*args):
+        raise ValueError("Installation requires the main branch")
+
+    monkeypatch.setattr(promote, "require_main_checkout", refuse)
+    before = snapshot(root)
+    with pytest.raises(ValueError, match="main branch"):
+        promote.install_local(root, stage, "state-1", "main-commit")
+    assert snapshot(root) == before

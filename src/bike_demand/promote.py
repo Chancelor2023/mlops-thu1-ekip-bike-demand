@@ -1,10 +1,11 @@
-"""Check or stage a promotion; never switch accepted state or deploy."""
+"""Check, stage or install versioned model bytes; never switch serving state."""
 
 import argparse
 import hashlib
 import json
 import os
 import shutil
+import subprocess
 from contextlib import contextmanager
 from datetime import datetime, timezone
 from pathlib import Path
@@ -186,6 +187,8 @@ def prepare_promotion(
             "evidence_sha256": checked["evidence_sha256"],
             "policy_sha256": checked["policy_sha256"],
             "decision_sha256": decision_digest,
+            "candidate_path": candidate.relative_to(root).as_posix(),
+            "policy_path": policy.relative_to(root).as_posix(),
             "promoted": False,
             "deployed": False,
         }
@@ -227,19 +230,180 @@ def prepare_promotion(
             raise
 
 
+def require_main_checkout(root: Path, expected_revision: str) -> None:
+    """Check local main/remote refs; GitHub review and ref freshness are external."""
+
+    def git(*args: str) -> str:
+        result = subprocess.run(
+            ["git", "-C", str(root), *args],
+            capture_output=True,
+            text=True,
+            check=False,
+        )
+        if result.returncode:
+            raise ValueError("Cannot verify the main checkout")
+        return result.stdout.strip()
+
+    if git("branch", "--show-current") != "main":
+        raise ValueError("Installation requires the main branch")
+    if not expected_revision or git("rev-parse", "HEAD") != expected_revision:
+        raise ValueError("Checkout does not match the expected revision")
+    if git("rev-parse", "refs/remotes/origin/main") != expected_revision:
+        raise ValueError("Checkout does not match origin/main; fetch and review first")
+    if git("status", "--porcelain"):
+        raise ValueError("Installation requires a clean working tree")
+
+
+def verify_prepared(root: Path, stage: Path, expected_state_id: str) -> dict:
+    """Revalidate journal, source and staged bytes before installation."""
+    started = read_object(stage / "00-started.json")
+    ready = read_object(stage / "01-prepared.json")
+    if ready.get("status") != "prepared" or (stage / "99-blocked.json").exists():
+        raise ValueError("Operation was not completely prepared")
+    if ready.get("operation_id") != stage.name:
+        raise ValueError("Operation identity does not match its directory")
+    if any(
+        ready.get(key) != value for key, value in started.items() if key != "status"
+    ):
+        raise ValueError("Prepared journal does not match the started record")
+    current = check_current(root)
+    if (
+        current["state_id"] != expected_state_id
+        or ready.get("expected_state_id") != expected_state_id
+    ):
+        raise ValueError("Expected accepted state changed; reevaluate")
+    if ready.get("accepted_state_sha256") != sha256(
+        root / "artifacts/accepted/current.json"
+    ):
+        raise ValueError("Accepted manifest changed since preparation")
+    checked = preflight(root, Path(ready["candidate_path"]), Path(ready["policy_path"]))
+    for name in ("model_version", "evidence_sha256", "policy_sha256"):
+        if ready.get(name) != checked[name]:
+            raise ValueError(f"Prepared evidence changed: {name}")
+    verify_files(stage / "bundle", ready["evidence_sha256"], EVALUATED_FILES)
+    source = root / ready["candidate_path"]
+    if (
+        sha256(stage / "bundle/decision.json") != ready["decision_sha256"]
+        or sha256(source / "decision.json") != ready["decision_sha256"]
+    ):
+        raise ValueError("Decision changed since preparation")
+    if sha256(stage / "gate-policy.yaml") != ready["policy_sha256"]:
+        raise ValueError("Staged policy changed since preparation")
+    return ready
+
+
+def verify_installed(directory: Path, ready: dict) -> None:
+    verify_files(directory, ready["evidence_sha256"], EVALUATED_FILES)
+    if sha256(directory / "decision.json") != ready["decision_sha256"]:
+        raise ValueError("Installed decision checksum mismatch")
+    origin = read_object(directory / "installation-origin.json")
+    if origin != {
+        "operation_id": ready["operation_id"],
+        "decision_sha256": ready["decision_sha256"],
+    }:
+        raise ValueError("Existing version belongs to another installation")
+
+
+def install_local(
+    root: Path, operation: Path, expected_state_id: str, expected_revision: str
+) -> dict:
+    """Install a complete versioned bundle; current.json stays on the served model."""
+    root = root.resolve()
+    require_main_checkout(root, expected_revision)
+    stage = inside(root / operation, root / "artifacts/promotions")
+    with promotion_lock(root):
+        require_main_checkout(root, expected_revision)
+        ready = verify_prepared(root, stage, expected_state_id)
+        destination = root / "artifacts/accepted" / ready["model_version"]
+        inside(destination, root / "artifacts/accepted")
+        receipt_path = stage / "02-installed-local.json"
+        try:
+            if destination.is_symlink():
+                raise ValueError("Installation destination must not be a symlink")
+            if not destination.exists():
+                # A private sibling keeps incomplete copies outside the final version.
+                temporary = destination.parent / f".install-{uuid4().hex}"
+                temporary.mkdir(exist_ok=False)
+                for name in (*EVALUATED_FILES, "decision.json"):
+                    shutil.copyfile(stage / "bundle" / name, temporary / name)
+                write_new_json(
+                    temporary / "installation-origin.json",
+                    {
+                        "operation_id": ready["operation_id"],
+                        "decision_sha256": ready["decision_sha256"],
+                    },
+                )
+                verify_installed(temporary, ready)
+                verify_prepared(root, stage, expected_state_id)
+                require_main_checkout(root, expected_revision)
+                # All cooperating writers must hold this same local lock.
+                temporary.rename(destination)
+            verify_installed(destination, ready)
+            verify_prepared(root, stage, expected_state_id)
+            require_main_checkout(root, expected_revision)
+            receipt = {
+                "operation_id": ready["operation_id"],
+                "status": "installed_local_pending_cloud",
+                "installed_bundle_path": destination.relative_to(root).as_posix(),
+                "model_version": ready["model_version"],
+                "expected_state_id": expected_state_id,
+                "installation_code_revision": expected_revision,
+                "evidence_sha256": ready["evidence_sha256"],
+                "current_manifest_updated": False,
+                "promoted": False,
+                "deployed": False,
+            }
+            if receipt_path.exists():
+                if read_object(receipt_path) != receipt:
+                    raise ValueError("Existing installation receipt differs")
+            else:
+                write_new_json(receipt_path, receipt)
+            return receipt
+        except (Exception, KeyboardInterrupt) as error:
+            write_new_json(
+                stage / f"install-failed-{uuid4().hex}.json",
+                {
+                    "status": "installation_blocked",
+                    "operation_id": ready["operation_id"],
+                    "reasons": [f"{type(error).__name__}: {error}"],
+                    "current_manifest_updated": False,
+                    "deployed": False,
+                },
+            )
+            raise
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--candidate", type=Path, required=True)
+    parser.add_argument("--candidate", type=Path)
     parser.add_argument("--policy", type=Path, default=Path("configs/gate-policy.yaml"))
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument("--dry-run", action="store_true")
     mode.add_argument("--prepare", action="store_true")
-    parser.add_argument("--expected-state", help="Required with --prepare")
+    mode.add_argument("--install-local", action="store_true")
+    parser.add_argument("--operation", type=Path, help="Prepared operation directory")
+    parser.add_argument(
+        "--expected-revision", help="Full main commit SHA for installation"
+    )
+    parser.add_argument(
+        "--expected-state", help="Required with --prepare/--install-local"
+    )
     args = parser.parse_args()
-    if args.prepare and not args.expected_state:
-        parser.error("--prepare requires --expected-state")
+    if (args.prepare or args.install_local) and not args.expected_state:
+        parser.error("--prepare/--install-local requires --expected-state")
+    if args.install_local:
+        if not args.operation or not args.expected_revision:
+            parser.error("--install-local requires --operation and --expected-revision")
+        if args.candidate:
+            parser.error("--install-local uses --operation, not --candidate")
+    elif not args.candidate:
+        parser.error("--dry-run/--prepare requires --candidate")
     try:
-        if args.prepare:
+        if args.install_local:
+            result = install_local(
+                Path.cwd(), args.operation, args.expected_state, args.expected_revision
+            )
+        elif args.prepare:
             result = prepare_promotion(
                 Path.cwd(), args.candidate, args.policy, args.expected_state
             )
