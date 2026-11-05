@@ -122,10 +122,10 @@ and before/after observations must support recovery if either side is interrupte
 
 - Have Brett and Mathis review the gate/pipeline integration changes.
 - Integrate real gate evidence and verify installation from reviewed main.
-- Add safe current-manifest finalization after verified cloud traffic switch.
-- Add cloud deployment without production traffic, identity verification,
-  explicit traffic switch and recovery tests.
-- Extend the recovery archive/evidence with dependency and evaluation records.
+- Review the implemented deploy.py workflow: no-traffic deployment, loaded-byte
+  identity verification, explicit activation and atomic current-state finalization.
+- Capture live cloud checks after review/merge; simulations do not prove cloud behavior.
+- Verify dependency/evaluation records and the actual old/new revision handoff.
 
 Tests live in `tests/test_promote.py`. They are intentionally unmarked for now:
 the existing full-suite CI step runs them, without claiming they are API,
@@ -137,3 +137,7 @@ temporary synthetic data. Training, MLflow persistence and timing are stubbed;
 these tests do not consume the real candidate budget or prove service latency.
 Real latency measurement in the agreed container environment and real gate
 decisions remain to be captured after review; no Cloud Run call is made here.
+
+`tests/test_deploy.py` simulates cloud publication, revision checks, traffic,
+failure and resumption; `tests/test_api.py` verifies loaded-byte identity.
+See [operator-guide.md](operator-guide.md) for the complete review and live procedure.

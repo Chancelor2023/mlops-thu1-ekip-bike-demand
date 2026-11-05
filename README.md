@@ -336,6 +336,41 @@ This section defines what a verified deployment means, details the execution and
    Exit status is `1`.
 
 
+## Pipeline and gate: Lab 7
+
+The pipeline trains an isolated candidate, compares it with the train-mean and
+current accepted model on validation, and records an eligible/rejected/blocked
+decision. Only model settings vary. The 2012 July-December test period is not scored.
+
+- Policy: [configs/gate-policy.yaml](configs/gate-policy.yaml), committed before
+  candidate experiments. Budget: at most three declared candidate configurations.
+- Initial accepted model and recovery records: [reports/lab-07/](reports/lab-07/).
+- Decision files: ignored `artifacts/candidates/<version>/decision.json`; retain
+  sanitized decision/log copies in the team report for actual experiments.
+- Entry point: `uv run --locked python -m bike_demand.pipeline --config
+  configs/candidate-01.yaml --accepted artifacts/accepted/<accepted-version>`.
+- Local state: ignored `artifacts/accepted/current.json`. Retrieve the trusted
+  accepted bundle and initialize/verify this state before training on a clean checkout.
+
+Read the [operator procedure](reports/lab-07/operator-guide.md) before a real
+experiment, installation or deployment. It covers prerequisites, recovery,
+partial failures, reviewed-main execution and explicit traffic activation.
+The [integration contract](reports/lab-07/promotion-interface.md) describes the
+gate evidence. The [cloud configuration record](reports/lab-07/cloud-deployment.md)
+identifies the team's trigger and the checks needed after merge.
+
+Every mandatory gate check must pass. An equivalent accepted candidate is not
+an accuracy improvement. `promote --dry-run` checks evidence; `--prepare` copies
+verified files; `--install-local` retains a version without changing serving state.
+`deploy plan` is read-only, `deploy deploy` publishes a versioned bundle and
+verifies a tagged revision without production traffic, and `deploy activate`
+explicitly switches traffic and then finalizes current state. None is run by CI.
+
+Serving `/health` reports model version, loaded model SHA-256 and code revision.
+The API checks the digest before deserializing the exact captured model bytes.
+An image build alone does not promote a model; after this PR merges, Cloud Build
+builds/publishes images and manual operations perform deployment separately.
+
 ## CI: Lab 6 Architecture & Decisions
 
 | # | Question | Choice | Rejected option and why |

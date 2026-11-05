@@ -45,7 +45,15 @@ verified by a cloud build. Other teams' triggers are outside this change.
 Keep the before/after evidence and report discrepancies rather than claiming
 a successful verification based only on this configuration.
 
-## Manual deployment still to implement and verify
+## Manual deployment implemented locally; live verification pending
+
+`src/bike_demand/deploy.py` provides plan, no-traffic deployment and explicit
+activation/finalization. The API verifies and reports the exact loaded model
+digest. Cloud calls are simulated in tests. No live candidate deployment or
+traffic switch has been performed as part of this implementation.
+Follow [operator-guide.md](operator-guide.md) after code review/merge.
+
+The implementation and eventual live verification cover:
 
 - Use a reviewed main commit and an image pinned by digest, not a moving tag.
 - Require real gate evidence and revalidate the staged candidate bytes.
