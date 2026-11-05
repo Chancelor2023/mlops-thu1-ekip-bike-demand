@@ -1,9 +1,14 @@
-"""Read-only promotion preflight. No local promotion or deployment is implemented yet."""
+"""Check or stage a promotion; never switch accepted state or deploy."""
 
 import argparse
 import hashlib
 import json
+import os
+import shutil
+from contextlib import contextmanager
+from datetime import datetime, timezone
 from pathlib import Path
+from uuid import uuid4
 
 EXIT_BLOCKED = 3
 BUNDLE_FILES = ("model.joblib", "model-metadata.json")
@@ -119,19 +124,132 @@ def preflight(root: Path, candidate: Path, policy: Path) -> dict:
     }
 
 
+def write_new_json(path: Path, value: dict) -> None:
+    """Create a new record, refusing to overwrite existing evidence."""
+    with path.open("x", encoding="utf-8") as stream:
+        json.dump(value, stream, indent=2, allow_nan=False)
+        stream.write("\n")
+        stream.flush()
+        os.fsync(stream.fileno())
+
+
+@contextmanager
+def promotion_lock(root: Path):
+    """Exclusive lock for cooperating processes sharing this local artifacts dir."""
+    path = root / "artifacts/.promotion.lock"
+    token = uuid4().hex
+    try:
+        stream = path.open("x", encoding="utf-8")
+    except FileExistsError as error:
+        raise ValueError("Promotion lock already exists; operation blocked") from error
+    try:
+        with stream:
+            json.dump({"token": token, "pid": os.getpid()}, stream)
+            stream.flush()
+            os.fsync(stream.fileno())
+        yield
+    finally:
+        # Never remove another process's replacement lock.
+        if read_object(path).get("token") == token:
+            path.unlink()
+
+
+def prepare_promotion(
+    root: Path, candidate: Path, policy: Path, expected_state_id: str
+) -> dict:
+    """Stage verified bytes and a journal, without changing accepted state."""
+    root = root.resolve()
+    with promotion_lock(root):
+        current_path = root / "artifacts/accepted/current.json"
+        current_digest = sha256(current_path)
+        current = check_current(root)
+        if current["state_id"] != expected_state_id:
+            raise ValueError("Expected accepted state changed; reevaluate")
+        candidate = inside(root / candidate, root / "artifacts/candidates")
+        policy = inside(root / policy, root / "configs")
+        decision_digest = sha256(candidate / "decision.json")
+        checked = preflight(root, candidate, policy)
+        if sha256(candidate / "decision.json") != decision_digest:
+            raise ValueError("Decision changed during preflight")
+
+        operation_id = f"promotion-{uuid4().hex}"
+        stage = root / "artifacts/promotions" / operation_id
+        stage.mkdir(parents=True, exist_ok=False)
+        started = {
+            "operation_id": operation_id,
+            "recorded_at": datetime.now(timezone.utc).isoformat(),
+            "status": "started",
+            "expected_state_id": expected_state_id,
+            "accepted_state_sha256": current_digest,
+            "previous_accepted": current,
+            "model_version": checked["model_version"],
+            "evidence_sha256": checked["evidence_sha256"],
+            "policy_sha256": checked["policy_sha256"],
+            "decision_sha256": decision_digest,
+            "promoted": False,
+            "deployed": False,
+        }
+        write_new_json(stage / "00-started.json", started)
+        try:
+            bundle = stage / "bundle"
+            bundle.mkdir()
+            for name in (*EVALUATED_FILES, "decision.json"):
+                shutil.copyfile(candidate / name, bundle / name)
+            shutil.copyfile(policy, stage / "gate-policy.yaml")
+            verify_files(bundle, checked["evidence_sha256"], EVALUATED_FILES)
+            if sha256(bundle / "decision.json") != decision_digest:
+                raise ValueError("Decision changed while staging")
+            if sha256(stage / "gate-policy.yaml") != checked["policy_sha256"]:
+                raise ValueError("Policy changed while staging")
+            # Recheck source evidence and accepted state before publishing readiness.
+            final_check = preflight(root, candidate, policy)
+            if final_check != checked or sha256(current_path) != current_digest:
+                raise ValueError("Inputs changed while staging; operation blocked")
+            if sha256(candidate / "decision.json") != decision_digest:
+                raise ValueError("Decision changed while staging")
+            prepared = {
+                **started,
+                "status": "prepared",
+                "prepared_at": datetime.now(timezone.utc).isoformat(),
+                "staging_path": stage.relative_to(root).as_posix(),
+            }
+            write_new_json(stage / "01-prepared.json", prepared)
+            return prepared
+        except (Exception, KeyboardInterrupt) as error:
+            write_new_json(
+                stage / "99-blocked.json",
+                {
+                    **started,
+                    "status": "blocked",
+                    "reasons": [f"{type(error).__name__}: {error}"],
+                },
+            )
+            raise
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--candidate", type=Path, required=True)
     parser.add_argument("--policy", type=Path, default=Path("configs/gate-policy.yaml"))
-    parser.add_argument("--dry-run", action="store_true")
+    mode = parser.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--dry-run", action="store_true")
+    mode.add_argument("--prepare", action="store_true")
+    parser.add_argument("--expected-state", help="Required with --prepare")
     args = parser.parse_args()
-    if not args.dry_run:
-        parser.error("Only --dry-run is implemented; no promotion is performed")
+    if args.prepare and not args.expected_state:
+        parser.error("--prepare requires --expected-state")
     try:
-        result = preflight(Path.cwd(), args.candidate, args.policy)
+        if args.prepare:
+            result = prepare_promotion(
+                Path.cwd(), args.candidate, args.policy, args.expected_state
+            )
+        else:
+            result = preflight(Path.cwd(), args.candidate, args.policy)
     except (OSError, ValueError, KeyError, TypeError) as error:
         print(
-            json.dumps({"status": "blocked", "dry_run": True, "reasons": [str(error)]})
+            json.dumps(
+                {"status": "blocked", "dry_run": args.dry_run, "reasons": [str(error)]}
+            )
         )
         return EXIT_BLOCKED
     print(json.dumps(result, indent=2))
