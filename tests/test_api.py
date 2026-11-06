@@ -1,3 +1,4 @@
+import hashlib
 import json
 
 import pytest
@@ -39,7 +40,12 @@ def client_with_model(monkeypatch, tmp_path):
 
     model_path.touch()
     metadata_path.write_text(
-        json.dumps({"model_version": "test_v1"}),
+        json.dumps(
+            {
+                "model_version": "test_v1",
+                "model_sha256": hashlib.sha256(b"").hexdigest(),
+            }
+        ),
         encoding="utf-8",
     )
 
@@ -84,6 +90,7 @@ def test_health_reports_model_and_code_identity(client_with_model, monkeypatch):
         "status": "ok",
         "model_version": "test_v1",
         "code_revision": "abc1234",
+        "model_sha256": hashlib.sha256(b"").hexdigest(),
     }
 
 
@@ -174,3 +181,44 @@ def test_prediction_returns_503_when_model_is_missing(client_without_model):
     response = client_without_model.post("/predict", json=VALID_SAMPLE)
 
     assert response.status_code == 503
+
+
+@pytest.mark.parametrize("checksum", [None, "0" * 64])
+def test_missing_or_wrong_checksum_prevents_model_load(monkeypatch, tmp_path, checksum):
+    model_path = tmp_path / "model.joblib"
+    model_path.write_bytes(b"synthetic bytes")
+    metadata_path = tmp_path / "model-metadata.json"
+    metadata_path.write_text(
+        json.dumps({"model_version": "test_v1", "model_sha256": checksum})
+    )
+    monkeypatch.setattr(api, "MODEL_PATH", model_path)
+    monkeypatch.setattr(api, "METADATA_PATH", metadata_path)
+
+    def must_not_deserialize(*args):
+        pytest.fail("Checksum must be verified before deserialization")
+
+    monkeypatch.setattr(api.joblib, "load", must_not_deserialize)
+    with TestClient(api.app) as client:
+        assert client.get("/health").status_code == 503
+        assert client.post("/predict", json=VALID_SAMPLE).status_code == 503
+
+
+def test_health_hash_identifies_exact_deserialized_bytes(monkeypatch, tmp_path):
+    model_path = tmp_path / "model.joblib"
+    model_path.write_bytes(b"original bytes")
+    expected = hashlib.sha256(b"original bytes").hexdigest()
+    metadata_path = tmp_path / "model-metadata.json"
+    metadata_path.write_text(
+        json.dumps({"model_version": "test_v1", "model_sha256": expected})
+    )
+    monkeypatch.setattr(api, "MODEL_PATH", model_path)
+    monkeypatch.setattr(api, "METADATA_PATH", metadata_path)
+
+    def load_captured_bytes(stream):
+        model_path.write_bytes(b"changed mounted file")
+        assert stream.read() == b"original bytes"
+        return FakeModel()
+
+    monkeypatch.setattr(api.joblib, "load", load_captured_bytes)
+    with TestClient(api.app) as client:
+        assert client.get("/health").json()["model_sha256"] == expected

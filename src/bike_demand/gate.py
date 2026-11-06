@@ -118,13 +118,16 @@ def evaluate_candidate(
     accepted_dir: Path,
     policy_path: Path,
     latency_measure: Callable[..., Any] | None = None,
+    accepted_state: dict | None = None,
 ) -> dict:
     """Evaluate a candidate without mutating accepted artifacts.
 
     The optional callable accepts ``(model, validation_features, warmup=...,
     requests=..., repeats=...)`` and returns a number (p95 milliseconds) or a
     mapping containing ``p95_ms``. Passing ``None`` uses an in-process local
-    measurement; no Cloud Run or external service is contacted.
+    measurement; no Cloud Run or external service is contacted. Pipeline callers
+    supply accepted_state captured before training to bind promotion evidence.
+    Without it, a standalone evaluation cannot authorize promotion.
     """
     root, candidate_dir, accepted_dir, policy_path = map(
         Path, (root, candidate_dir, accepted_dir, policy_path)
@@ -162,6 +165,43 @@ def evaluate_candidate(
     accepted_model_path = accepted_dir / "model.joblib"
     accepted_metadata_path = accepted_dir / "model-metadata.json"
     accepted_metrics_path = accepted_dir / "metrics.json"
+    if not accepted_metrics_path.is_file():
+        accepted_metrics_path = (
+            accepted_dir / "reference-evidence/validation-reevaluation.json"
+        )
+    evidence_paths = {
+        "model.joblib": candidate_model_path,
+        "model-metadata.json": candidate_metadata_path,
+        "metrics.json": candidate_metrics_path,
+    }
+    evidence_before = {
+        name: sha256(path) for name, path in evidence_paths.items() if path.is_file()
+    }
+    accepted_reference = None
+
+    def reference_check() -> tuple[str, Any]:
+        nonlocal accepted_reference
+        current = _read_json(root / "artifacts/accepted/current.json")
+        if current != accepted_state:
+            return "fail", "accepted state changed since pipeline start"
+        if not current.get("state_id") or not current.get("model_version"):
+            return "fail", "accepted state identity missing"
+        if (root / current["bundle_path"]).resolve() != accepted_dir.resolve():
+            return "fail", "accepted directory is not the current reference"
+        checksums = current.get("checksums", {})
+        for name in ("model.joblib", "model-metadata.json"):
+            if sha256(accepted_dir / name) != checksums.get(name):
+                return "fail", f"accepted reference checksum mismatch: {name}"
+        meta = _read_json(accepted_metadata_path)
+        if meta.get("model_version") != current["model_version"]:
+            return "fail", "accepted reference model version mismatch"
+        accepted_reference = {
+            key: current[key] for key in ("state_id", "model_version", "checksums")
+        }
+        return "pass", accepted_reference
+
+    if accepted_state is not None:
+        _run(checks, "accepted_reference", reference_check)
     candidate_meta: dict | None = None
     accepted_meta: dict | None = None
     candidate_metrics: dict | None = None
@@ -414,6 +454,24 @@ def evaluate_candidate(
 
     _run(checks, "performance", performance_check)
 
+    def evaluation_integrity() -> tuple[str, Any]:
+        if set(evidence_before) != set(evidence_paths):
+            return "fail", "candidate evidence was incomplete at evaluation start"
+        if any(
+            sha256(path) != evidence_before[name]
+            for name, path in evidence_paths.items()
+        ):
+            return "fail", "candidate files changed during evaluation"
+        if sha256(policy_path) != policy_hash:
+            return "fail", "policy changed during evaluation"
+        if accepted_state is not None:
+            status, details = reference_check()
+            if status != "pass":
+                return status, details
+        return "pass", "evaluated bytes, policy and reference unchanged"
+
+    _run(checks, "evaluation_integrity", evaluation_integrity)
+
     failed = [name for name, check in checks.items() if check["status"] == "fail"]
     unevaluated = [
         name for name, check in checks.items() if check["status"] == "not_evaluated"
@@ -427,6 +485,8 @@ def evaluate_candidate(
         "model_reload",
         "model_sha256",
         "predictions",
+        "accepted_reference",
+        "evaluation_integrity",
     }
     blocking_failures = [name for name in failed if name in integrity_checks]
     rejected_checks = [name for name in failed if name not in integrity_checks]
@@ -447,7 +507,11 @@ def evaluate_candidate(
         "reasons": reasons,
         "checks": checks,
         "policy_sha256": policy_hash,
+        "evidence_sha256": evidence_before,
+        "promotion_evidence_complete": accepted_reference is not None,
     }
+    if accepted_reference is not None:
+        decision["accepted_reference"] = accepted_reference
     _write_decision(candidate_dir, decision)
     return decision
 

@@ -100,6 +100,12 @@ def run_pipeline(
         if not accepted_dir.is_dir():
             raise ValueError(f"accepted model directory does not exist: {accepted_dir}")
 
+        from bike_demand.promote import check_current
+
+        accepted_state = check_current(root)
+        if (root / accepted_state["bundle_path"]).resolve() != accepted_dir.resolve():
+            raise ValueError("accepted directory must match current.json")
+
         # 1. Validate configuration and frozen dataset.
         config = load_candidate_config(config_path)
         snapshot = check_snapshot(root)
@@ -220,6 +226,7 @@ def run_pipeline(
             candidate_dir=candidate_dir,
             accepted_dir=accepted_dir,
             policy_path=root / "configs/gate-policy.yaml",
+            accepted_state=accepted_state,
         )
 
         if not isinstance(gate_result, dict):
@@ -230,6 +237,7 @@ def run_pipeline(
             raise ValueError(f"gate: invalid status: {status}")
 
         decision = {
+            **gate_result,
             "model_version": candidate_version,
             "status": status,
             "reasons": gate_result.get("reasons", []),
@@ -237,6 +245,11 @@ def run_pipeline(
             "model_sha256": metadata["model_sha256"],
             "model_run_id": candidate_run_id,
         }
+        if status == "eligible":
+            from bike_demand.promote import preflight
+
+            write_json(decision_path, decision)
+            preflight(root, candidate_dir, root / "configs/gate-policy.yaml")
         write_json(decision_path, decision)
 
         exit_codes = {

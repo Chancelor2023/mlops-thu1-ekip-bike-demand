@@ -1,3 +1,5 @@
+import hashlib
+import io
 import json
 import math
 import os
@@ -86,10 +88,16 @@ class PredictionResponse(BaseModel):
 async def lifespan(app: FastAPI):
     app.state.model = None
     app.state.model_version = None
+    app.state.model_sha256 = None
 
     try:
-        model = joblib.load(MODEL_PATH)
         metadata = json.loads(METADATA_PATH.read_text(encoding="utf-8"))
+        model_bytes = MODEL_PATH.read_bytes()
+        model_sha256 = hashlib.sha256(model_bytes).hexdigest()
+        if metadata.get("model_sha256") != model_sha256:
+            raise ValueError("Model checksum does not match metadata")
+        # Hash and deserialize the same bytes, even if the mounted file changes.
+        model = joblib.load(io.BytesIO(model_bytes))
         model_version = metadata["model_version"]
 
         if not isinstance(model_version, str) or not model_version:
@@ -97,6 +105,7 @@ async def lifespan(app: FastAPI):
 
         app.state.model = model
         app.state.model_version = model_version
+        app.state.model_sha256 = model_sha256
 
         write_log(
             event="startup",
@@ -107,6 +116,7 @@ async def lifespan(app: FastAPI):
     except (OSError, ValueError, KeyError, TypeError):
         app.state.model = None
         app.state.model_version = None
+        app.state.model_sha256 = None
 
         write_log(
             event="startup",
@@ -117,6 +127,7 @@ async def lifespan(app: FastAPI):
 
     app.state.model = None
     app.state.model_version = None
+    app.state.model_sha256 = None
 
 
 app = FastAPI(lifespan=lifespan)
@@ -184,6 +195,7 @@ def health():
         "status": "ok",
         "model_version": app.state.model_version,
         "code_revision": CODE_REVISION,
+        "model_sha256": app.state.model_sha256,
     }
 
 
