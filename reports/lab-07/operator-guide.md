@@ -64,6 +64,12 @@ do not claim it proves endpoint latency. If the agreed operating criterion needs
 HTTP timing, coordinate an actual measurement adapter and version its protocol
 before candidate evaluation rather than substituting invented timings.
 
+New gate decisions retain `candidate_repeat_p95_ms` and `accepted_repeat_p95_ms`
+when the measurement adapter provides the individual p95s. Scalar-only adapters
+record null for these fields; repetitions must never be reconstructed. These
+fields add evidence without changing the median comparison or the 1.25 limit.
+Historical decisions remain unchanged if they did not retain individual p95s.
+
 Use at most the three declared configurations, preserve every attempt, and never
 score the held test period. A genuine measured rejection is required; no better
 model or promotion is guaranteed. If nothing qualifies, retain current state and

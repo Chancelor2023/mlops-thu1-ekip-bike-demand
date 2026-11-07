@@ -1,0 +1,1 @@
+europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:7da7b6d4d89507a50fbe0cf44ffaa40006a6e97f60a228516ef46d434bef0feb

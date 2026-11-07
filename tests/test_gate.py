@@ -315,3 +315,46 @@ def test_policy_hash_recorded_and_decision_written_only_for_candidate(sandbox):
     )
     assert json.loads(decision_path.read_text())["status"] == result["status"]
     assert not (sandbox["accepted"] / "decision.json").exists()
+
+
+@pytest.mark.parametrize(
+    ("candidate_ms", "expected_status"), [(12.5, "eligible"), (12.51, "rejected")]
+)
+def test_repeat_latencies_are_saved_without_changing_the_decision(
+    sandbox, candidate_ms, expected_status
+):
+    setup_pair(sandbox, PatternModel(), PatternModel())
+    candidate_repeats = [11.0, candidate_ms, 14.0]
+    accepted_repeats = [9.0, 10.0, 11.0]
+    measurements = iter(
+        [
+            {"p95_ms": candidate_ms, "repeat_p95_ms": candidate_repeats},
+            {"p95_ms": 10.0, "repeat_p95_ms": accepted_repeats},
+        ]
+    )
+    result = evaluate(sandbox, measure=lambda *args, **kwargs: next(measurements))
+    details = result["checks"]["performance"]["details"]
+    assert details["candidate_repeat_p95_ms"] == candidate_repeats
+    assert details["accepted_repeat_p95_ms"] == accepted_repeats
+    saved = json.loads((sandbox["candidate"] / "decision.json").read_text())
+    assert saved["checks"]["performance"]["details"] == details
+    scalar_result = evaluate(sandbox, measure=latency(candidate_ms, 10.0))
+    assert result["status"] == scalar_result["status"] == expected_status
+    scalar_details = scalar_result["checks"]["performance"]["details"]
+    for key in (
+        "candidate_p95_ms",
+        "accepted_p95_ms",
+        "max_ratio",
+        "candidate_to_accepted_ratio",
+        "protocol",
+    ):
+        assert details[key] == scalar_details[key]
+
+
+def test_scalar_latency_measurements_do_not_invent_repetitions(sandbox):
+    setup_pair(sandbox, PatternModel(), PatternModel())
+    result = evaluate(sandbox, measure=latency())
+    details = result["checks"]["performance"]["details"]
+    assert result["status"] == "eligible"
+    assert details["candidate_repeat_p95_ms"] is None
+    assert details["accepted_repeat_p95_ms"] is None

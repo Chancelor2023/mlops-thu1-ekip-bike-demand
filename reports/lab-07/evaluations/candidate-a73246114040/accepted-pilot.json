@@ -1,0 +1,48 @@
+{
+  "measured_at": "2026-11-07T19:56:37.154915+00:00",
+  "code_revision": "8c5f89e2562482e605216005e3c3d2b7c2a474f0",
+  "state_id": "246c8505253a4252a63809b66c04b7f3",
+  "model_version": "baseline-4df84bfe8121",
+  "checksums": {
+    "model.joblib": "d24c050e3631d5b4c2feb8cb571bef6382d8c975c42a5c11edd28de78a0b8c07",
+    "model-metadata.json": "b09c2b06b0a90b829c3d1a89c3d544f9d0020f0a74b22a4931e0e676596dbd8f"
+  },
+  "resources": {
+    "cpus": 2,
+    "memory": "2g"
+  },
+  "scope": "Warm in-process model.predict; not HTTP latency",
+  "protocol": {
+    "warmup": 20,
+    "requests": 100,
+    "repeats": 3
+  },
+  "measurements": [
+    {
+      "p95_ms": 6.467662050090439,
+      "repeat_p95_ms": [
+        6.349248350079506,
+        6.467662050090439,
+        6.874139750289032
+      ]
+    },
+    {
+      "p95_ms": 6.81404520007618,
+      "repeat_p95_ms": [
+        6.81404520007618,
+        6.6747390497994274,
+        6.961157149999053
+      ]
+    },
+    {
+      "p95_ms": 6.906381450198751,
+      "repeat_p95_ms": [
+        6.906381450198751,
+        6.506187449781464,
+        7.1458433500993115
+      ]
+    }
+  ],
+  "retraining_performed": false,
+  "cloud_run_modified": false
+}

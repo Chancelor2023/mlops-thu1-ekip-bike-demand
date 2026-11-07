@@ -425,23 +425,28 @@ def evaluate_candidate(
         measure = latency_measure or _default_latency_measure
         features = validation.loc[:, FEATURES]
 
-        def run(model: Any) -> float:
+        def run(model: Any) -> tuple[float, list[float] | None]:
             value = measure(
                 model, features, warmup=warmup, requests=requests, repeats=repeats
             )
+            repeat_p95_ms = None
             if isinstance(value, dict):
+                repeat_p95_ms = value.get("repeat_p95_ms")
                 value = value.get("p95_ms")
             value = float(value)
             if not math.isfinite(value) or value < 0:
                 raise ValueError("latency must be finite and nonnegative")
-            return value
+            return value, repeat_p95_ms
 
-        candidate_latency, accepted_latency = run(candidate_model), run(accepted_model)
+        candidate_latency, candidate_repeats = run(candidate_model)
+        accepted_latency, accepted_repeats = run(accepted_model)
         ratio = float(perf_cfg.get("max_ratio", 1.25))
         passed = candidate_latency <= ratio * accepted_latency
         details = {
             "candidate_p95_ms": candidate_latency,
             "accepted_p95_ms": accepted_latency,
+            "candidate_repeat_p95_ms": candidate_repeats,
+            "accepted_repeat_p95_ms": accepted_repeats,
             "max_ratio": ratio,
             "candidate_to_accepted_ratio": candidate_latency / accepted_latency
             if accepted_latency

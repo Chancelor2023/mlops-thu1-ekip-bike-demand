@@ -1,0 +1,5 @@
+artifacts/accepted/current.json: OK
+artifacts/accepted/baseline-4df84bfe8121/model.joblib: OK
+artifacts/accepted/baseline-4df84bfe8121/model-metadata.json: OK
+configs/gate-policy.yaml: OK
+configs/candidate-01.yaml: OK
