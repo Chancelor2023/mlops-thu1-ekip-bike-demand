@@ -336,40 +336,7 @@ This section defines what a verified deployment means, details the execution and
    Exit status is `1`.
 
 
-## Pipeline and gate: Lab 7
 
-The pipeline trains an isolated candidate, compares it with the train-mean and
-current accepted model on validation, and records an eligible/rejected/blocked
-decision. Only model settings vary. The 2012 July-December test period is not scored.
-
-- Policy: [configs/gate-policy.yaml](configs/gate-policy.yaml), committed before
-  candidate experiments. Budget: at most three declared candidate configurations.
-- Initial accepted model and recovery records: [reports/lab-07/](reports/lab-07/).
-- Decision files: ignored `artifacts/candidates/<version>/decision.json`; retain
-  sanitized decision/log copies in the team report for actual experiments.
-- Entry point: `uv run --locked python -m bike_demand.pipeline --config
-  configs/candidate-01.yaml --accepted artifacts/accepted/<accepted-version>`.
-- Local state: ignored `artifacts/accepted/current.json`. Retrieve the trusted
-  accepted bundle and initialize/verify this state before training on a clean checkout.
-
-Read the [operator procedure](reports/lab-07/operator-guide.md) before a real
-experiment, installation or deployment. It covers prerequisites, recovery,
-partial failures, reviewed-main execution and explicit traffic activation.
-The [integration contract](reports/lab-07/promotion-interface.md) describes the
-gate evidence. The [cloud configuration record](reports/lab-07/cloud-deployment.md)
-identifies the team's trigger and the checks needed after merge.
-
-Every mandatory gate check must pass. An equivalent accepted candidate is not
-an accuracy improvement. `promote --dry-run` checks evidence; `--prepare` copies
-verified files; `--install-local` retains a version without changing serving state.
-`deploy plan` is read-only, `deploy deploy` publishes a versioned bundle and
-verifies a tagged revision without production traffic, and `deploy activate`
-explicitly switches traffic and then finalizes current state. None is run by CI.
-
-Serving `/health` reports model version, loaded model SHA-256 and code revision.
-The API checks the digest before deserializing the exact captured model bytes.
-An image build alone does not promote a model; after this PR merges, Cloud Build
-builds/publishes images and manual operations perform deployment separately.
 
 ## CI: Lab 6 Architecture & Decisions
 
@@ -412,3 +379,65 @@ uv run --locked pytest -q
 ```bash
 uv run --locked pytest -q -m regression -x
 ```
+
+## Pipeline and gate: Lab 7
+
+The pipeline trains an isolated candidate, benchmarks it against the naive train-mean and current accepted model on the 2012-H1 validation split, and produces an explicit decision. The July–December 2012 test period is strictly held out and never evaluated.
+
+### Architecture & Candidate Isolation
+- **Candidate Isolation:** Candidate trainings write strictly to unique folders (`artifacts/candidates/<candidate_version>/`) and never overwrite the active model bundle (`artifacts/accepted/`).
+- **State Manifest:** The active serving state is referenced via `artifacts/accepted/current.json` (or `manifest.json`), tracking bundle paths and SHA-256 digests.
+- **Budget Constraint:** At most three declared candidate configurations are evaluated during this lab.
+
+### Single Execution Command
+The unified pipeline executes data validation, training, serialisation, readback, latency benchmarking, and gate decision:
+
+```bash
+uv run --locked python -m bike_demand.pipeline \
+  --config configs/candidate-01.yaml \
+  --accepted artifacts/accepted/baseline-current \
+  2>&1 | tee reports/run-candidate-01.log
+```
+
+### Quality Gate Policy (`configs/gate-policy.yaml`)
+Evaluated by `src/bike_demand/gate.py`, every candidate must satisfy all three check families:
+
+1. **Quality Criteria:**
+   - $\text{MAE}_{\text{candidate}} < \text{MAE}_{\text{train\_mean}}$ (beats naive baseline).
+   - $\text{MAE}_{\text{candidate}} \le \text{MAE}_{\text{accepted}} + \varepsilon$ with $\varepsilon = 10^{-6}$ (floating point noise tolerance; an equivalent candidate is not an accuracy improvement).
+2. **Operational Criteria (In-Container Warm Latency):**
+   - 20 warm-up requests, followed by 100 sequential requests across 3 repetitions.
+   - Candidate median $p95$ must not exceed accepted median $p95$ by more than **25%** ($p95_{\text{cand}} \le 1.25 \times p95_{\text{acc}}$).
+3. **Integrity Criteria:**
+   - 12 canonical features in exact order; valid date windows.
+   - Predictions strictly finite and non-negative.
+   - Artifact digest immutability: SHA-256 matching between training, gate evaluation, and promotion.
+
+### Decision Exit Codes
+- **`0` (`eligible`):** All criteria passed. The candidate is marked eligible for human review. *No automatic promotion occurs.*
+- **`2` (`rejected`):** Pipeline completed, but at least one quality or operational gate threshold failed. The accepted bundle remains untouched.
+- **`3` (`blocked`):** Evaluation could not be completed reliably (missing evidence, corrupted artifacts, hash mismatch, or runtime abort).
+
+### Operator & Promotion Procedures
+
+#### Manual Promotion
+Promotion must be triggered manually from `main` after peer approval:
+```bash
+# Check evidence without touching serving state
+uv run --locked python -m bike_demand.promote --candidate artifacts/candidates/<candidate_version> --dry-run
+
+# Execute verified promotion
+uv run --locked python -m bike_demand.promote --candidate artifacts/candidates/<candidate_version> --execute
+```
+Promotion applies an atomic file lock, verifies SHA-256 hashes against evaluation evidence, archives the previous accepted model to `artifacts/archive/`, and updates `current.json`.
+
+#### Recovery / Rollback Without Retraining
+If an issue arises in production:
+1. Locate the previous accepted bundle version in `artifacts/archive/`.
+2. Repoint the active manifest using the promotion utility:
+   ```bash
+   uv run --locked python -m bike_demand.promote --rollback --target-version <previous_version>
+   ```
+3. Update Cloud Run traffic routing to the prior revision via Cloud Shell / gcloud.
+
+---
