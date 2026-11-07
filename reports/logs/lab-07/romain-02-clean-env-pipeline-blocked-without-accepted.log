@@ -1,0 +1,21 @@
+# Lab 7 - real pipeline entry point on a clean checkout, before the accepted bundle is retrieved
+# expected: blocked (exit 3), no training, no accepted state created
+$ uv run --locked python -m bike_demand.pipeline --config configs/candidate-01.yaml --accepted artifacts/accepted/accepted-v1
+{
+  "model_version": "candidate-7a93ebdf4f8f",
+  "status": "blocked",
+  "reasons": [
+    "ValueError: accepted model directory does not exist: <clean-clone>/artifacts/accepted/accepted-v1"
+  ]
+}
+exit=3
+$ find artifacts -type f
+artifacts/candidates/candidate-7a93ebdf4f8f/decision.json
+$ cat artifacts/candidates/*/decision.json
+{
+  "model_version": "candidate-7a93ebdf4f8f",
+  "status": "blocked",
+  "reasons": [
+    "ValueError: accepted model directory does not exist: <clean-clone>/artifacts/accepted/accepted-v1"
+  ]
+}

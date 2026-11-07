@@ -8,6 +8,8 @@ import pytest
 
 from bike_demand import promote
 
+pytestmark = pytest.mark.lab7
+
 
 def write_json(path, value):
     path.parent.mkdir(parents=True, exist_ok=True)

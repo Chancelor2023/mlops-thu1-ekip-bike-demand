@@ -18,6 +18,8 @@ from bike_demand import gate, pipeline, promote
 from bike_demand.preflight import sha256
 from bike_demand.validate import FEATURES
 
+pytestmark = pytest.mark.lab7
+
 
 class SyntheticModel:
     def __init__(self, offset=0):

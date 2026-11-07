@@ -1,0 +1,35 @@
+# Lab 7 - clean environment run (2026-11-07T10:45:43Z), base commit ce0e02e + uncommitted integration changes
+# uv 0.12.23, Linux x86_64
+# artifacts: ls: cannot access 'artifacts': No such file or directory
+$ uv lock --check
+Using CPython 3.12.15
+Resolved 100 packages in 2ms
+exit=0
+$ uv sync --locked
+   Building bike-demand @ file://<clean-clone>
+      Built bike-demand @ file://<clean-clone>
+Prepared 1 package in 26ms
+Installed 97 packages in 736ms
+exit=0
+$ uv run --locked ruff check .
+All checks passed!
+exit=0
+$ uv run --locked ruff format --check .
+24 files already formatted
+exit=0
+$ uv run --locked python -m bike_demand.preflight
+Preflight passed: imports, frozen snapshot and writable outputs.
+This does not complete exercises, verify GitHub CI, or certify other OSes.
+exit=0
+$ uv run --locked pytest -q -p no:cacheprovider -m lab7
+    from starlette.testclient import TestClient as TestClient  # noqa
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+116 passed, 77 deselected, 1 warning in 10.59s
+exit=0
+$ uv run --locked pytest -q -p no:cacheprovider
+    sqlalchemy.orm.configure_mappers()
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+193 passed, 2 warnings in 31.74s
+exit=0
