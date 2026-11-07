@@ -1,0 +1,37 @@
+# Lab 7 - proof that tests/test_lab7_integration.py can fail (defects injected in a throwaway clone, never committed)
+## Unmodified code
+38 passed, 1 warning in 8.08s
+
+## M1 (historical Lab 7 defect): training also writes the candidate into the accepted bundle
++ joblib.dump(model, accepted_dir / "model.joblib")   # pipeline.py, after model_path
+FAILED tests/test_lab7_integration.py::test_no_gate_outcome_changes_accepted_version_or_served_model[eligible]
+FAILED tests/test_lab7_integration.py::test_no_gate_outcome_changes_accepted_version_or_served_model[rejected]
+FAILED tests/test_lab7_integration.py::test_no_gate_outcome_changes_accepted_version_or_served_model[blocked]
+FAILED tests/test_lab7_integration.py::test_real_rejection_records_values_thresholds_and_is_refused
+4 failed, 34 passed, 1 warning in 7.13s
+
+## M2: promotion preflight no longer requires every mandatory gate check
+- not REQUIRED_CHECKS.issubset(checks)  + False   # promote.py
+FAILED tests/test_lab7_integration.py::test_missing_or_unpassed_control_blocks_promotion[missing-accepted_evidence]
+FAILED tests/test_lab7_integration.py::test_missing_or_unpassed_control_blocks_promotion[missing-accepted_reference]
+FAILED tests/test_lab7_integration.py::test_missing_or_unpassed_control_blocks_promotion[missing-candidate_artifacts]
+FAILED tests/test_lab7_integration.py::test_missing_or_unpassed_control_blocks_promotion[missing-dataset_checksum_and_split]
+FAILED tests/test_lab7_integration.py::test_missing_or_unpassed_control_blocks_promotion[missing-evaluation_integrity]
+FAILED tests/test_lab7_integration.py::test_missing_or_unpassed_control_blocks_promotion[missing-feature_contract]
+FAILED tests/test_lab7_integration.py::test_missing_or_unpassed_control_blocks_promotion[missing-metadata_consistency]
+FAILED tests/test_lab7_integration.py::test_missing_or_unpassed_control_blocks_promotion[missing-model_reload]
+FAILED tests/test_lab7_integration.py::test_missing_or_unpassed_control_blocks_promotion[missing-model_sha256]
+FAILED tests/test_lab7_integration.py::test_missing_or_unpassed_control_blocks_promotion[missing-performance]
+FAILED tests/test_lab7_integration.py::test_missing_or_unpassed_control_blocks_promotion[missing-policy]
+FAILED tests/test_lab7_integration.py::test_missing_or_unpassed_control_blocks_promotion[missing-predictions]
+FAILED tests/test_lab7_integration.py::test_missing_or_unpassed_control_blocks_promotion[missing-quality]
+13 failed, 25 passed, 1 warning in 7.37s
+
+## M3: verify_files returns without comparing SHA-256 digests
++ return   # first line of promote.verify_files
+FAILED tests/test_lab7_integration.py::test_file_modified_after_evaluation_cannot_be_promoted[model.joblib]
+FAILED tests/test_lab7_integration.py::test_file_modified_after_evaluation_cannot_be_promoted[model-metadata.json]
+FAILED tests/test_lab7_integration.py::test_file_modified_after_evaluation_cannot_be_promoted[metrics.json]
+FAILED tests/test_lab7_integration.py::test_tampered_accepted_reference_blocks_evaluation
+4 failed, 34 passed, 1 warning in 7.04s
+

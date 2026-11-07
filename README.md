@@ -345,7 +345,7 @@ This section defines what a verified deployment means, details the execution and
 | 1 | **Coverage** | Training reproducibility, data validation, and API schemas are tested; the sealed holdout test period (Jul–Dec 2012) is never touched by CI. | Evaluating on the holdout test set in CI (violates course rules and risks data leakage). |
 | 2 | **Machine** | Clean ephemeral GitHub Actions runner (`ubuntu-latest`), strictly installed via `uv.lock`, without cached state or GPU dependencies. | Self-hosted or stateful runner preserving artifacts across runs (hides missing setup steps). |
 | 3 | **Trigger** | `pull_request` to `main`, `push` to `main`, and manual `workflow_dispatch`; no `paths` filters to prevent silent skips. | Filtering on `paths: src/**` (would miss configuration, Dockerfile, or dependency changes). |
-| 4 | **Order** | `lock` -> `ruff check` -> `ruff format` -> `preflight` -> markers (`infra` -> `lab1` -> `exercise` -> `api` -> `regression`) -> full `pytest` -> `container`. | Parallel execution without dependencies (wastes Docker builds and hides the root-cause step). |
+| 4 | **Order** | `lock` -> `ruff check` -> `ruff format` -> `preflight` -> markers (`infra` -> `lab1` -> `exercise` -> `api` -> `regression` -> `lab7`) -> full `pytest` -> `container`. | Parallel execution without dependencies (wastes Docker builds and hides the root-cause step). |
 | 5 | **Evidence** | CI proves strict numerical reproducibility of RF validation MAE and schema conformance across environments. | Claiming CI proves future model accuracy or business value under production drift. |
 | 6 | **Defects** | Individual tests target distinct failure classes (`test_fault_b` for corrupted records, `test_api` for payload bounds, `regression` for MAE drift). | A single monolithic black-box test (makes diagnosing the failure location difficult). |
 | 7 | **Failing** | Verified via reviewer-driven defect injection PRs (each check was observed failing on intentional defects before passing). | Trusting always-green tests without defect injection (tests could be tautological). |
@@ -372,6 +372,7 @@ uv run --locked pytest -q -m lab1
 uv run --locked pytest -q -m exercise
 uv run --locked pytest -q -m api
 uv run --locked pytest -q -m regression
+uv run --locked pytest -q -m lab7
 uv run --locked pytest -q
 ```
 ### To reproduce a failure on a specific marker, run with -x (stop at first failure):
@@ -386,7 +387,7 @@ The pipeline trains an isolated candidate, benchmarks it against the naive train
 
 ### Architecture & Candidate Isolation
 - **Candidate Isolation:** Candidate trainings write strictly to unique folders (`artifacts/candidates/<candidate_version>/`) and never overwrite the active model bundle (`artifacts/accepted/`).
-- **State Manifest:** The active serving state is referenced via `artifacts/accepted/current.json` (or `manifest.json`), tracking bundle paths and SHA-256 digests.
+- **State Manifest:** The accepted state is `artifacts/accepted/current.json` (ignored by Git), recording the bundle path, model version and SHA-256 digests. On a clean checkout, retrieve the trusted accepted bundle first (operator guide, step 1); without it the pipeline is blocked (exit 3).
 - **Budget Constraint:** At most three declared candidate configurations are evaluated during this lab.
 
 ### Single Execution Command
@@ -395,8 +396,8 @@ The unified pipeline executes data validation, training, serialisation, readback
 ```bash
 uv run --locked python -m bike_demand.pipeline \
   --config configs/candidate-01.yaml \
-  --accepted artifacts/accepted/baseline-current \
-  2>&1 | tee reports/run-candidate-01.log
+  --accepted artifacts/accepted/<accepted-version> \
+  2>&1 | tee reports/logs/lab-07/<attempt>.log
 ```
 
 ### Quality Gate Policy (`configs/gate-policy.yaml`)
@@ -421,23 +422,75 @@ Evaluated by `src/bike_demand/gate.py`, every candidate must satisfy all three c
 ### Operator & Promotion Procedures
 
 #### Manual Promotion
-Promotion must be triggered manually from `main` after peer approval:
+Promotion is manual, from a clean checkout of reviewed `main`, by the operator
+holding Cloud access (Jerry), following
+[reports/lab-07/operator-guide.md](reports/lab-07/operator-guide.md). Use real values:
+`STATE` is the accepted state the gate evaluated, `SHA` the reviewed `main` commit.
+
 ```bash
-# Check evidence without touching serving state
-uv run --locked python -m bike_demand.promote --candidate artifacts/candidates/<candidate_version> --dry-run
-
-# Execute verified promotion
-uv run --locked python -m bike_demand.promote --candidate artifacts/candidates/<candidate_version> --execute
+# 1. Read-only check of the gate evidence (writes nothing)
+uv run --locked python -m bike_demand.promote --dry-run \
+  --candidate artifacts/candidates/<candidate-version>
+# 2. Stage verified bytes and a journal under the promotion lock
+uv run --locked python -m bike_demand.promote --prepare \
+  --candidate artifacts/candidates/<candidate-version> --expected-state "$STATE"
+# 3. Install the new immutable version locally (serving state unchanged)
+uv run --locked python -m bike_demand.promote --install-local \
+  --operation "$OP" --expected-state "$STATE" --expected-revision "$SHA"
+# 4. Cloud Run: read-only plan, then a tagged revision WITHOUT production traffic
+uv run --locked python -m bike_demand.deploy plan   --operation "$OP" --image "$IMAGE" \
+  --expected-state "$STATE" --expected-revision "$SHA"
+uv run --locked python -m bike_demand.deploy deploy --operation "$OP" --image "$IMAGE" \
+  --expected-state "$STATE" --expected-revision "$SHA"
+# 5. After review of the no-traffic checks: explicit traffic switch, then finalization
+uv run --locked python -m bike_demand.deploy activate --operation "$OP" \
+  --expected-state "$STATE" --expected-revision "$SHA" --confirm-revision "$CONFIRM"
 ```
-Promotion applies an atomic file lock, verifies SHA-256 hashes against evaluation evidence, archives the previous accepted model to `artifacts/archive/`, and updates `current.json`.
+Each step re-verifies SHA-256 digests against the gate evidence and refuses if the
+candidate, the policy or the accepted state changed. Only `deploy activate` changes
+production traffic and `current.json`.
 
-#### Recovery / Rollback Without Retraining
-If an issue arises in production:
-1. Locate the previous accepted bundle version in `artifacts/archive/`.
-2. Repoint the active manifest using the promotion utility:
-   ```bash
-   uv run --locked python -m bike_demand.promote --rollback --target-version <previous_version>
-   ```
-3. Update Cloud Run traffic routing to the prior revision via Cloud Shell / gcloud.
+### Recovery / Rollback Without Retraining
+There is no separate archive or rollback command. Every accepted
+version stays in its own immutable `artifacts/accepted/<version>/` directory, and
+`current.json` keeps the full previous accepted manifest after activation.
+
+- **Before the traffic switch:** `current.json` and production traffic are unchanged.
+  Inspect the operation journal in `artifacts/promotions/<operation-id>/` and retry
+  the same operation; never delete the lock automatically.
+- **Traffic switched but finalization interrupted:** rerun `deploy activate` with the
+  same `--operation`, `--expected-state`, `--expected-revision` and `--confirm-revision`.
+- **Rollback:** route traffic back to the retained old Cloud Run revision, which
+  still loads its own versioned bundle, then verify `/health` and record the
+  local-state reconciliation:
+  ```bash
+  gcloud run services update-traffic "$SERVICE" \
+    --project="$PROJECT" --region="$REGION" --to-revisions="$OLD_REVISION=100"
+  ```
+  This is a real traffic change: review it and perform it deliberately.
+
+### Tests and CI
+All Lab 7 tests carry the `lab7` marker and run as their own CI step
+(`uv run --locked pytest -q -m lab7`) after `regression`. They use synthetic data
+and stubs for training, MLflow and latency, and make no cloud calls. The
+end-to-end cases in `tests/test_lab7_integration.py` drive the real pipeline,
+gate, promotion preflight and API:
+
+| Critical case | Test | Expected |
+|---|---|---|
+| Any outcome (eligible/rejected/blocked) | `test_no_gate_outcome_changes_accepted_version_or_served_model` | accepted bytes, `current.json` and `/health` identity unchanged |
+| Real rejection | `test_real_rejection_records_values_thresholds_and_is_refused` | exit 2, reasons recorded, preflight refuses |
+| Missing or unpassed control | `test_missing_or_unpassed_control_blocks_promotion` | preflight refuses, for each mandatory check |
+| File modified after evaluation | `test_file_modified_after_evaluation_cannot_be_promoted` | preflight and prepare refuse |
+| Stale accepted reference | `test_stale_accepted_reference_requires_reevaluation` | reevaluation required |
+| Tampered accepted reference | `test_tampered_accepted_reference_blocks_evaluation` | blocked before training |
+| Interrupted execution (Ctrl+C) | `test_interrupted_execution_is_never_promotable` | no decision written, preflight refuses |
+| Crash after saving the model | `test_crash_after_saving_model_is_blocked_and_rerun_is_isolated` | blocked, rerun gets a new directory |
+
+**Limits.** CI does not run a real candidate experiment, measure Cloud Run
+latency or cold starts, or deploy. The real measured rejection, its before/after
+proof and any promotion are performed manually and recorded in
+`reports/lab-07-report.md`. Proof that these tests can fail:
+`reports/logs/lab-07/romain-03-integration-tests-can-fail.log`.
 
 ---

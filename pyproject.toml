@@ -44,4 +44,5 @@ markers = [
     "exercise: Week 1 Lab 2 data/split/baseline exercises",
     "api: tests de l'API",
     "regression: tests de non-régression",
+    "lab7: Lab 7 pipeline, quality gate, promotion and deployment safety",
 ]

@@ -19,6 +19,8 @@ sys.path.insert(0, str(REPO / "src"))
 
 from bike_demand import gate  # noqa: E402
 
+pytestmark = pytest.mark.lab7
+
 FEATURES = gate.FEATURES
 
 

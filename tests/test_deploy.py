@@ -8,6 +8,8 @@ from test_promote import scenario as scenario
 
 from bike_demand import deploy, promote
 
+pytestmark = pytest.mark.lab7
+
 REVISION = "a" * 40
 IMAGE = "europe-west1-docker.pkg.dev/test-project/repo/team@sha256:" + "b" * 64
 
