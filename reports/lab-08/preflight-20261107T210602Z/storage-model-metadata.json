@@ -1,0 +1,16 @@
+{
+  "bucket": "thu1-ekip-bike-demand-model",
+  "content_type": "application/json",
+  "crc32c_hash": "jw45IQ==",
+  "creation_time": "2026-10-23T09:51:23+0000",
+  "etag": "CLWsmeLuz5cDEAE=",
+  "generation": "1792749083186741",
+  "md5_hash": "kUdyZkW/krD5/o4/9tUmrA==",
+  "metageneration": 1,
+  "name": "model-metadata.json",
+  "size": 1793,
+  "storage_class": "STANDARD",
+  "storage_class_update_time": "2026-10-23T09:51:23+0000",
+  "storage_url": "gs://thu1-ekip-bike-demand-model/model-metadata.json#1792749083186741",
+  "update_time": "2026-10-23T09:51:23+0000"
+}

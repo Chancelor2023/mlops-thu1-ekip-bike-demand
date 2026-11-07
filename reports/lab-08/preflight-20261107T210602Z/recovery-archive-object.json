@@ -1,0 +1,16 @@
+{
+  "bucket": "thu1-ekip-bike-demand-model",
+  "content_type": "application/x-tar",
+  "crc32c_hash": "/7vfcg==",
+  "creation_time": "2026-11-05T16:44:28+0000",
+  "etag": "CPbFoqyj8ZcDEAE=",
+  "generation": "1793897068536566",
+  "md5_hash": "Ot9UUZHIl2jEJ4yH9OlVHw==",
+  "metageneration": 1,
+  "name": "lab7-archives/baseline-4df84bfe8121/20261105T154814Z/accepted-reference.tar.gz",
+  "size": 1262950,
+  "storage_class": "STANDARD",
+  "storage_class_update_time": "2026-11-05T16:44:28+0000",
+  "storage_url": "gs://thu1-ekip-bike-demand-model/lab7-archives/baseline-4df84bfe8121/20261105T154814Z/accepted-reference.tar.gz#1793897068536566",
+  "update_time": "2026-11-05T16:44:28+0000"
+}

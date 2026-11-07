@@ -1,0 +1,81 @@
+[
+    {
+        "Id": "sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f",
+        "RepoTags": [
+            "europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f"
+        ],
+        "RepoDigests": [
+            "europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f"
+        ],
+        "Created": "2026-11-05T18:04:38.696858143Z",
+        "Config": {
+            "ExposedPorts": {
+                "8000/tcp": {}
+            },
+            "Env": [
+                "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+                "PYTHON_VERSION=3.12.9",
+                "PYTHON_SHA256=7220835d9f90b37c006e9842a8dff4580aaca4318674f947302b8d28f3f81112",
+                "UV_LINK_MODE=copy",
+                "UV_COMPILE_BYTECODE=1",
+                "PYTHONUNBUFFERED=1",
+                "MODEL_DIR=/app/artifacts",
+                "CODE_REVISION=ea37b8a45d4a6738585d9de7d0f95d624ad1d3be"
+            ],
+            "Cmd": [
+                "uv",
+                "run",
+                "--locked",
+                "uvicorn",
+                "bike_demand.api:app",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "8000"
+            ],
+            "WorkingDir": "/app"
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 2467399571,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:ea680fbff095473bb8a6c867938d6d851e11ef0c177fce983ccc83440172bd72",
+                "sha256:8f752ea4c4bdbd4d6ad369e9d5fa1fb05008f63252c8187cf8025653b8d7b7b3",
+                "sha256:0d3e139ff0286aee05a5abbfe1b318f46d4d53030d046cf815be874d0a7fc197",
+                "sha256:de4389417aed217eaa76e2b8362b44d79f3e81d4d2593f41ef7ba34607a13b46",
+                "sha256:1b13c33d7cecd7bf46acdbcf4a42201d56cb2ec1450871714b7c6e24bbbc3ba1",
+                "sha256:b103205b7667416e473d18cf4b09a9de28c7a56df0b689b6653dbcf24e3652e5",
+                "sha256:e7e4d0cb35dc6cfb2253565124d7bb9a0ed61a58b0533141329d7c690d9389dd",
+                "sha256:e5613630130c324f14f6cd8dcee6cbc4ef4ef33d98785f09171eb242170ccdcd",
+                "sha256:c6043148d4b960167b50b430ef3a2d205ff2d640630d63f3284e4cbdffb2e004",
+                "sha256:dd83a146dad0f9d64bdf7bb4817cca669b4abbd45bda03aaee660edf5a3c302f",
+                "sha256:dd88e0100fd078489fc837e3a993eff687ab17ef99774039be4cb09b5a033e72",
+                "sha256:66431212ea9abf6a33f9b572e32060d58589f13272d5f9050b1467c2e0db09a9",
+                "sha256:f357a6d00bb4327167898438fb8b86124edd06ef8a9b356940cafac397292fbe",
+                "sha256:041e296e7ba853b92aacbc7ced003327af72eb515f5ee8747b3edce5981ce7cd",
+                "sha256:b1695f121befc8376ad666011188f85e529bd7d3c247795216e92f90e646b244",
+                "sha256:948e267e1863ba571145c6e8d52f76913b499ee0b131f161ce57f3436130a55d",
+                "sha256:c9ffcab123d6093793110a7f70920f1394d0d03d6c78771ca7712a30aad3a700"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-11-07T21:13:04.895695931Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.docker.distribution.manifest.v2+json",
+            "digest": "sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f",
+            "size": 3884
+        },
+        "Identity": {
+            "Pull": [
+                {
+                    "Repository": "europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand"
+                }
+            ]
+        }
+    }
+]
