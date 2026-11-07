@@ -103,12 +103,12 @@ This is expected: the accepted bundle and `current.json` are not in Git.
 
 ## Real experiment (team, manual): TO FILL
 
-Synthetic tests do not replace this. Use `set -o pipefail` and
-`2>&1 | tee reports/logs/lab-07/<attempt>.log`, and keep the exit status.
+Synthetic tests do not replace this. Use `set -o pipefail`, `mkdir -p reports/logs/lab-07`
+and `2>&1 | tee reports/logs/lab-07/<attempt>.log`, and keep the exit status.
 
 | Attempt | Config (declared) | Exit | Status | MAE candidate | MAE accepted | MAE train mean | p95 median cand./acc. | Main reason |
 |---|---|---|---|---|---|---|---|---|
-| 1 | `candidate-01.yaml` | | | | | ~143.79 | | |
+| 1 | `candidate-01.yaml` | | | | | | | |
 | 2 | `candidate-02.yaml` | | | | | | | |
 | 3 | `candidate-03.yaml` | | | | | | | |
 

@@ -394,6 +394,8 @@ The pipeline trains an isolated candidate, benchmarks it against the naive train
 The unified pipeline executes data validation, training, serialisation, readback, latency benchmarking, and gate decision:
 
 ```bash
+set -o pipefail
+mkdir -p reports/logs/lab-07
 uv run --locked python -m bike_demand.pipeline \
   --config configs/candidate-01.yaml \
   --accepted artifacts/accepted/<accepted-version> \

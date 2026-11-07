@@ -145,6 +145,13 @@ def test_real_rejection_records_values_thresholds_and_is_refused(
     assert code == 2
     quality = decision["checks"]["quality"]
     assert quality["status"] == "fail"
+    details = quality["details"]
+    assert details["candidate_validation_mae"] == pytest.approx(1.0)
+    assert details["accepted_validation_mae"] == pytest.approx(0.0)
+    assert details["train_mean_validation_mae"] == pytest.approx(15.0)
+    assert details["epsilon"] == 1e-6
+    assert details["candidate_beats_train_mean"] is True
+    assert details["candidate_within_accepted_epsilon"] is False
     assert decision["reasons"], "a rejection must explain itself"
     with pytest.raises(ValueError, match="Only an eligible"):
         promote.preflight(root, only_candidate(root), policy)
