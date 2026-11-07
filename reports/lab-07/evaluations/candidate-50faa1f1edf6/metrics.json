@@ -1,0 +1,6 @@
+{
+  "naive_train_mean_validation_mae": 154.23179306864967,
+  "candidate_validation_mae": 86.6918618844724,
+  "reload_validation_mae": 86.6918618844724,
+  "prediction_max_abs_delta": 0.0
+}

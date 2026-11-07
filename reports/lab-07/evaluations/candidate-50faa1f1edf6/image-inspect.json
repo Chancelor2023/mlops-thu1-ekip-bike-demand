@@ -1,0 +1,84 @@
+[
+    {
+        "Id": "sha256:74135981385018b061f6fbf13cc820d8a5284a17ed92ba2387571eaa7ef9bc10",
+        "RepoTags": [
+            "bike-demand-lab7:5cb80324df5caa7d83cd775907274060f906db2c"
+        ],
+        "RepoDigests": [
+            "bike-demand-lab7@sha256:74135981385018b061f6fbf13cc820d8a5284a17ed92ba2387571eaa7ef9bc10"
+        ],
+        "Comment": "buildkit.dockerfile.v0",
+        "Created": "2026-11-07T20:31:18.072169715Z",
+        "Config": {
+            "ExposedPorts": {
+                "8000/tcp": {}
+            },
+            "Env": [
+                "PATH=/usr/local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+                "LANG=C.UTF-8",
+                "GPG_KEY=7169605F62C751356D054A26A821E680E5FA6305",
+                "PYTHON_VERSION=3.12.9",
+                "PYTHON_SHA256=7220835d9f90b37c006e9842a8dff4580aaca4318674f947302b8d28f3f81112",
+                "UV_LINK_MODE=copy",
+                "UV_COMPILE_BYTECODE=1",
+                "PYTHONUNBUFFERED=1",
+                "MODEL_DIR=/app/artifacts",
+                "CODE_REVISION=5cb80324df5caa7d83cd775907274060f906db2c"
+            ],
+            "Cmd": [
+                "uv",
+                "run",
+                "--locked",
+                "uvicorn",
+                "bike_demand.api:app",
+                "--host",
+                "0.0.0.0",
+                "--port",
+                "8000"
+            ],
+            "WorkingDir": "/app",
+            "ArgsEscaped": true
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 2466458330,
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:ea680fbff095473bb8a6c867938d6d851e11ef0c177fce983ccc83440172bd72",
+                "sha256:8f752ea4c4bdbd4d6ad369e9d5fa1fb05008f63252c8187cf8025653b8d7b7b3",
+                "sha256:0d3e139ff0286aee05a5abbfe1b318f46d4d53030d046cf815be874d0a7fc197",
+                "sha256:de4389417aed217eaa76e2b8362b44d79f3e81d4d2593f41ef7ba34607a13b46",
+                "sha256:888926c107c3811094865865952b5e0f90dcf6394b28103d53ae42b194a0f213",
+                "sha256:df69da07d9c9ae9505001ff5bce3131a0c3e54a3b5175b2ef0a609ac4195811e",
+                "sha256:c44b65612b7a2350ad47cdacd8e7865ef14f0c6b5ba30005a8179386189ebbe1",
+                "sha256:88e02a501cc028a31bf1708a1e6d37877bbbf13c8ca66746476b62b80cc6cb78",
+                "sha256:09144dd0fabe59f2cf01447cff3305ea4edf26009bcd6350cf40bb7e2855973c",
+                "sha256:2569261a5bb4efdd0af3eb7511e2b4d70502323d0326b27c29f16da428f2ac71",
+                "sha256:984e7bc4688405fbd41970e96e9e02a784628acabe2aa8fb72944bac244d4ab4",
+                "sha256:711ce328bf16ec496c71611c7a672507049b80931f45458f50ebaaa08e05fea4",
+                "sha256:ff4144c099446c394156f0e0a4c1e330af192f2efeb3684f8f2c27d5132f0d25",
+                "sha256:fa1848c0768a7f5331a5b34ca26854b053f09f856a6f442ea9dfb92c5928503e",
+                "sha256:12193c489a748bbcc905ede4be63b5562bb92bcc40ff6116399417cf0cfc6995",
+                "sha256:ac332a1533077385a46e6cb2ecc8d0e811b178c76899e7c06c83b0f5d8a883fd",
+                "sha256:b448f7c82d80aacda62e47123fd3ea5710fcee9ddb56e24738f0320d24079f9a"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-11-07T20:32:53.991134059Z"
+        },
+        "Descriptor": {
+            "mediaType": "application/vnd.oci.image.index.v1+json",
+            "digest": "sha256:74135981385018b061f6fbf13cc820d8a5284a17ed92ba2387571eaa7ef9bc10",
+            "size": 856
+        },
+        "Identity": {
+            "Build": [
+                {
+                    "Ref": "dwiqtjlqybh8e7omavefl4vj9",
+                    "CreatedAt": "2026-11-07T20:33:23.912644325Z"
+                }
+            ]
+        }
+    }
+]
