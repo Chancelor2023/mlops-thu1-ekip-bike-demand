@@ -496,3 +496,22 @@ proof and any promotion are performed manually and recorded in
 `reports/logs/lab-07/romain-03-integration-tests-can-fail.log`.
 
 ---
+
+## Monitoring, incident and recovery: Lab 8
+
+Status: prepared, drill not yet performed. Only one accepted model version exists; the
+drill restores the retained accepted state on an isolated `lab8` tag (scope to confirm
+with the instructor, see the contract).
+
+- Operating procedure for the next operator: [RUNBOOK.md](RUNBOOK.md)
+- Team rules, workload and signal definitions: [reports/lab-08-contract.md](reports/lab-08-contract.md)
+- What actually happened (timeline, first signal, hypotheses, recovery proof):
+  [reports/lab-08-incident.md](reports/lab-08-incident.md)
+- Recovery target and its preflight evidence:
+  [reports/lab-08/rollback-target.md](reports/lab-08/rollback-target.md),
+  [rollback-target.json](reports/lab-08/rollback-target.json),
+  [preflight-20261107T210602Z/](reports/lab-08/preflight-20261107T210602Z/)
+- Raw drill evidence: `reports/lab-08/drill-<UTC>/` (added after the drill)
+
+CI does not prove that a live recovery succeeded; recovery is verified manually on
+Cloud Run with fresh requests, identity checks and post-change logs.
