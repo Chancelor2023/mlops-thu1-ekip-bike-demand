@@ -1,0 +1,111 @@
+{
+  "status": "prepared_for_peer_review_not_a_live_recovery_proof",
+  "project": "mlops-ece-group2",
+  "region": "europe-west1",
+  "service": "mlops-thu1-ekip-bike-demand",
+  "service_url": "https://mlops-thu1-ekip-bike-demand-jdc2acx6uq-ew.a.run.app",
+  "revision": "mlops-thu1-ekip-bike-demand-00018-rng",
+  "image": "europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f",
+  "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+  "model_version": "baseline-4df84bfe8121",
+  "bundle_checksums": {
+    "model.joblib": "d24c050e3631d5b4c2feb8cb571bef6382d8c975c42a5c11edd28de78a0b8c07",
+    "model-metadata.json": "b09c2b06b0a90b829c3d1a89c3d544f9d0020f0a74b22a4931e0e676596dbd8f"
+  },
+  "model_dir": "/app/artifacts",
+  "revision_spec": {
+    "containerConcurrency": 80,
+    "containers": [
+      {
+        "image": "europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f",
+        "name": "placeholder-1",
+        "ports": [
+          {
+            "containerPort": 8000,
+            "name": "http1"
+          }
+        ],
+        "resources": {
+          "limits": {
+            "cpu": "1000m",
+            "memory": "512Mi"
+          }
+        },
+        "startupProbe": {
+          "failureThreshold": 1,
+          "periodSeconds": 240,
+          "tcpSocket": {
+            "port": 8000
+          },
+          "timeoutSeconds": 240
+        },
+        "volumeMounts": [
+          {
+            "mountPath": "/app/artifacts",
+            "name": "model"
+          }
+        ]
+      }
+    ],
+    "serviceAccountName": "1087566946792-compute@developer.gserviceaccount.com",
+    "timeoutSeconds": 300,
+    "volumes": [
+      {
+        "csi": {
+          "driver": "gcsfuse.run.googleapis.com",
+          "readOnly": true,
+          "volumeAttributes": {
+            "bucketName": "thu1-ekip-bike-demand-model"
+          }
+        },
+        "name": "model"
+      }
+    ]
+  },
+  "captured_traffic": [
+    {
+      "latestRevision": true,
+      "percent": 100,
+      "revisionName": "mlops-thu1-ekip-bike-demand-00018-rng"
+    }
+  ],
+  "stored_model_objects": [
+    {
+      "uri": "gs://thu1-ekip-bike-demand-model/model.joblib",
+      "generation": "1792749083386751",
+      "sha256": "d24c050e3631d5b4c2feb8cb571bef6382d8c975c42a5c11edd28de78a0b8c07"
+    },
+    {
+      "uri": "gs://thu1-ekip-bike-demand-model/model-metadata.json",
+      "generation": "1792749083186741",
+      "sha256": "b09c2b06b0a90b829c3d1a89c3d544f9d0020f0a74b22a4931e0e676596dbd8f"
+    }
+  ],
+  "recovery_archive": {
+    "versioned_uri": "gs://thu1-ekip-bike-demand-model/lab7-archives/baseline-4df84bfe8121/20261105T154814Z/accepted-reference.tar.gz#1793897068536566",
+    "sha256": "5ab5085191491febe7fe9ad919ebc81d9afd3f7c2e745ba4565a292936a74ad3"
+  },
+  "observed_local_compatibility": {
+    "http_health": 200,
+    "http_valid_prediction": 200,
+    "prediction": 37.30960864135864,
+    "http_invalid_request": 422,
+    "evidence": "preflight-20261107T210602Z/local-compatibility-verification.json"
+  },
+  "reviewer": "Romain",
+  "peer_approval_recorded": false,
+  "live_recovery_verified": false,
+  "two_distinct_accepted_model_versions_established": false,
+  "source_evidence_archive": {
+    "name": "lab8-preflight-20261107T210602Z-evidence.zip",
+    "sha256": "2aadce1531b56afce58bcd676101f3dee78cd0e31f8112ad77142f56a57343d2"
+  },
+  "limitations": [
+    "Evidence captures the observed period; re-check live traffic, configuration and object generations before the drill.",
+    "Legacy health reports model version and code revision, not the loaded in-memory model hash.",
+    "Stored file hashes and archive recovery were recorded on the execution host; model binary files are omitted from this review package.",
+    "Local Docker verification does not reproduce the Cloud Run IAM or GCS FUSE path, or demonstrate live recovery.",
+    "Two distinct accepted model versions and a prior/current accepted-version handoff are not established.",
+    "Captured production traffic follows latestRevision; future changes must explicitly preserve the observed production revision and verify routing."
+  ]
+}

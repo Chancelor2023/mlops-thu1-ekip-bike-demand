@@ -1,0 +1,35 @@
+{
+  "scope": "Local compatibility check using the recovered accepted bundle",
+  "input_origin": {
+    "instant": "8646",
+    "date": "2012-01-01",
+    "partition": "validation"
+  },
+  "observations": {
+    "health-check": {
+      "timestamp": "2026-11-07T21:17:44.915943+00:00",
+      "http_status": 200,
+      "request_id": "a7090b84-2544-4ac8-b00e-b70ccc70af78"
+    },
+    "valid": {
+      "timestamp": "2026-11-07T21:17:44.949840+00:00",
+      "http_status": 200,
+      "request_id": "276e3410-e5c0-4774-8e3f-d77e1095e1da"
+    },
+    "invalid": {
+      "timestamp": "2026-11-07T21:17:44.954052+00:00",
+      "http_status": 422,
+      "request_id": "5f81a5c0-7e2b-4b2f-913b-dc6154ae4060"
+    }
+  },
+  "checks": {
+    "health_identity": true,
+    "valid_http_200": true,
+    "prediction_finite_nonnegative": true,
+    "prediction_model_version": true,
+    "invalid_http_422": true
+  },
+  "result": "passed",
+  "cloud_run_modified": false,
+  "retraining_performed": false
+}

@@ -1,0 +1,22 @@
+   Building bike-demand @ file:///app
+      Built bike-demand @ file:///app
+Uninstalled 1 package in 1ms
+Installed 1 package in 1ms
+Bytecode compiled 8811 files in 1.85s
+INFO:     Started server process [21]
+INFO:     Waiting for application startup.
+{"ts": "2026-11-07T21:16:00.880021+00:00", "event": "startup", "request_id": null, "status": "loaded", "duration_ms": null, "model_version": "baseline-4df84bfe8121", "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be", "method": null, "path": null}
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+{"ts": "2026-11-07T21:16:16.429205+00:00", "event": "health", "request_id": "d7f747e3-a0db-41cd-8fef-9bf829cbe096", "status": 200, "duration_ms": 2.65, "model_version": "baseline-4df84bfe8121", "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be", "method": "GET", "path": "/health"}
+INFO:     172.17.0.1:52718 - "GET /health HTTP/1.1" 200 OK
+{"ts": "2026-11-07T21:17:44.914179+00:00", "event": "health", "request_id": "a7090b84-2544-4ac8-b00e-b70ccc70af78", "status": 200, "duration_ms": 1.25, "model_version": "baseline-4df84bfe8121", "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be", "method": "GET", "path": "/health"}
+INFO:     172.17.0.1:39070 - "GET /health HTTP/1.1" 200 OK
+{"ts": "2026-11-07T21:17:44.946760+00:00", "event": "predicted", "request_id": "276e3410-e5c0-4774-8e3f-d77e1095e1da", "status": 200, "duration_ms": 29.32, "model_version": "baseline-4df84bfe8121", "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be", "method": "POST", "path": "/predict"}
+INFO:     172.17.0.1:39086 - "POST /predict HTTP/1.1" 200 OK
+{"ts": "2026-11-07T21:17:44.952482+00:00", "event": "rejected", "request_id": "5f81a5c0-7e2b-4b2f-913b-dc6154ae4060", "status": 422, "duration_ms": 1.13, "model_version": "baseline-4df84bfe8121", "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be", "method": "POST", "path": "/predict"}
+INFO:     172.17.0.1:39094 - "POST /predict HTTP/1.1" 422 Unprocessable Entity
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [21]
