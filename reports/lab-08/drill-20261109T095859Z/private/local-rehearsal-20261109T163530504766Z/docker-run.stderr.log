@@ -1,0 +1,55 @@
+Unable to find image 'europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f' locally
+europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f: Pulling from mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand
+e45297bcbecd: Pulling fs layer
+4a679ac3b09f: Pulling fs layer
+d9612276b664: Pulling fs layer
+b365a43716b1: Pulling fs layer
+e639439a2713: Pulling fs layer
+12e7013014f3: Pulling fs layer
+b733085e2b3a: Pulling fs layer
+c8caba3986c1: Pulling fs layer
+b723b5f61328: Pulling fs layer
+ac98aabd1856: Pulling fs layer
+4f5e7b9e9544: Pulling fs layer
+235af6abe7bd: Pulling fs layer
+fc6bb9dfd5d5: Pulling fs layer
+d207033bcf58: Pulling fs layer
+634cfb24c8c7: Pulling fs layer
+0e7d2454e720: Pulling fs layer
+3bd5dbb9d3b4: Pulling fs layer
+d207033bcf58: Download complete
+e45297bcbecd: Download complete
+d9612276b664: Download complete
+e639439a2713: Download complete
+b365a43716b1: Download complete
+c8caba3986c1: Download complete
+4a679ac3b09f: Download complete
+b723b5f61328: Download complete
+b733085e2b3a: Download complete
+634cfb24c8c7: Download complete
+12e7013014f3: Download complete
+0e7d2454e720: Download complete
+3bd5dbb9d3b4: Download complete
+235af6abe7bd: Download complete
+4f5e7b9e9544: Download complete
+fc6bb9dfd5d5: Download complete
+4a679ac3b09f: Pull complete
+d9612276b664: Pull complete
+b365a43716b1: Pull complete
+e639439a2713: Pull complete
+12e7013014f3: Pull complete
+b733085e2b3a: Pull complete
+ac98aabd1856: Download complete
+c8caba3986c1: Pull complete
+b723b5f61328: Pull complete
+ac98aabd1856: Pull complete
+d207033bcf58: Pull complete
+235af6abe7bd: Pull complete
+4f5e7b9e9544: Pull complete
+fc6bb9dfd5d5: Pull complete
+634cfb24c8c7: Pull complete
+0e7d2454e720: Pull complete
+3bd5dbb9d3b4: Pull complete
+e45297bcbecd: Pull complete
+Digest: sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f
+Status: Downloaded newer image for europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f

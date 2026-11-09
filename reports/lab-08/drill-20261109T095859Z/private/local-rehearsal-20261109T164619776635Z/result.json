@@ -1,0 +1,20 @@
+{
+  "scope": "Private local rehearsal only",
+  "runner_version": 2,
+  "launch_mode": "Installed Python/uvicorn directly; no uv bootstrap",
+  "default_image_command_tested": false,
+  "plan_sha256": "d16e9a43d2ac64d77b0e07fa49c545f25f8d59e04ece15fe5e92575bb0850066",
+  "cloud_run_modified": false,
+  "retraining_performed": false,
+  "container": "lab8-local-fault-73158fc84a",
+  "result": "passed",
+  "probe_exit": 0,
+  "checks": {
+    "health_503": true,
+    "valid_prediction_503": true,
+    "invalid_input_422": true
+  },
+  "configuration_matches": true,
+  "container_running_after_cleanup": false,
+  "oom_killed": false
+}

@@ -1,0 +1,1227 @@
+[
+  {
+    "insertId": "6af19ecc00043dccd6999e0b",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 1.35,
+      "event": "health",
+      "method": "GET",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/health",
+      "request_id": "f07dbcda-cab6-4f19-b397-b273808ab3ba",
+      "status": 200,
+      "ts": "2026-11-09T10:22:04.277954+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:04.285500817Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:04.277964Z"
+  },
+  {
+    "insertId": "6af19ecd0005511ec78610e5",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 30.64,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "e3419ec8-4619-4a5e-8654-389fb0e38aaf",
+      "status": 200,
+      "ts": "2026-11-09T10:22:05.347197+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:05.616358018Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:05.348446Z"
+  },
+  {
+    "insertId": "6af19ece00062ebf29f9d3ae",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 15.94,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "01f9b052-a9ad-4ec7-9231-c9ba8d9cd2a2",
+      "status": 200,
+      "ts": "2026-11-09T10:22:06.404833+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:06.616398079Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:06.405183Z"
+  },
+  {
+    "insertId": "6af19ecf0006ebc54d49f890",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 9.85,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "f918909e-f8f6-4a95-a4a5-ed8a762aec5a",
+      "status": 200,
+      "ts": "2026-11-09T10:22:07.453465+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:07.615759Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:07.453573Z"
+  },
+  {
+    "insertId": "6af19ed00007aeb0fef5b486",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 8.61,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "365d4e83-c5a5-40f9-b9a4-0a60387473f4",
+      "status": 200,
+      "ts": "2026-11-09T10:22:08.502455+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:08.613748290Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:08.503472Z"
+  },
+  {
+    "insertId": "6af19ed1000863a9ac0be406",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 9.94,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "19d31c06-37b7-4129-ad1e-4e3a84f1da5d",
+      "status": 200,
+      "ts": "2026-11-09T10:22:09.549703+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:09.612710370Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:09.549801Z"
+  },
+  {
+    "insertId": "6af19ed2000922209e3e6fb9",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 8.09,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "cac3c8ae-e739-4b20-a6d2-982a6c338242",
+      "status": 200,
+      "ts": "2026-11-09T10:22:10.598282+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:10.611856431Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:10.598560Z"
+  },
+  {
+    "insertId": "6af19ed30009da4ef087f2f2",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 7.24,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "983cbb3c-08e4-4a92-95b5-3a2a84fb3fbc",
+      "status": 200,
+      "ts": "2026-11-09T10:22:11.645517+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:11.944594915Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:11.645710Z"
+  },
+  {
+    "insertId": "6af19ed4000ad3859ece9621",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 8.75,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "0b18bbb1-77b0-4981-a3f2-536f9545460a",
+      "status": 200,
+      "ts": "2026-11-09T10:22:12.709260+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:12.941768524Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:12.709509Z"
+  },
+  {
+    "insertId": "6af19ed5000b7d707bee6db5",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 7.96,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "d57b1783-7f3e-4a0f-98a0-7599d548614f",
+      "status": 200,
+      "ts": "2026-11-09T10:22:13.752963+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:13.944508817Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:13.753008Z"
+  },
+  {
+    "insertId": "6af19ed6000c2e6a8fa6c5cf",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 9.51,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "6efe3a14-1767-4ef5-94d4-cf4cc3256c81",
+      "status": 200,
+      "ts": "2026-11-09T10:22:14.798272+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:14.940205825Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:14.798314Z"
+  },
+  {
+    "insertId": "6af19ed7000cd3a9bc12c049",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 7.92,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "02906ac1-6f6f-4703-be59-083c56a60eeb",
+      "status": 200,
+      "ts": "2026-11-09T10:22:15.840586+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:15.944480955Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:15.840617Z"
+  },
+  {
+    "insertId": "6af19ed8000d871a420460c2",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 9.78,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "1c792fdb-c7bf-41a3-bb97-8516d32de0c7",
+      "status": 200,
+      "ts": "2026-11-09T10:22:16.886165+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:16.933668024Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:16.886554Z"
+  },
+  {
+    "insertId": "6af19ed9000e2f823a6b0e95",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 8.01,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "d7703631-7ece-49a7-b536-36d2e0b68b4a",
+      "status": 200,
+      "ts": "2026-11-09T10:22:17.929573+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:17.937568054Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:17.929666Z"
+  },
+  {
+    "insertId": "6af19eda000ee92d4fa175d0",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 8.64,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "a3372af5-2291-4377-81e6-39ba54856e10",
+      "status": 200,
+      "ts": "2026-11-09T10:22:18.975974+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:19.269917917Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:18.977197Z"
+  },
+  {
+    "insertId": "6af19edc000053d33e355741",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 9.83,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "20d0093f-5a05-4277-b4db-6e8a2b1e81ac",
+      "status": 200,
+      "ts": "2026-11-09T10:22:20.021338+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:20.271986558Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:20.021459Z"
+  },
+  {
+    "insertId": "6af19edd0000fc55a4ec4739",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 8.07,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "2db7d8a1-4191-4f0c-b3c8-efca30881a61",
+      "status": 200,
+      "ts": "2026-11-09T10:22:21.064366+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:21.268847035Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:21.064597Z"
+  },
+  {
+    "insertId": "6af19ede0001b3a84dbe370b",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 7.83,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "e8065039-1fb8-46a0-aacb-7fe8e72f82f3",
+      "status": 200,
+      "ts": "2026-11-09T10:22:22.111123+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:22.267651443Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:22.111528Z"
+  },
+  {
+    "insertId": "6af19edf00026a401361d967",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 8.42,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "98a2a40a-96db-4d97-9b0e-6ee25ab950f4",
+      "status": 200,
+      "ts": "2026-11-09T10:22:23.158150+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:23.267497821Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:23.158272Z"
+  },
+  {
+    "insertId": "6af19ee000032d58d762cbc4",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 8.01,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "e2f95a7a-4d6e-4862-807c-52f335f412cd",
+      "status": 200,
+      "ts": "2026-11-09T10:22:24.208020+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:24.267437896Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:24.208216Z"
+  },
+  {
+    "insertId": "6af19ee10003debf1c162c83",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 8.15,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "06146de1-04d3-4f15-8f45-1cf0bb80638f",
+      "status": 200,
+      "ts": "2026-11-09T10:22:25.253577+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:25.265741876Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:25.253631Z"
+  },
+  {
+    "insertId": "6af19ee20004a1ade6a1dbad",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 7.54,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "134ececf-d4b8-4497-843b-eb5f07b84d1f",
+      "status": 200,
+      "ts": "2026-11-09T10:22:26.303561+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:26.597758611Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:26.303533Z"
+  },
+  {
+    "insertId": "6af19ee300055f53f94927b0",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 8.83,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "a8641a98-9dd2-41d9-b7d1-f01817ffcad4",
+      "status": 200,
+      "ts": "2026-11-09T10:22:27.351772+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:27.591860641Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:27.352083Z"
+  },
+  {
+    "insertId": "6af19ee400060a0bf303fcfd",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 7.75,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "f08a87ae-ffa6-4487-8d0a-14c9221cd163",
+      "status": 200,
+      "ts": "2026-11-09T10:22:28.395750+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:28.594444113Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:28.395787Z"
+  },
+  {
+    "insertId": "6af19ee50006bc1155ee9c67",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 7.58,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "77c885c1-4645-4a22-850b-331d589d0a68",
+      "status": 200,
+      "ts": "2026-11-09T10:22:29.441085+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:29.595017737Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:29.441361Z"
+  },
+  {
+    "insertId": "6af19ee600076fdbf5bfa9c9",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 7.72,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "53ae96b3-d81d-4cd9-ba7e-2d518b374274",
+      "status": 200,
+      "ts": "2026-11-09T10:22:30.487360+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:30.593264706Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:30.487387Z"
+  },
+  {
+    "insertId": "6af19ee700082138c898a490",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 7.68,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "d484d3a5-ad35-4511-a44b-a70a0507afed",
+      "status": 200,
+      "ts": "2026-11-09T10:22:31.532785+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:31.593049111Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:31.532792Z"
+  },
+  {
+    "insertId": "6af19ee800093892643d9313",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 7.54,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "620870bb-e1a6-4872-bfd0-f6ea79540199",
+      "status": 200,
+      "ts": "2026-11-09T10:22:32.604270+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:32.921564813Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:32.604306Z"
+  },
+  {
+    "insertId": "6af19ee90009e31d6bc9ed92",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 7.77,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "94822114-0eed-44e0-9ea1-ac6b877f73e9",
+      "status": 200,
+      "ts": "2026-11-09T10:22:33.647852+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:33.924615489Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:33.647965Z"
+  },
+  {
+    "insertId": "6af19eea000a8f901691d065",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 7.18,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "e4c593ea-93b0-4a01-9659-6757ec01aad2",
+      "status": 200,
+      "ts": "2026-11-09T10:22:34.692082+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:34.923154614Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:34.692112Z"
+  },
+  {
+    "insertId": "6af19eeb000b3debb29f07c5",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 7.58,
+      "event": "predicted",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "61c68cb6-6471-4802-8c07-d5da8e904f29",
+      "status": 200,
+      "ts": "2026-11-09T10:22:35.736715+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:35.922412187Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:35.736747Z"
+  },
+  {
+    "insertId": "6af19eeb000bcaa487ced22d",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 1.34,
+      "event": "rejected",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "c2930852-99a1-4a2a-9903-57aaf632f3a8",
+      "status": 422,
+      "ts": "2026-11-09T10:22:35.772740+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:35.922412187Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:35.772772Z"
+  },
+  {
+    "insertId": "6af19eec000c5c0ed41d03f9",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 0.84,
+      "event": "rejected",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "d4b4bd3e-d94d-472b-8025-3588b86ceb3a",
+      "status": 422,
+      "ts": "2026-11-09T10:22:36.809732+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:36.922817303Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:36.809998Z"
+  },
+  {
+    "insertId": "6af19eed000cef800eb0ac6d",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 1.22,
+      "event": "rejected",
+      "method": "POST",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/predict",
+      "request_id": "6ae96323-7785-4b2b-9451-648c14d05760",
+      "status": 422,
+      "ts": "2026-11-09T10:22:37.847682+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:37.919463088Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:37.847744Z"
+  },
+  {
+    "insertId": "6af19eee000d9797c051ffe9",
+    "jsonPayload": {
+      "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "duration_ms": 1.77,
+      "event": "health",
+      "method": "GET",
+      "model_version": "baseline-4df84bfe8121",
+      "path": "/health",
+      "request_id": "ff738043-06f7-4cd4-a885-743a6ab1f8cc",
+      "status": 200,
+      "ts": "2026-11-09T10:22:38.889954+00:00"
+    },
+    "labels": {
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "instanceId": "00e8a408bd9a64fc12d69887c21c1df119b962d0ab1fb3c334170d6f2cfaf922ed3921516978762fed57743eb2c3e2b98a163f75cf94270106f7b620e670b90a527b9ffec913d1e0aeb8d17d2bcc0808c764581f6bf05150ab",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run"
+    },
+    "logName": "projects/mlops-ece-group2/logs/run.googleapis.com%2Fstdout",
+    "receiveTimestamp": "2026-11-09T10:22:38.920182384Z",
+    "resource": {
+      "labels": {
+        "configuration_name": "mlops-thu1-ekip-bike-demand",
+        "location": "europe-west1",
+        "project_id": "mlops-ece-group2",
+        "revision_name": "mlops-thu1-ekip-bike-demand-00018-rng",
+        "service_name": "mlops-thu1-ekip-bike-demand"
+      },
+      "type": "cloud_run_revision"
+    },
+    "timestamp": "2026-11-09T10:22:38.890775Z"
+  }
+]

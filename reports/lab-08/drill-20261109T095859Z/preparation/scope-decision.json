@@ -1,0 +1,9 @@
+{
+  "recorded_at_utc": "2026-11-09T10:44:02.756089+00:00",
+  "reported_by": "Jerry",
+  "decision": "Proceed with recovery to the retained accepted state",
+  "reason": "Time constraint reported by the team",
+  "instructor_confirmation": "not_obtained",
+  "limitation": "Does not demonstrate rollback between two accepted models",
+  "incident_performed": false
+}

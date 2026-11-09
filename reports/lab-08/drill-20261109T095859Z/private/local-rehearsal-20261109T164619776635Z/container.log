@@ -1,0 +1,15 @@
+{"ts": "2026-11-09T16:46:23.649850+00:00", "event": "startup", "request_id": null, "status": "unavailable", "duration_ms": null, "model_version": null, "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be", "method": null, "path": null}
+{"ts": "2026-11-09T16:46:24.930801+00:00", "event": "model_unavailable", "request_id": "54ef33bc-cd22-41aa-bd62-7529f544bcb4", "status": 503, "duration_ms": 2.42, "model_version": null, "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be", "method": "GET", "path": "/health"}
+INFO:     127.0.0.1:49960 - "GET /health HTTP/1.1" 503 Service Unavailable
+{"ts": "2026-11-09T16:46:24.937687+00:00", "event": "model_unavailable", "request_id": "3f371a67-5bd4-4476-a65e-1707fad43dfa", "status": 503, "duration_ms": 3.8, "model_version": null, "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be", "method": "POST", "path": "/predict"}
+INFO:     127.0.0.1:49968 - "POST /predict HTTP/1.1" 503 Service Unavailable
+{"ts": "2026-11-09T16:46:24.941427+00:00", "event": "rejected", "request_id": "b66c1a22-1568-49d3-81f4-db61f119230a", "status": 422, "duration_ms": 1.21, "model_version": null, "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be", "method": "POST", "path": "/predict"}
+INFO:     127.0.0.1:49972 - "POST /predict HTTP/1.1" 422 Unprocessable Entity
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [1]

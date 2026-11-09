@@ -1,0 +1,10 @@
+[
+  "gcloud",
+  "logging",
+  "read",
+  "resource.type=\"cloud_run_revision\"\nresource.labels.service_name=\"mlops-thu1-ekip-bike-demand\"\nresource.labels.location=\"europe-west1\"\njsonPayload.request_id:*\ntimestamp>=\"2026-11-09T17:22:16.106637+00:00\"\ntimestamp<=\"2026-11-09T17:24:01.313466+00:00\"",
+  "--project=mlops-ece-group2",
+  "--order=asc",
+  "--limit=1000",
+  "--format=json"
+]

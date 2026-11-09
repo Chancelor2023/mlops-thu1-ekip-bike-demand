@@ -1,0 +1,16 @@
+{
+  "bucket": "thu1-ekip-bike-demand-model",
+  "content_type": "application/octet-stream",
+  "crc32c_hash": "/FuEGg==",
+  "creation_time": "2026-10-23T09:51:23+0000",
+  "etag": "CP/GpeLuz5cDEAE=",
+  "generation": "1792749083386751",
+  "md5_hash": "R7aXmR27NYD3O839Bl69dw==",
+  "metageneration": 1,
+  "name": "model.joblib",
+  "size": 5243633,
+  "storage_class": "STANDARD",
+  "storage_class_update_time": "2026-10-23T09:51:23+0000",
+  "storage_url": "gs://thu1-ekip-bike-demand-model/model.joblib#1792749083386751",
+  "update_time": "2026-10-23T09:51:23+0000"
+}

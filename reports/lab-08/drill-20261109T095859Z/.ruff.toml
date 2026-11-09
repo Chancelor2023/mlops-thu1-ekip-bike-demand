@@ -1,0 +1,3 @@
+# Preserve archived diagnostic scripts byte-for-byte; they are raw evidence.
+extend = "../../../pyproject.toml"
+extend-exclude = ["**/*.py"]

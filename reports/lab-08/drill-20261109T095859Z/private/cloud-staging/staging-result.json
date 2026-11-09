@@ -1,0 +1,9 @@
+{
+  "status": "prepared_without_traffic",
+  "revision": "mlops-thu1-ekip-bike-demand-lab8-fault-67f152fd40",
+  "image": "europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f",
+  "production_revision": "mlops-thu1-ekip-bike-demand-00018-rng",
+  "lab8_tag_revision": "mlops-thu1-ekip-bike-demand-00018-rng",
+  "incident_activated": false,
+  "healthy_template_cleanup_pending": true
+}

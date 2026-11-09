@@ -1,0 +1,8 @@
+{
+  "scope": "Healthy endpoint checks before baseline; no fault injected",
+  "checks": {
+    "production": true,
+    "lab8": true
+  },
+  "result": "passed"
+}

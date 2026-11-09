@@ -1,7 +1,10 @@
 # Lab 8 contract: monitoring, incident diagnosis and verified recovery
 
 Lead: Romain. Contract reviewer: Jerry. Status: **draft for review**; validated only when the
-four members have signed section 14 *before* any baseline observation or injection.
+four members have signed section 14 *before* any baseline observation or injection. The normal
+phase was collected by Jerry on 2026-11-09 while individual signatures/updated
+role confirmation were not recorded here. This deviation is explicit; successful
+measurements do not imply retroactive sign-off or independent diagnosis.
 
 This contract fixes definitions and rules. It contains no observed result: what
 actually happened is recorded in [lab-08-incident.md](lab-08-incident.md), and how to
@@ -14,7 +17,7 @@ act is in [RUNBOOK.md](../RUNBOOK.md).
 | Lab 7 merged on `main` | merged; the planned Mathis review of #35 was not completed | PR #34 (integration), #35 (candidate evaluations); do not equate merge with the missing peer review |
 | Lab 7 outcome | two candidates rejected on latency; accepted model kept; third candidate not run | [lab-07-report.md](lab-07-report.md), [evaluations/](lab-07/evaluations/) |
 | Recovery target named and reviewed | done (local compatibility only) | PR #36, [rollback-target.md](lab-08/rollback-target.md) |
-| Live re-check of the target just before the drill | **pending** (Jerry) | to be stored with the drill evidence |
+| Live target re-check | passed before the normal phase on 2026-11-09; refresh before injection | [reference-preflight.json](lab-08/drill-20261109T095859Z/preparation/reference-preflight.json) |
 | Two distinct accepted versions (current + previous) | **missing: explicit blocker** | see section 2 |
 
 ## 2. Blocker: only one accepted version
@@ -26,10 +29,13 @@ rejected Lab 7 candidate is relabelled as accepted to fill the gap.
 Consequence for the drill: the fault is injected on an isolated tagged revision, and the
 recovery restores the **retained accepted state** (section 3) on that tag. This
 demonstrates notice, diagnosis and recovery to a verified retained state; it does not
-demonstrate a handoff between two accepted model versions. The lead asks the instructor to
-confirm this scope **before** the drill and records the answer here:
+demonstrate a handoff between two accepted model versions.
 
-> Instructor answer: _pending_ (date, channel, wording).
+Team decision reported by Jerry on 2026-11-09: proceed with this retained-state
+scope without instructor confirmation because of limited time. This is not an
+instructor approval or an assertion that two accepted models exist. The missing
+handoff stays explicit in the result. See
+[scope-decision.json](lab-08/drill-20261109T095859Z/preparation/scope-decision.json).
 
 ## 3. Recovery target (fixed, from the reviewed record)
 
@@ -183,7 +189,22 @@ not a failure to hide.
 
 ## 15. Work order
 
-Jerry/Mathis/Romain preparations in parallel → review of preparations → instructor scope
-answer (section 2) → drill (three members) → incident record and runbook completed →
+Jerry/Mathis/Romain preparations in parallel → review of preparations → recorded scope
+limitation (section 2) → drill (three members) → incident record and runbook completed →
 Romain's final verification → corrections and merges → annotated tag `m4` prepared by Romain with
 a note listing remaining limits.
+
+## 16. Actual execution deviation — 9 November 2026
+
+The original three-person protocol above remains the intended contract. Jerry
+recorded a solo-execution decision at 17:12:09.010203 UTC because Mathis and Romain
+were unavailable, then performed the isolated live incident and retained-state
+recovery. This does not fulfil independent blind diagnosis or peer runbook use.
+No instructor approval, role attendance, contract signature or final review is
+created retroactively. See [the incident record](lab-08-incident.md) and
+[drill summary](lab-08/drill-summary.md) for the completed technical checks and limits.
+A first interrupted activation was retained; a second completed incident collected
+30/30 valid failures (503), followed by 30/30 valid successes after recovery.
+The incident has 34 correlated request IDs plus one uncorrelated health timeout;
+recovery has 35/35. The healthy service template was restored without traffic.
+Final peer review and an independent runbook attempt remain outstanding.

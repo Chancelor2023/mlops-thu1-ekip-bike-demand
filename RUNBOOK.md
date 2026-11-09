@@ -8,9 +8,9 @@ rules are in [reports/lab-08-contract.md](reports/lab-08-contract.md).
 
 | Item | Value | Last verified |
 |---|---|---|
-| Service | `mlops-thu1-ekip-bike-demand`, project `mlops-ece-group2`, region `europe-west1` | 2026-11-07T21:06Z (capture) |
-| Accepted model | `baseline-4df84bfe8121` (only accepted version) | same |
-| Recovery target | revision `mlops-thu1-ekip-bike-demand-00018-rng`, code `ea37b8a…`, image `sha256:bbf02e…` | same; **live re-check pending before the drill** |
+| Service | `mlops-thu1-ekip-bike-demand`, project `mlops-ece-group2`, region `europe-west1` | 2026-11-09, Jerry (live drill and recovery) |
+| Accepted model | `baseline-4df84bfe8121` (only accepted version) | 2026-11-09, Jerry |
+| Recovery target | revision `mlops-thu1-ekip-bike-demand-00018-rng`, code `ea37b8a…`, image `sha256:bbf02e…` | 2026-11-09 live recovery, 17:22–17:23 UTC; refresh before any later drill |
 | Full expectations | [reports/lab-08/rollback-target.json](reports/lab-08/rollback-target.json) | reviewed in PR #36 |
 | Cloud access | Jerry only (IAM) | — |
 
@@ -157,6 +157,22 @@ Do not retrain, delete revisions, edit bucket objects or change IAM as a repair.
 Declare recovery only if the three agree; write the observation window. A successful
 `gcloud` command is not a proof of recovery.
 
+### Repair the service template after a configuration fault
+
+Restoring a traffic tag does not restore `spec.template`. Inspect the template
+against the retained target after recovery. In this drill, MODEL_DIR remained wrong
+until a no-traffic deployment of the same pinned image removed its override with
+`--remove-env-vars=MODEL_DIR --no-traffic`. Retain the command, stdout/stderr, exit,
+revision spec and service-after snapshot. Verify production=100% and the lab8 tag
+still point to the retained target, the template and cleanup revision match its
+healthy spec, and the cleanup revision has Ready=true. Ready alone does not prove
+its HTTP behavior; do not route to it merely because cleanup succeeded.
+
+After restoring traffic, check the root production URL separately if claiming its
+HTTP health. Tagged recovery requests only establish behavior on the tagged URL.
+An initial timeout may have no returned request ID: retain it as uncorrelated,
+not as a matching application log. Never describe 34 pairs as 35/35 correlation.
+
 ## 7. Escalation
 
 | Situation | Who | Action |
@@ -182,3 +198,12 @@ Declare recovery only if the three agree; write the observation window. A succes
 | Date (UTC) | Change | Author |
 |---|---|---|
 | 2026-11-08 | First version, before the drill and before the peer attempt | Romain |
+| 2026-11-09 | Live solo evidence, timeout-correlation limit and service-template cleanup | Jerry, assisted by Codex |
+
+Normal-phase evidence: [baseline-summary.md](reports/lab-08/baseline-summary.md).
+Baseline and recovery each have 35 matching client/log pairs. The completed incident
+has 34 matching pairs and one health timeout without a usable request ID. See
+[the live drill summary](reports/lab-08/drill-summary.md). The drill was executed
+by Jerry alone; independent diagnosis and peer runbook use remain unperformed.
+A separate pre-baseline health call took 46916.29 ms, cause unestablished; do not
+substitute that observation for the measured prediction-latency population.

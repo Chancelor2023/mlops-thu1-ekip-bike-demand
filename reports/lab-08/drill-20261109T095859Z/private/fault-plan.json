@@ -1,0 +1,21 @@
+{
+  "status": "planned_not_executed",
+  "created_at_utc": "2026-11-09T16:07:19.963495+00:00",
+  "owner": "Jerry",
+  "fault": {
+    "type": "configuration",
+    "variable": "MODEL_DIR",
+    "planned_value": "/app/artifacts/lab8-missing-67f152fd40"
+  },
+  "planned_revision_suffix": "lab8-fault-67f152fd40",
+  "image": "europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f",
+  "isolation_tag": "lab8",
+  "production_revision": "mlops-thu1-ekip-bike-demand-00018-rng",
+  "production_percent": 100,
+  "recovery_revision": "mlops-thu1-ekip-bike-demand-00018-rng",
+  "active_fault_limit_seconds": 300,
+  "accepted_files_modified": false,
+  "injection_performed": false,
+  "cleanup_required": "After recovery, restore a healthy service template; do not leave the faulty MODEL_DIR for future deployments.",
+  "disclosure": "Reveal the fault to Mathis only after his diagnosis is recorded."
+}
