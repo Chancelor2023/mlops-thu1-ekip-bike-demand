@@ -1,6 +1,6 @@
 # Lab 8 contract: monitoring, incident diagnosis and verified recovery
 
-Lead: Romain. Reviewer: Brett. Status: **draft for review**; validated only when the
+Lead: Romain. Contract reviewer: Jerry. Status: **draft for review**; validated only when the
 four members have signed section 14 *before* any baseline observation or injection.
 
 This contract fixes definitions and rules. It contains no observed result: what
@@ -11,7 +11,7 @@ act is in [RUNBOOK.md](../RUNBOOK.md).
 
 | Prerequisite | State | Evidence |
 |---|---|---|
-| Lab 7 reviewed and merged on `main` | done | PR #34 (integration), #35 (candidate evaluations) |
+| Lab 7 merged on `main` | merged; the planned Mathis review of #35 was not completed | PR #34 (integration), #35 (candidate evaluations); do not equate merge with the missing peer review |
 | Lab 7 outcome | two candidates rejected on latency; accepted model kept; third candidate not run | [lab-07-report.md](lab-07-report.md), [evaluations/](lab-07/evaluations/) |
 | Recovery target named and reviewed | done (local compatibility only) | PR #36, [rollback-target.md](lab-08/rollback-target.md) |
 | Live re-check of the target just before the drill | **pending** (Jerry) | to be stored with the drill evidence |
@@ -63,12 +63,18 @@ Notes:
 
 | Role | Member | Rule |
 |---|---|---|
-| Injector + Cloud operator | Jerry | Sole IAM access. Chooses one reversible fault, keeps its detail in a dated note readable by Romain, runs the checks Brett asks for and shares raw results **without suggesting a cause**, performs recovery. |
-| Operator (investigator) | Brett | Investigates without knowing the fault, follows RUNBOOK.md without Romain dictating it, records the first signal and the hypotheses. |
+| Injector + Cloud operator | Jerry | Sole IAM access. Chooses one reversible fault, keeps its detail in a dated note readable by Romain, runs the checks Mathis asks for and shares raw results **without suggesting a cause**, performs recovery. |
+| Operator (investigator) | Mathis | Investigates without knowing the fault, follows RUNBOOK.md without Romain dictating it, records the first signal and the hypotheses. |
 | Recorder + lead | Romain | Keeps the UTC timeline in the incident record, owns this contract, the runbook and the report. Does not reveal the fault. |
-| Final verifier | Mathis | After the drill only: reconstructs the incident from the runbook and the files, leaves at least one concrete observation. |
+| Final verifier | Romain | After the drill only: reconstructs the incident from the runbook and the files, leaves at least one concrete observation. |
 
-The fault is revealed to Brett only after his diagnosis is recorded (timestamped).
+The fault is revealed to Mathis only after his diagnosis is recorded (timestamped).
+
+Role update proposed before the drill: Mathis delivered the observation tools in
+place of Brett, whose PC was unavailable. Mathis leads the investigation; Romain
+reviews the resulting evidence instead of Mathis reviewing his own collector and
+diagnosis. Confirm this allocation in section 14 before injection. No signature
+or completed independent review is implied by the update.
 
 ## 5. Isolation
 
@@ -96,7 +102,7 @@ section 3. The injector records the exact change, its UTC time and how it is rev
   missing field, a wrong type), counted separately.
 - `GET /health` at the start and at the end of each phase.
 - Payload files are frozen before the baseline: their list of `instant` values, the files
-  and their SHA-256 are committed by Brett. The same files are reused unchanged.
+  and their SHA-256 are prepared by Mathis (taking over from Brett). The same files are reused unchanged.
 - Client timeout per request: **15 s** (same as `check_service.py`).
 - No metric is computed on the held test period (2012-07 to 2012-12).
 
@@ -170,14 +176,14 @@ not a failure to hide.
 
 | Member | Role | Agreed (date UTC) |
 |---|---|---|
-| Romain | lead, recorder | |
-| Brett | operator, contract reviewer | |
+| Romain | lead, recorder, final verifier | |
+| Brett | unavailable during preparation; any later contribution/review must be recorded | |
 | Jerry | injector, cloud operator | |
-| Mathis | final verifier | |
+| Mathis | observation tooling, investigator | |
 
 ## 15. Work order
 
-Jerry/Brett/Romain preparations in parallel → review of preparations → instructor scope
+Jerry/Mathis/Romain preparations in parallel → review of preparations → instructor scope
 answer (section 2) → drill (three members) → incident record and runbook completed →
-Mathis's verification → corrections and merges → annotated tag `m4` prepared by Romain with
+Romain's final verification → corrections and merges → annotated tag `m4` prepared by Romain with
 a note listing remaining limits.

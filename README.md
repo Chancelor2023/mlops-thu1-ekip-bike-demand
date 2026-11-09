@@ -512,6 +512,7 @@ with the instructor, see the contract).
   [rollback-target.json](reports/lab-08/rollback-target.json),
   [preflight-20261107T210602Z/](reports/lab-08/preflight-20261107T210602Z/)
 - Raw drill evidence: `reports/lab-08/drill-<UTC>/` (added after the drill)
+- Authenticated collector and exit-code instructions: [observer-usage.md](reports/lab-08/observer-usage.md)
 
 CI does not prove that a live recovery succeeded; recovery is verified manually on
 Cloud Run with fresh requests, identity checks and post-change logs.

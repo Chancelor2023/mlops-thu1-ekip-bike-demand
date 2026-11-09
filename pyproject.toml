@@ -45,4 +45,5 @@ markers = [
     "api: tests de l'API",
     "regression: tests de non-régression",
     "lab7: Lab 7 pipeline, quality gate, promotion and deployment safety",
+    "lab8: offline HTTP observer and incident evidence contracts",
 ]

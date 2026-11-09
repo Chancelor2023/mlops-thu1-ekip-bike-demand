@@ -1,6 +1,6 @@
 # Lab 8 incident record
 
-Recorder: Romain. Operator: Brett. Injector: Jerry. Final verifier: Mathis.
+Recorder: Romain. Operator: Mathis (proposed replacement for Brett). Injector: Jerry. Final verifier: Romain.
 Status: **template, no drill performed yet.** Every value below is filled from raw evidence
 during or after the drill; nothing is pre-filled with an expected result. An empty cell
 means "not observed". Rules and definitions: [lab-08-contract.md](lab-08-contract.md).
@@ -80,7 +80,7 @@ Rejected hypotheses and inconclusive checks stay in this table.
 
 ## 7. Diagnosis
 
-- Diagnosis recorded by Brett at (UTC): 
+- Diagnosis recorded by Mathis at (UTC):
 - Statement:
 - Evidence it rests on:
 - What it does not explain:
@@ -119,11 +119,11 @@ Recovery declared: yes / no, by whom, at (UTC).
 
 ## 12. Runbook use and corrections
 
-| RUNBOOK step | What Brett did | Missing or ambiguous instruction | Correction (commit) |
+| RUNBOOK step | What Mathis did | Missing or ambiguous instruction | Correction (commit) |
 |---|---|---|---|
 | | | | |
 
-## 13. Final verification (Mathis)
+## 13. Final verification (Romain)
 
 | Observation (contradiction, missing proof, non-reproducible step) | Author response | Recheck result |
 |---|---|---|

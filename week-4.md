@@ -60,9 +60,9 @@ The evidence is stored in `reports/lab-08/`, including:
 
 These checks establish the integrity of the retained recovery reference and its local compatibility. They do not represent a live Cloud Run recovery.
 
-### Brett and Mathis — Operational and investigation preparation
+### Mathis — Operational and investigation preparation (taking over from Brett)
 
-Brett and Mathis worked together on the operational and investigation aspects of the Lab 8 preparation.
+Mathis implemented the observation and diagnostic tooling in PR #38, taking over from Brett because Brett could not work due to a PC problem. This records the actual preparation contribution; a completed incident or investigation is not claimed.
 
 Their work followed the contract's approach to:
 - Observing service behavior through health checks and prediction requests.
@@ -71,9 +71,9 @@ Their work followed the contract's approach to:
 - Using multiple hypotheses and targeted checks to justify an incident diagnosis.
 - Preserving the distinction between valid prediction failures and expected invalid-input responses.
 
-The contract assigns Brett the operator/investigator role during the exercise.
+The proposed role update assigns Mathis the operator/investigator role; it must be confirmed before the exercise.
 
-Mathis is also assigned the final verification role: reviewing the incident evidence, reconstructing the diagnosis from the runbook, checking the recovery target identity and assessing whether the post-recovery evidence is new and consistent.
+Romain is proposed to review the final incident evidence, rather than Mathis reviewing his own collector and diagnosis. That review is still pending and must check the retained target and fresh recovery evidence.
 
 ## 3. Recovery preparation and technical constraints
 
@@ -127,6 +127,6 @@ The incident record currently serves as the exercise template. The preflight fil
 
 ## 7. Conclusion
 
-The team established the technical and procedural foundations for Lab 8. Romain structured the exercise and documented the incident protocol, Jerry prepared and checked the recovery reference, and Brett and Mathis worked together on the operational and diagnostic preparation.
+The team established the technical and procedural foundations for Lab 8. Romain structured the exercise and documented the incident protocol, Jerry prepared and checked the recovery reference, and Mathis implemented the operational and diagnostic preparation in place of Brett.
 
 The resulting documentation provides a defined recovery target, a structured investigation methodology, explicit safety boundaries and concrete technical evidence supporting the preparation.

@@ -101,6 +101,15 @@ Record the UTC time of each check in the incident timeline.
 Write at least two hypotheses with their expected observation and the check that separates
 them **before** concluding (contract §10). Keep rejected ones.
 
+### Full phase observations (Mathis; Jerry executes authenticated requests)
+
+Use [the collector instructions](reports/lab-08/observer-usage.md) for normal,
+incident and recovery phases. Supply the retained expected model AND code, keep
+the token in memory, and retain the actual exit code. The collector saves request
+IDs for the Cloud Run log check. An HTTP phase pass is not a revision/routing or
+post-change-log verification. Stop at the agreed fault time box even if the
+collector is still running; record partial observations instead of masking them.
+
 ## 4. Decision
 
 | Evidence | Response |
