@@ -1,0 +1,22 @@
+{
+  "verified_at": "2026-11-09T17:30:00.373715+00:00",
+  "result": "passed",
+  "objects": [
+    {
+      "uri": "gs://thu1-ekip-bike-demand-model/model.joblib",
+      "generation": "1792749083386751",
+      "sha256": "d24c050e3631d5b4c2feb8cb571bef6382d8c975c42a5c11edd28de78a0b8c07",
+      "result": "passed"
+    },
+    {
+      "uri": "gs://thu1-ekip-bike-demand-model/model-metadata.json",
+      "generation": "1792749083186741",
+      "sha256": "b09c2b06b0a90b829c3d1a89c3d544f9d0020f0a74b22a4931e0e676596dbd8f",
+      "result": "passed"
+    }
+  ],
+  "scope": "Stored model objects; not an in-memory model hash check",
+  "cloud_run_modified": false,
+  "model_objects_modified": false,
+  "retraining_performed": false
+}

@@ -1,0 +1,1 @@
+Preparation and normal-phase evidence only. No controlled incident or live recovery has been performed. Model binaries are omitted. Instructor scope confirmation was not obtained; see preparation/scope-decision.json.

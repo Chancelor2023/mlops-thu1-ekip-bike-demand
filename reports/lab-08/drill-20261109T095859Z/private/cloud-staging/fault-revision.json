@@ -1,0 +1,144 @@
+{
+  "apiVersion": "serving.knative.dev/v1",
+  "kind": "Revision",
+  "metadata": {
+    "annotations": {
+      "autoscaling.knative.dev/maxScale": "3",
+      "autoscaling.knative.dev/minScale": "0",
+      "run.googleapis.com/client-name": "gcloud",
+      "run.googleapis.com/client-version": "592.0.0",
+      "run.googleapis.com/cpu-throttling": "true",
+      "run.googleapis.com/execution-environment": "gen2",
+      "run.googleapis.com/ingress": "all",
+      "run.googleapis.com/operation-id": "6b44f317-a195-49bf-beed-7f300d9972a3",
+      "run.googleapis.com/sessionAffinity": "false",
+      "run.googleapis.com/startup-cpu-boost": "true",
+      "serving.knative.dev/creator": "jrrychg@gmail.com"
+    },
+    "creationTimestamp": "2026-11-09T16:59:16.705019Z",
+    "generation": 1,
+    "labels": {
+      "cloud.googleapis.com/location": "europe-west1",
+      "commit-sha": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+      "gcb-build-id": "28f47417-f0ca-466a-aa0f-6feab13bb9e8",
+      "gcb-trigger-id": "bd29fb61-b91a-43b1-8fc4-8668e4fbc772",
+      "gcb-trigger-region": "global",
+      "managed-by": "gcp-cloud-build-deploy-cloud-run",
+      "run.googleapis.com/startupProbeType": "Default",
+      "serving.knative.dev/configuration": "mlops-thu1-ekip-bike-demand",
+      "serving.knative.dev/configurationGeneration": "19",
+      "serving.knative.dev/service": "mlops-thu1-ekip-bike-demand",
+      "serving.knative.dev/serviceUid": "9233eb93-b367-4b9f-a3bc-e1a769aa288b"
+    },
+    "name": "mlops-thu1-ekip-bike-demand-lab8-fault-67f152fd40",
+    "namespace": "1087566946792",
+    "ownerReferences": [
+      {
+        "apiVersion": "serving.knative.dev/v1",
+        "blockOwnerDeletion": true,
+        "controller": true,
+        "kind": "Configuration",
+        "name": "mlops-thu1-ekip-bike-demand",
+        "uid": "c6b42085-b1da-4b01-9f6a-1bf840384936"
+      }
+    ],
+    "resourceVersion": "AAZf2uHmSsA",
+    "selfLink": "/apis/serving.knative.dev/v1/namespaces/1087566946792/revisions/mlops-thu1-ekip-bike-demand-lab8-fault-67f152fd40",
+    "uid": "261f82c6-2d8c-49cc-ab2e-8b6e96d10a36"
+  },
+  "spec": {
+    "containerConcurrency": 80,
+    "containers": [
+      {
+        "env": [
+          {
+            "name": "MODEL_DIR",
+            "value": "/app/artifacts/lab8-missing-67f152fd40"
+          }
+        ],
+        "image": "europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f",
+        "name": "placeholder-1",
+        "ports": [
+          {
+            "containerPort": 8000,
+            "name": "http1"
+          }
+        ],
+        "resources": {
+          "limits": {
+            "cpu": "1000m",
+            "memory": "512Mi"
+          }
+        },
+        "startupProbe": {
+          "failureThreshold": 1,
+          "periodSeconds": 240,
+          "tcpSocket": {
+            "port": 8000
+          },
+          "timeoutSeconds": 240
+        },
+        "volumeMounts": [
+          {
+            "mountPath": "/app/artifacts",
+            "name": "model"
+          }
+        ]
+      }
+    ],
+    "serviceAccountName": "1087566946792-compute@developer.gserviceaccount.com",
+    "timeoutSeconds": 300,
+    "volumes": [
+      {
+        "csi": {
+          "driver": "gcsfuse.run.googleapis.com",
+          "readOnly": true,
+          "volumeAttributes": {
+            "bucketName": "thu1-ekip-bike-demand-model"
+          }
+        },
+        "name": "model"
+      }
+    ]
+  },
+  "status": {
+    "conditions": [
+      {
+        "lastTransitionTime": "2026-11-09T16:59:17.739200Z",
+        "reason": "Retired",
+        "status": "True",
+        "type": "Ready"
+      },
+      {
+        "lastTransitionTime": "2026-11-09T16:59:17.739200Z",
+        "message": "Revision retired.",
+        "reason": "Retired",
+        "severity": "Info",
+        "status": "False",
+        "type": "Active"
+      },
+      {
+        "lastTransitionTime": "2026-11-09T16:59:17.561991Z",
+        "message": "Container image import completed.",
+        "status": "True",
+        "type": "ContainerReady"
+      },
+      {
+        "lastTransitionTime": "2026-11-09T16:59:17.739200Z",
+        "message": "Revision retired.",
+        "reason": "Retired",
+        "status": "Unknown",
+        "type": "ResourcesAvailable"
+      }
+    ],
+    "containerStatuses": [
+      {
+        "imageDigest": "europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f",
+        "name": "placeholder-1"
+      }
+    ],
+    "imageDigest": "europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f",
+    "logUrl": "https://console.cloud.google.com/logs/viewer?project=mlops-ece-group2&resource=cloud_run_revision/service_name/mlops-thu1-ekip-bike-demand/revision_name/mlops-thu1-ekip-bike-demand-lab8-fault-67f152fd40&advancedFilter=resource.type%3D%22cloud_run_revision%22%0Aresource.labels.service_name%3D%22mlops-thu1-ekip-bike-demand%22%0Aresource.labels.revision_name%3D%22mlops-thu1-ekip-bike-demand-lab8-fault-67f152fd40%22",
+    "observedGeneration": 1
+  }
+}

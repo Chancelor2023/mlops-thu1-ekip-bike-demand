@@ -195,3 +195,22 @@ If an expected identity field is unavailable from the deployed service, explicit
 If the exercise is interrupted, report the actual number of attempts and the reason for interruption.
 
 The observation protocol does not authorize modifying the accepted model, overwriting accepted artifacts or retraining a model as a recovery method.
+
+## Collector execution and verification scope
+
+Use [observer-usage.md](observer-usage.md). The collector reads ID_TOKEN only from
+the environment and sends it as a bearer header on HTTPS; it does not record
+request headers or follow redirects. Unset ID_TOKEN for local HTTP probes.
+
+Pass both independently retained expected model version and code revision. The
+optional loaded-model hash is checked only when explicitly supplied; the legacy
+recovery target has no such field. Both health calls use the same configured
+15-second default timeout as predictions. Responses retain X-Request-ID and body
+text; use those IDs for the separate Cloud Run log correlation.
+
+Exit 0 means this HTTP phase satisfied all checks; 2 means observations completed
+but at least one check failed (an expected possible outcome during incident);
+3 means collection was incomplete. No exit code alone proves cloud recovery.
+The first signal is recorded once when observed, and successful-request latency
+is reported separately from errors. A missing final summary means an incomplete
+phase; count the actual retained attempts and record the interruption.

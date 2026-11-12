@@ -33,6 +33,7 @@ COPY src/ ./src/
 COPY configs/ ./configs/
 COPY data/ ./data/
 COPY tests/ ./tests/
+COPY scripts/ ./scripts/
 
 # Install the project itself in the environment
 RUN uv sync --locked

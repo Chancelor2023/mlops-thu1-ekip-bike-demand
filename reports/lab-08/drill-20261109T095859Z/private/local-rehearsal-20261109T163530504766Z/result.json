@@ -1,0 +1,12 @@
+{
+  "scope": "Private local rehearsal only",
+  "plan_sha256": "d16e9a43d2ac64d77b0e07fa49c545f25f8d59e04ece15fe5e92575bb0850066",
+  "cloud_run_modified": false,
+  "retraining_performed": false,
+  "container": "lab8-local-fault-721479de2f",
+  "result": "failed",
+  "probe_exit": 137,
+  "error": "JSONDecodeError: Expecting value: line 1 column 1 (char 0)",
+  "container_running_after_cleanup": false,
+  "oom_killed": false
+}

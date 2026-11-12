@@ -1,0 +1,14 @@
+{
+  "timestamp_utc": "2026-11-09T10:19:25.403731+00:00",
+  "completed_at_utc": "2026-11-09T10:19:25.458962+00:00",
+  "http_status": 200,
+  "duration_ms": 55.25,
+  "request_id": "b96800c0-eba0-4a7f-b11d-cbd38c920fe8",
+  "response": {
+    "status": "ok",
+    "model_version": "baseline-4df84bfe8121",
+    "code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be"
+  },
+  "response_body": "{\"status\":\"ok\",\"model_version\":\"baseline-4df84bfe8121\",\"code_revision\":\"ea37b8a45d4a6738585d9de7d0f95d624ad1d3be\"}",
+  "error": null
+}

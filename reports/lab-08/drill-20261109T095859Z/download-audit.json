@@ -1,0 +1,115 @@
+{
+  "archive": "lab8-drill-final-evidence-20261109T173112486545Z.zip",
+  "archive_sha256": "e9a03d3187ee1ef1d658ff2aa1ae3aec83f3eb7bd10dca780f5c566c5f33da86",
+  "verified_original_files": 151,
+  "archive_entries": 152,
+  "method": "Independent local recheck of hashes, raw HTTP records, successful latency statistics, request-ID log pairs, revision specs, routing and recorded object identities; no cloud calls or execution of archived scripts.",
+  "result": "passed",
+  "phases": [
+    {
+      "phase": "normal",
+      "requests": 35,
+      "correlated": 35,
+      "summary": {
+        "phase": "normal",
+        "type": "summary",
+        "timestamp_utc": "2026-11-09T10:22:38.893300+00:00",
+        "valid_attempts": 30,
+        "successful_predictions": 30,
+        "failed_predictions": 0,
+        "valid_success_rate_percent": 100.0,
+        "invalid_attempts": 3,
+        "invalid_rejections_422": 3,
+        "expected_model_version": "baseline-4df84bfe8121",
+        "expected_code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+        "elapsed_seconds": 34.699,
+        "health_usable": 2,
+        "first_signal": null,
+        "successful_prediction_latency": {
+          "n": 30,
+          "population": "successful_valid_predictions",
+          "median_ms": 45.61,
+          "p95_ms": 66.52299999999998,
+          "max_ms": 70.6
+        },
+        "phase_verified": true,
+        "scope": "HTTP observations only; cloud revision/log correlation is separate"
+      },
+      "start": "2026-11-09T10:22:04.194745+00:00"
+    },
+    {
+      "phase": "incident",
+      "requests": 35,
+      "correlated": 34,
+      "summary": {
+        "phase": "incident",
+        "type": "summary",
+        "timestamp_utc": "2026-11-09T17:21:20.173280+00:00",
+        "valid_attempts": 30,
+        "successful_predictions": 0,
+        "failed_predictions": 30,
+        "valid_success_rate_percent": 0.0,
+        "invalid_attempts": 3,
+        "invalid_rejections_422": 3,
+        "expected_model_version": "baseline-4df84bfe8121",
+        "expected_code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+        "elapsed_seconds": 56.398,
+        "health_usable": 0,
+        "first_signal": {
+          "type": "signal",
+          "phase": "incident",
+          "reason": "health_unusable_or_identity_mismatch",
+          "timestamp_utc": "2026-11-09T17:20:38.826218+00:00",
+          "source_type": "health",
+          "request_id": null,
+          "http_status": null,
+          "model_version": null,
+          "code_revision": null
+        },
+        "successful_prediction_latency": null,
+        "phase_verified": false,
+        "scope": "HTTP observations only; cloud revision/log correlation is separate"
+      },
+      "start": "2026-11-09T17:20:23.775409+00:00"
+    },
+    {
+      "phase": "recovery",
+      "requests": 35,
+      "correlated": 35,
+      "summary": {
+        "phase": "recovery",
+        "type": "summary",
+        "timestamp_utc": "2026-11-09T17:23:01.313689+00:00",
+        "valid_attempts": 30,
+        "successful_predictions": 30,
+        "failed_predictions": 0,
+        "valid_success_rate_percent": 100.0,
+        "invalid_attempts": 3,
+        "invalid_rejections_422": 3,
+        "expected_model_version": "baseline-4df84bfe8121",
+        "expected_code_revision": "ea37b8a45d4a6738585d9de7d0f95d624ad1d3be",
+        "elapsed_seconds": 35.208,
+        "health_usable": 2,
+        "first_signal": null,
+        "successful_prediction_latency": {
+          "n": 30,
+          "population": "successful_valid_predictions",
+          "median_ms": 58.19,
+          "p95_ms": 76.6935,
+          "max_ms": 108.31
+        },
+        "phase_verified": true,
+        "scope": "HTTP observations only; cloud revision/log correlation is separate"
+      },
+      "start": "2026-11-09T17:22:26.105967+00:00"
+    }
+  ],
+  "limitations": [
+    "One incident health timeout has no usable request ID and is not correlated.",
+    "No independent blind diagnosis or peer runbook execution.",
+    "Only one accepted model; no in-memory loaded-model SHA exposed.",
+    "Object hashes after the drill are checks recorded by the cloud executor; model bytes are absent from this archive.",
+    "Production health was checked after the interrupted first attempt, not separately after the second incident; final production routing is captured.",
+    "Cleanup revision has configuration/Ready evidence, not an HTTP test."
+  ]
+}

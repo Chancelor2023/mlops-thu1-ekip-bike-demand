@@ -1,0 +1,17 @@
+[
+  "docker",
+  "run",
+  "--detach",
+  "--name",
+  "lab8-local-fault-721479de2f",
+  "--cpus=1",
+  "--memory=512m",
+  "--network=none",
+  "--env",
+  "MODEL_DIR=/app/artifacts/lab8-missing-67f152fd40",
+  "--mount",
+  "type=bind,src=/home/jrrychg/lab8-drill-20261109T095859Z/preparation/reference-bundle,dst=/app/artifacts,readonly",
+  "--mount",
+  "type=bind,src=/home/jrrychg/lab8-drill-20261109T095859Z/preparation/frozen-inputs,dst=/lab8-inputs,readonly",
+  "europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f"
+]

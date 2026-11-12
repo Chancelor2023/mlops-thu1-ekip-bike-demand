@@ -1,0 +1,12 @@
+[
+  "gcloud",
+  "run",
+  "deploy",
+  "mlops-thu1-ekip-bike-demand",
+  "--project=mlops-ece-group2",
+  "--region=europe-west1",
+  "--image=europe-west1-docker.pkg.dev/mlops-ece-group2/cloud-run-source-deploy/mlops-thu1-ekip-bike-demand/mlops-thu1-ekip-bike-demand@sha256:bbf02e7850f3c282a1cda39d539f59459856cd541d81c713fbdebb19f8f3dd3f",
+  "--revision-suffix=lab8-clean-877ded52e9",
+  "--remove-env-vars=MODEL_DIR",
+  "--no-traffic"
+]

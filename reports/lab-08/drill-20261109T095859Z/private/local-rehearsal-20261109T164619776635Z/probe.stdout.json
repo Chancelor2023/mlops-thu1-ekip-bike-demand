@@ -1,0 +1,35 @@
+{
+  "scope": "Local private fault rehearsal, not Cloud Run incident",
+  "readiness_attempts": [
+    {
+      "started_at_utc": "2026-11-09T16:46:24.846631+00:00",
+      "http_status": 503,
+      "request_id": "54ef33bc-cd22-41aa-bd62-7529f544bcb4",
+      "response_body": "{\"detail\":\"Model unavailable\"}"
+    }
+  ],
+  "health": {
+    "started_at_utc": "2026-11-09T16:46:24.846631+00:00",
+    "http_status": 503,
+    "request_id": "54ef33bc-cd22-41aa-bd62-7529f544bcb4",
+    "response_body": "{\"detail\":\"Model unavailable\"}"
+  },
+  "valid": {
+    "started_at_utc": "2026-11-09T16:46:24.932537+00:00",
+    "http_status": 503,
+    "request_id": "3f371a67-5bd4-4476-a65e-1707fad43dfa",
+    "response_body": "{\"detail\":\"Model unavailable\"}"
+  },
+  "invalid": {
+    "started_at_utc": "2026-11-09T16:46:24.939100+00:00",
+    "http_status": 422,
+    "request_id": "b66c1a22-1568-49d3-81f4-db61f119230a",
+    "response_body": "{\"detail\":[{\"type\":\"less_than_equal\",\"loc\":[\"body\",\"hr\"],\"msg\":\"Input should be less than or equal to 23\",\"input\":24,\"ctx\":{\"le\":23}}]}"
+  },
+  "checks": {
+    "health_503": true,
+    "valid_prediction_503": true,
+    "invalid_input_422": true
+  },
+  "result": "passed"
+}

@@ -1,0 +1,78 @@
+{
+  "payloads_sha256": "7bce55409325391e49599f0b8e0ef51378c667d586f4f966d33b3dc8ccd92d91",
+  "data_sha256": "e03de4ee4ef4dc376ac6e04bf829673c6269e8eba5c60fa121640fa2f829504f",
+  "partition": "validation",
+  "selection_rule": "Lowest matching instant; all exact matches retained",
+  "origins": [
+    {
+      "payload_id": 1,
+      "selected_instant": 8821,
+      "matching_validation_instants": [
+        8821
+      ]
+    },
+    {
+      "payload_id": 2,
+      "selected_instant": 9484,
+      "matching_validation_instants": [
+        9484
+      ]
+    },
+    {
+      "payload_id": 3,
+      "selected_instant": 9557,
+      "matching_validation_instants": [
+        9557
+      ]
+    },
+    {
+      "payload_id": 4,
+      "selected_instant": 10008,
+      "matching_validation_instants": [
+        10008
+      ]
+    },
+    {
+      "payload_id": 5,
+      "selected_instant": 10256,
+      "matching_validation_instants": [
+        10256
+      ]
+    },
+    {
+      "payload_id": 6,
+      "selected_instant": 10852,
+      "matching_validation_instants": [
+        10852
+      ]
+    },
+    {
+      "payload_id": 7,
+      "selected_instant": 11594,
+      "matching_validation_instants": [
+        11594
+      ]
+    },
+    {
+      "payload_id": 8,
+      "selected_instant": 12582,
+      "matching_validation_instants": [
+        12582
+      ]
+    },
+    {
+      "payload_id": 9,
+      "selected_instant": 12897,
+      "matching_validation_instants": [
+        12897
+      ]
+    },
+    {
+      "payload_id": 10,
+      "selected_instant": 12914,
+      "matching_validation_instants": [
+        12914
+      ]
+    }
+  ]
+}

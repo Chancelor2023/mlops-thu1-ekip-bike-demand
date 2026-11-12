@@ -499,9 +499,11 @@ proof and any promotion are performed manually and recorded in
 
 ## Monitoring, incident and recovery: Lab 8
 
-Status: prepared, drill not yet performed. Only one accepted model version exists; the
-drill restores the retained accepted state on an isolated `lab8` tag (scope to confirm
-with the instructor, see the contract).
+Status: live isolated incident and retained-state recovery observed on 2026-11-09,
+executed by Jerry alone; final peer review remains pending. Independent blind
+diagnosis and peer runbook execution were not performed. Only one accepted model exists. The team chose to proceed with a retained-
+state recovery exercise without instructor confirmation; the two-model limitation
+remains explicit in the contract.
 
 - Operating procedure for the next operator: [RUNBOOK.md](RUNBOOK.md)
 - Team rules, workload and signal definitions: [reports/lab-08-contract.md](reports/lab-08-contract.md)
@@ -511,7 +513,12 @@ with the instructor, see the contract).
   [reports/lab-08/rollback-target.md](reports/lab-08/rollback-target.md),
   [rollback-target.json](reports/lab-08/rollback-target.json),
   [preflight-20261107T210602Z/](reports/lab-08/preflight-20261107T210602Z/)
-- Raw drill evidence: `reports/lab-08/drill-<UTC>/` (added after the drill)
+- Normal phase: [baseline summary](reports/lab-08/baseline-summary.md) and
+  [raw evidence](reports/lab-08/drill-20261109T095859Z/) (30 valid successes,
+  3 invalid rejections, 2 usable health checks; all 35 request IDs matched to cloud logs).
+- Live incident, verified recovery, cleanup and scope limits: [drill summary](reports/lab-08/drill-summary.md).
+  Recovery has 35/35 matching Cloud Run request logs; incident has 34/35 and one uncorrelated timeout.
+- Authenticated collector and exit-code instructions: [observer-usage.md](reports/lab-08/observer-usage.md)
 
 CI does not prove that a live recovery succeeded; recovery is verified manually on
 Cloud Run with fresh requests, identity checks and post-change logs.

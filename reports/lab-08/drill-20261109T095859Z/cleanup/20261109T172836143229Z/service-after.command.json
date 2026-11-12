@@ -1,0 +1,10 @@
+[
+  "gcloud",
+  "run",
+  "services",
+  "describe",
+  "mlops-thu1-ekip-bike-demand",
+  "--project=mlops-ece-group2",
+  "--region=europe-west1",
+  "--format=json"
+]

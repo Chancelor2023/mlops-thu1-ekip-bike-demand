@@ -1,0 +1,6 @@
+Deploying container to Cloud Run service [[1mmlops-thu1-ekip-bike-demand[m] in project [[1mmlops-ece-group2[m] region [[1meurope-west1[m]
+Deploying...
+Creating Revision.................done
+Done.
+Service [[1mmlops-thu1-ekip-bike-demand[m] revision [[1mmlops-thu1-ekip-bike-demand-lab8-clean-877ded52e9[m] has been deployed and is serving [1m0[m percent of traffic.
+Proxy locally with: gcloud run services proxy mlops-thu1-ekip-bike-demand --region europe-west1 --project mlops-ece-group2

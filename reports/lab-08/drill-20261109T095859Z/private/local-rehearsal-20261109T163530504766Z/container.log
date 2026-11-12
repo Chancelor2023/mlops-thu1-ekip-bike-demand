@@ -1,0 +1,10 @@
+   Building bike-demand @ file:///app
+error: Failed to build `bike-demand @ file:///app`
+  cause: Failed to resolve requirements from `build-system.requires`
+  cause: No solution found when resolving: `uv-build==0.12.23`
+  cause: Request failed after 3 retries in 28.3s
+  cause: Failed to fetch: `https://pypi.org/simple/uv-build/`
+  cause: error sending request for url (https://pypi.org/simple/uv-build/)
+  cause: client error (Connect)
+  cause: dns error
+  cause: failed to lookup address information: Try again

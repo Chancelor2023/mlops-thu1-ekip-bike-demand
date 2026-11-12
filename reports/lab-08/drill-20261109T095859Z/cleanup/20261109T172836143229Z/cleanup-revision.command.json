@@ -1,0 +1,10 @@
+[
+  "gcloud",
+  "run",
+  "revisions",
+  "describe",
+  "mlops-thu1-ekip-bike-demand-lab8-clean-877ded52e9",
+  "--project=mlops-ece-group2",
+  "--region=europe-west1",
+  "--format=json"
+]

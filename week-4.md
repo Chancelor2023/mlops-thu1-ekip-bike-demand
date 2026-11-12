@@ -4,7 +4,7 @@
 
 Lab 8 focuses on preparing and documenting an incident-response exercise for the bike-demand prediction service. The team established an incident protocol, documented the recovery procedure, identified a recovery target and performed preliminary technical compatibility checks.
 
-The work described in this report distinguishes preparation and local verification from an actual Cloud Run incident and recovery exercise.
+The report distinguishes preparation from the live solo Cloud Run drill subsequently executed by Jerry. Technical recovery is evidenced; independent blind diagnosis, peer runbook use and final review are not claimed.
 
 ## 2. Team contributions
 
@@ -60,9 +60,9 @@ The evidence is stored in `reports/lab-08/`, including:
 
 These checks establish the integrity of the retained recovery reference and its local compatibility. They do not represent a live Cloud Run recovery.
 
-### Brett and Mathis — Operational and investigation preparation
+### Mathis — Operational and investigation preparation (taking over from Brett)
 
-Brett and Mathis worked together on the operational and investigation aspects of the Lab 8 preparation.
+Mathis implemented the observation and diagnostic tooling in PR #38, taking over from Brett because Brett could not work due to a PC problem. This records the actual preparation contribution; a completed incident or investigation is not claimed.
 
 Their work followed the contract's approach to:
 - Observing service behavior through health checks and prediction requests.
@@ -71,9 +71,9 @@ Their work followed the contract's approach to:
 - Using multiple hypotheses and targeted checks to justify an incident diagnosis.
 - Preserving the distinction between valid prediction failures and expected invalid-input responses.
 
-The contract assigns Brett the operator/investigator role during the exercise.
+Mathis was intended to act as investigator. He was unavailable during the actual solo drill; no diagnosis or runbook execution is attributed to him.
 
-Mathis is also assigned the final verification role: reviewing the incident evidence, reconstructing the diagnosis from the runbook, checking the recovery target identity and assessing whether the post-recovery evidence is new and consistent.
+Romain is proposed to review the final incident evidence, rather than Mathis reviewing his own collector and diagnosis. That review is still pending and must check the retained target and fresh recovery evidence.
 
 ## 3. Recovery preparation and technical constraints
 
@@ -123,10 +123,60 @@ The available preflight evidence confirms:
 - The expected generations and hashes of the stored model files.
 - Successful local API compatibility checks.
 
-The incident record currently serves as the exercise template. The preflight files explicitly describe preparation and integrity checks, not a live Cloud Run incident or recovery.
+The normal phase was subsequently collected by Jerry on 2026-11-09 from
+10:22:04.194745 to 10:22:38.893300 UTC (34.699 seconds), using collector commit
+08b1981. It produced 30/30 successful valid predictions, 3/3 invalid rejections
+and 2/2 usable health checks. All 35 IDs/statuses match the expected revision,
+model and code in Cloud Run logs. Successful prediction latency was median
+45.61 ms, p95 66.523 ms and max 70.6 ms. These are HTTP observations, not quality
+scores or a cold-start benchmark. See [baseline summary](reports/lab-08/baseline-summary.md).
+
+An earlier production health probe took 46916.29 ms; it is retained separately,
+with no established cause. The team chose to proceed without instructor scope
+confirmation, explicitly retaining the single-accepted-model limitation.
+Mathis/Romain were unavailable for the incident session: baseline rows were
+reconstructed from raw records, not attributed to their live participation.
+Jerry subsequently executed the live incident and recovery alone; no independent
+diagnosis was performed. See the execution results below.
 
 ## 7. Conclusion
 
-The team established the technical and procedural foundations for Lab 8. Romain structured the exercise and documented the incident protocol, Jerry prepared and checked the recovery reference, and Brett and Mathis worked together on the operational and diagnostic preparation.
+The team established the technical and procedural foundations for Lab 8. Romain structured the exercise and documented the incident protocol, Jerry prepared and checked the recovery reference, and Mathis implemented the operational and diagnostic preparation in place of Brett.
 
 The resulting documentation provides a defined recovery target, a structured investigation methodology, explicit safety boundaries and concrete technical evidence supporting the preparation.
+## 8. Live solo drill and remaining requirements — 9 November 2026
+
+Jerry executed the cloud operations and retained the raw evidence, assisted by Codex
+for collector corrections, scripts, archive checking and report drafting. No live
+recorder participation by Romain or blind diagnosis by Mathis is claimed.
+
+- Fault: a separate revision using the retained image with only MODEL_DIR changed to
+  a missing path; only the lab8 tag was moved, normal traffic explicitly pinned.
+- The first activation was interrupted and restored; it has no observation workload.
+- Completed incident: 30/30 valid HTTP 503 responses, 3/3 invalid HTTP 422 responses,
+  initial health timeout and final health 503. Logs match the faulty revision for
+  34/35 requests; the timeout has no usable request ID and is not correlated.
+- Recovery: health 2/2 usable, valid 30/30 successful, invalid 3/3 rejected; all 35
+  request IDs/statuses/model/code match the retained revision in Cloud Run logs.
+- Successful recovery prediction HTTP latency: median 58.19 ms, p95 76.6935 ms,
+  max 108.31 ms (30 observations); descriptive only, no cold-start/SLA conclusion.
+- Second activation-start to restore-success command window: 66 seconds; exact
+  routing propagation and outage duration are not separately measured.
+- The faulty service template was repaired via a no-traffic cleanup revision of
+  the same image. Production and lab8 remain on 00018-rng; no new model was accepted.
+- Stored object generations and recorded generation-pinned downloaded hashes match
+  the retained accepted bytes after the drill. No retraining was used for recovery.
+
+[Incident record](reports/lab-08-incident.md), [drill summary](reports/lab-08/drill-summary.md)
+and [raw evidence](reports/lab-08/drill-20261109T095859Z/) contain the actual timeline,
+rehearsal failures, checks and limitations. The archive's 151 file hashes and raw
+HTTP/log pairs were independently checked on the review PC. Root production health
+was not separately sampled after the second incident; final routing is captured.
+
+Remaining: Romain's review of the latest commit and CI, an actionable observation
+and Jerry's response/rerun, and an independent peer attempt with the runbook if
+performed. Blind diagnosis and the two-accepted-model handoff are not demonstrated;
+no instructor scope confirmation was obtained. Do not describe the lab as fully
+reviewed or create m4 on the basis of these technical checks alone. This root file
+is the team preparation/execution report, not evidence of each member's private
+personal week-4 submission.

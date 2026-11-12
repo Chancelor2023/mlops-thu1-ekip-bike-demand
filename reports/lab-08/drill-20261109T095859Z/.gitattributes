@@ -1,0 +1,4 @@
+* -text
+# Preserve whitespace in original gcloud download logs.
+final-storage-verification/20261109T172952362546Z/model-metadata.json.download.stderr.log -whitespace
+final-storage-verification/20261109T172952362546Z/model.joblib.download.stderr.log -whitespace

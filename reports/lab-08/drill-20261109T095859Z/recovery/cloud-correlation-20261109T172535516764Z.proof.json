@@ -1,0 +1,11 @@
+{
+  "phase": "recovery",
+  "expected_revision": "mlops-thu1-ekip-bike-demand-00018-rng",
+  "client_requests": 35,
+  "correlated_requests": 35,
+  "missing_logs": [],
+  "mismatches": [],
+  "requests_without_client_http_response": [],
+  "result": "passed",
+  "scope": "Application request-ID correlation. A client timeout does not establish the HTTP status received by the client."
+}
