@@ -1,0 +1,19 @@
+{
+  "verified_at": "2026-11-13T13:34:59.084810+00:00",
+  "result": "passed",
+  "verification_scope": "Recheck recorded predictions and immutable inputs only; no model load, prediction, fitting or new test evaluation.",
+  "input_hashes_match": true,
+  "predictions_match_all_test_row_identities_and_labels": true,
+  "rows": 4376,
+  "recomputed_mae_from_saved_predictions": 93.73505906420368,
+  "recorded_test_mae": 93.73505906420367,
+  "mae_absolute_tolerance": 1e-12,
+  "evaluation_code_revision": "474a620de2ceeace6d0d7978c03cb8d7d10128ed",
+  "console_matches_result_json": true,
+  "raw_evidence_checksums": {
+    "started.json": "2bc6d18829000a65170bde3139376d3056ec4ca6b8820bec6e9b5b1d9174acd3",
+    "result.json": "6f6e5f6288f810abdf083b9f422ae13c109b6356e158d9cdb0aa1088b6f08712",
+    "predictions.csv": "edbe0d4e7d61ea47f92fd6387ea366b4c9eea7e8417c11b5e71347c416750f72",
+    "console.log": "9d2f2ad96a3f48a381352ab17f5e320fbef879ddd76e4595955cbf99e5a66ae8"
+  }
+}

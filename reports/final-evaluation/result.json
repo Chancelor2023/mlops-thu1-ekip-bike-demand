@@ -1,0 +1,34 @@
+{
+  "status": "completed",
+  "model_version": "baseline-4df84bfe8121",
+  "model_sha256": "d24c050e3631d5b4c2feb8cb571bef6382d8c975c42a5c11edd28de78a0b8c07",
+  "test_period": {
+    "start": "2012-07-01",
+    "end": "2012-12-31",
+    "rows": 4376
+  },
+  "metric": "mean_absolute_error",
+  "retraining_performed": false,
+  "held_test_scored": true,
+  "evaluated_at": "2026-11-13T13:33:11.460451+00:00",
+  "evaluation_code_revision": "474a620de2ceeace6d0d7978c03cb8d7d10128ed",
+  "evaluation_script_sha256": "95fe0f2b68e39ab96b5c398ca8bbfa78a9c97f0ba99b8b9f7465b0eeabe0b635",
+  "selection_sha256": "d4ece9e8ed74db3a5357a5574f4a93533c90cae3c6ce4b55bfe4e7c03d879a4e",
+  "metadata_sha256": "b09c2b06b0a90b829c3d1a89c3d544f9d0020f0a74b22a4931e0e676596dbd8f",
+  "data_sha256": "e03de4ee4ef4dc376ac6e04bf829673c6269e8eba5c60fa121640fa2f829504f",
+  "uv_lock_sha256": "a44bd05957ecafe604ab8880a61c9df45c60243b58379fd31db98148b608f21e",
+  "test_rows": 4376,
+  "test_date_min": "2012-07-01",
+  "test_date_max": "2012-12-31",
+  "test_mae": 93.73505906420367,
+  "predictions_sha256": "edbe0d4e7d61ea47f92fd6387ea366b4c9eea7e8417c11b5e71347c416750f72",
+  "environment": {
+    "python": "3.12.15",
+    "platform": "Windows-11-10.0.26200-SP0",
+    "scikit_learn": "1.9.1",
+    "numpy": "2.5.3",
+    "pandas": "2.3.3",
+    "joblib": "1.6.0"
+  },
+  "scope": "Held-test prediction quality of the preselected saved model; not HTTP latency or a promotion decision"
+}
