@@ -89,3 +89,11 @@ checksum failure before prediction and mutation detection during prediction.
 It never loads the real retained model or scores real course held-test labels.
 Codex assisted with this protocol, selection record, evaluator and synthetic tests;
 Jerry is the designated operator for the real evaluation.
+
+## Recorded execution
+
+The designated operator subsequently completed the evaluation on 13 November 2026,
+using source `474a620de2ceeace6d0d7978c03cb8d7d10128ed`, without retraining.
+The actual test MAE is 93.73505906420367 over 4,376 observed hours.
+See [the result and interpretation](final-evaluation/README.md). This records the
+completed execution; do not run the scoring command again for the presentation.

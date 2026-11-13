@@ -522,3 +522,27 @@ remains explicit in the contract.
 
 CI does not prove that a live recovery succeeded; recovery is verified manually on
 Cloud Run with fresh requests, identity checks and post-change logs.
+
+## Final held-test evaluation: Week 5
+
+The team selected the existing accepted model before evaluating the held test.
+Neither Lab 7 candidate met all gate criteria: both improved validation MAE slightly
+but failed the unchanged latency limit. The exact retained model was therefore kept;
+the choice was not made using the test score.
+
+On 13 November 2026, Jerry evaluated saved model `baseline-4df84bfe8121` once, without
+retraining, on 4,376 observed hours from July–December 2012. **Test MAE:
+93.73505906420367 rentals per observed hour.** This is an average absolute count
+error, not an accuracy percentage. The earlier validation MAE was 86.84685685591091;
+the different periods do not support a causal conclusion from that difference alone.
+
+- [Frozen model selection](reports/final-model-selection.json)
+- [Evaluation protocol](reports/final-evaluation-protocol.md)
+- [Observed result and interpretation](reports/final-evaluation/README.md)
+- [Machine-readable result](reports/final-evaluation/result.json)
+- [Saved predictions and labels](reports/final-evaluation/predictions.csv)
+- [Verification without rerunning predictions](reports/final-evaluation/verification.json)
+
+Evaluation source: `474a620de2ceeace6d0d7978c03cb8d7d10128ed`; the final release tag will
+identify its own packaging revision. Do not repeat held-test scoring during the live
+demo or tune/select a replacement against this result. Show the retained evidence.
