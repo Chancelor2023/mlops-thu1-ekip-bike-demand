@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "selected_on": "2026-11-13",
+  "selected_by": "Jerry Cheng, reporting the team decision",
+  "purpose": "Final model selected before held-test evaluation",
+  "model_version": "baseline-4df84bfe8121",
+  "bundle_path": "artifacts/accepted/baseline-4df84bfe8121",
+  "checksums": {
+    "model.joblib": "d24c050e3631d5b4c2feb8cb571bef6382d8c975c42a5c11edd28de78a0b8c07",
+    "model-metadata.json": "b09c2b06b0a90b829c3d1a89c3d544f9d0020f0a74b22a4931e0e676596dbd8f"
+  },
+  "data_path": "data/raw/hour.csv",
+  "data_sha256": "e03de4ee4ef4dc376ac6e04bf829673c6269e8eba5c60fa121640fa2f829504f",
+  "features": [
+    "season",
+    "yr",
+    "mnth",
+    "hr",
+    "holiday",
+    "weekday",
+    "workingday",
+    "weathersit",
+    "temp",
+    "atemp",
+    "hum",
+    "windspeed"
+  ],
+  "model_parameters": {
+    "n_estimators": 50,
+    "max_depth": 10,
+    "random_state": 42,
+    "n_jobs": 1
+  },
+  "config_path": "configs/baseline.yaml",
+  "config_sha256": "88a909bd859977a82a032a99415ab03b4aa14d837aef7c9980090f110e8897d6",
+  "uv_lock_sha256": "a44bd05957ecafe604ab8880a61c9df45c60243b58379fd31db98148b608f21e",
+  "metric": "mean_absolute_error",
+  "target": "cnt",
+  "test_period": {
+    "start": "2012-07-01",
+    "end": "2012-12-31",
+    "rows": 4376
+  },
+  "selection_basis": {
+    "accepted_validation_mae": 86.84685685591091,
+    "naive_train_mean_validation_mae": 154.23179306864967,
+    "candidate_01": {
+      "validation_mae": 86.74306881621092,
+      "latency_ratio": 1.3689584499363496,
+      "status": "rejected"
+    },
+    "candidate_02": {
+      "validation_mae": 86.6918618844724,
+      "latency_ratio": 3.4593161890651265,
+      "status": "rejected"
+    },
+    "maximum_latency_ratio": 1.25,
+    "decision": "Retain the current accepted model; neither evaluated candidate met all gate criteria.",
+    "held_test_used_for_selection": false
+  },
+  "limitations": [
+    "Original training commit unavailable.",
+    "Initial accepted model is retained; no new all-pass gate decision or promotion is claimed.",
+    "Latency stability and generalization beyond the course data are not established.",
+    "The final test score must be reported without selecting or tuning another model against this holdout."
+  ]
+}
