@@ -546,3 +546,12 @@ the different periods do not support a causal conclusion from that difference al
 Evaluation source: `474a620de2ceeace6d0d7978c03cb8d7d10128ed`; the final release tag will
 identify its own packaging revision. Do not repeat held-test scoring during the live
 demo or tune/select a replacement against this result. Show the retained evidence.
+
+## Presentation demo
+
+See [the preparation and rehearsal guide](reports/demo-guide.md). From a clean checkout,
+build the commit-tagged image before the presentation, then use `bash demo.sh --check`
+and `bash demo.sh --unattended --with-tests` for the local rehearsal. `--cloud` opts
+into read-only authenticated checks; `--bonus` adds a local missing-model example.
+The script never trains, reruns held-test scoring or changes cloud routing. Successful
+unit tests do not substitute for the actual Docker/cloud rehearsal.
