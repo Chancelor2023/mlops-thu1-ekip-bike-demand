@@ -23,13 +23,17 @@ course compliance. Deadline in the Week 5 brief: 22 November 2026 at 23:59.
   obtain CI results for its latest commit. Record any review observation and response.
 - [x] Implement the Week 5 `/version` identity endpoint with API tests; see the
   [endpoint contract](version-endpoint.md). This is a source change, not a deployment.
-- [ ] Review/test the release image, deploy it deliberately, and retain its actual
-  `/version` response together with health/prediction and routing checks. The old
-  Cloud Run reference does not have this endpoint.
+- [x] Verify the local endpoint image with the retained model: [observed local
+  evidence](release/local-image-20261120T153721Z/README.md), 27 API tests passed.
+  This is Linux ARM64 source `569f292`, not the future published cloud image.
+- [ ] Verify/deploy the Cloud Build release image deliberately and retain its actual
+  `/version` response, health/prediction and routing checks. The old Cloud Run
+  reference does not have this endpoint.
 - [ ] Export the final slides to `final-presentation.pdf` and inspect the PDF.
-- [ ] Package the trusted accepted model and metadata as a Release asset, verify
-  their frozen hashes, and provide a `.sha256` checksum file. Keep binaries out of Git.
-- [ ] Draft Release notes with the exact release commit, accepted model/version/hash,
+- [x] Prepare and independently reopen/hash the accepted model ZIP and its
+  `.zip.sha256` under ignored `artifacts/releases/v1.0.0/`; binaries stay out of Git.
+- [ ] Attach and verify those assets on the actual GitHub Release.
+- [ ] Finalize the [draft Release notes](release-notes-v1.0.0.md) with the exact release commit, accepted model/version/hash,
   image tag and digest, final held-test result, latest CI links, dated deployment
   evidence, interface output and known limitations. Do not rerun the held test.
 - [ ] After review and CI, merge the release branch into main; identify the exact
