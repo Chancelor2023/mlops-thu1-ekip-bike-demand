@@ -1,6 +1,6 @@
 # Lab 8 incident record: isolated model-directory fault
 
-Status: **live incident and retained-state recovery observed; peer verification pending.**
+Status: **live incident and retained-state recovery observed; positive PR feedback recorded; independent peer runbook execution not demonstrated.**
 Jerry executed the drill alone on 2026-11-09 because Mathis and Romain were unavailable.
 He knew the fault. No independent blind diagnosis, live recorder participation by Romain,
 or independent runbook execution is claimed. Preparation contributions remain attributed
@@ -124,8 +124,8 @@ Fresh tagged HTTP requests established health 2/2, valid 30/30, invalid 3/3, cor
 model/code and finite nonnegative predictions. All 35 request IDs/statuses/model/code
 values match Cloud Run logs for `00018-rng`. Captured post-recovery routing also points
 production and `lab8` to that target. Together these support the technical recovery
-claim; command success alone was not used to declare it. Review and human sign-off
-remain pending; no retroactive independent declaration time is invented.
+claim; command success alone was not used to declare it. Later PR feedback is
+recorded in section 9; no retroactive independent declaration time is invented.
 
 Moving the tag back left the service template with the faulty MODEL_DIR. Cleanup
 therefore used the same pinned image with `--remove-env-vars=MODEL_DIR --no-traffic`,
@@ -156,11 +156,14 @@ availability or infer a production request from a tagged request.
 - No cloud startup-log extract proving the exact load exception is included; config,
   behavior, request logs and retained local rehearsal support the technical explanation.
 
-## 9. Final review still required
+## 9. Recorded review and remaining gaps
 
-Romain is the proposed final reviewer. He should inspect the latest PR commit/CI,
-verify the recorded limits and leave one actionable observation. Jerry records the
-response and any rerun. No approval or signature is filled on Romain's behalf.
+Romain subsequently reviewed [PR #40](https://github.com/Chancelor2023/mlops-thu1-ekip-bike-demand/pull/40#pullrequestreview-5870116665)
+on 12 November 2026, on head `f17332d`, with state **COMMENTED** and a positive
+comment that the modifications work. This records feedback, not formal APPROVED
+status, an independent blind diagnosis or a peer execution of the runbook.
+The comment does not document an actionable observation and author response/rerun.
+
 Codex assisted with collector corrections, execution scripts, archive verification
 and report drafting; Jerry executed the Cloud Shell operations. Independent reviewer
 execution of the runbook remains unperformed and must be recorded if later attempted.

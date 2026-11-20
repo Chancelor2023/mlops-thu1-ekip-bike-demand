@@ -1,0 +1,14 @@
+   Building bike-demand @ file:///app
+      Built bike-demand @ file:///app
+Uninstalled 1 package in 2ms
+Installed 1 package in 2ms
+Bytecode compiled 8811 files in 1.32s
+INFO:     Started server process [47]
+INFO:     Waiting for application startup.
+{"ts": "2026-11-20T15:38:11.868204+00:00", "event": "startup", "request_id": null, "status": "loaded", "duration_ms": null, "model_version": "baseline-4df84bfe8121", "code_revision": "569f2920c0587912a5996bad70957a12fd6c8543", "method": null, "path": null}
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+{"ts": "2026-11-20T15:38:15.674974+00:00", "event": "health", "request_id": "879e0e6d-d5f5-43a7-9dc0-a3ad7c3f6fd7", "status": 200, "duration_ms": 2.57, "model_version": "baseline-4df84bfe8121", "code_revision": "569f2920c0587912a5996bad70957a12fd6c8543", "method": "GET", "path": "/health"}
+INFO:     172.17.0.1:48634 - "GET /health HTTP/1.1" 200 OK
+{"ts": "2026-11-20T15:38:15.704242+00:00", "event": "version", "request_id": "192fe670-ba1a-453c-8800-9558b9bad230", "status": 200, "duration_ms": 1.43, "model_version": "baseline-4df84bfe8121", "code_revision": "569f2920c0587912a5996bad70957a12fd6c8543", "method": "GET", "path": "/version"}
+INFO:     172.17.0.1:48646 - "GET /version HTTP/1.1" 200 OK

@@ -4,7 +4,7 @@
 
 Lab 8 focuses on preparing and documenting an incident-response exercise for the bike-demand prediction service. The team established an incident protocol, documented the recovery procedure, identified a recovery target and performed preliminary technical compatibility checks.
 
-The report distinguishes preparation from the live solo Cloud Run drill subsequently executed by Jerry. Technical recovery is evidenced; independent blind diagnosis, peer runbook use and final review are not claimed.
+The report distinguishes preparation from the live solo Cloud Run drill subsequently executed by Jerry. Technical recovery is evidenced; later positive PR feedback is recorded below. Independent blind diagnosis and peer runbook use are not claimed.
 
 ## 2. Team contributions
 
@@ -73,7 +73,7 @@ Their work followed the contract's approach to:
 
 Mathis was intended to act as investigator. He was unavailable during the actual solo drill; no diagnosis or runbook execution is attributed to him.
 
-Romain is proposed to review the final incident evidence, rather than Mathis reviewing his own collector and diagnosis. That review is still pending and must check the retained target and fresh recovery evidence.
+Romain subsequently left positive COMMENTED feedback on PR #40 (see the follow-up below). This is separate from an independent runbook attempt and is not formal APPROVED status.
 
 ## 3. Recovery preparation and technical constraints
 
@@ -173,10 +173,15 @@ rehearsal failures, checks and limitations. The archive's 151 file hashes and ra
 HTTP/log pairs were independently checked on the review PC. Root production health
 was not separately sampled after the second incident; final routing is captured.
 
-Remaining: Romain's review of the latest commit and CI, an actionable observation
-and Jerry's response/rerun, and an independent peer attempt with the runbook if
-performed. Blind diagnosis and the two-accepted-model handoff are not demonstrated;
-no instructor scope confirmation was obtained. Do not describe the lab as fully
-reviewed or create m4 on the basis of these technical checks alone. This root file
-is the team preparation/execution report, not evidence of each member's private
-personal week-4 submission.
+## 9. Review follow-up — 12 November 2026
+
+Romain subsequently reviewed [PR #40](https://github.com/Chancelor2023/mlops-thu1-ekip-bike-demand/pull/40#pullrequestreview-5870116665)
+on 12 November 2026, on head `f17332d`, with state **COMMENTED** and a positive
+comment that the modifications work. This records feedback, not formal APPROVED
+status, an independent blind diagnosis or a peer execution of the runbook.
+The comment does not document an actionable observation and author response/rerun.
+
+Blind diagnosis and the two-accepted-model handoff remain undemonstrated; no
+instructor scope confirmation was obtained. The later review does not fill those
+gaps. This root file is the team preparation/execution report, not evidence of
+each member's private personal week-4 submission. No m4 tag is claimed here.
