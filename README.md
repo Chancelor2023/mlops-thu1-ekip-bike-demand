@@ -308,7 +308,7 @@ This section defines what a verified deployment means, details the execution and
 | **4** | **Broken** | Returns HTTP 503 `{"detail": "Model unavailable"}` with a `model_unavailable` structured log event. | Returning default predictions (e.g. mean) or crashing silently on inference calls. | Prevents silent data corruption and lets downstream operators detect missing dependencies immediately. |
 | **5** | **Log line** | One single-line JSON per request to stdout containing `ts`, `event`, `request_id`, `method`, `path`, `status`, `duration_ms`, `model_version`, `code_revision`. | Unstructured multiline plain text logs (`logging.info(...)`). | Structured JSON enables zero-overhead parsing, filtering, and latency monitoring in Cloud Logging without custom regex. |
 | **6** | **Secrets** | Strict exclusion: Never log HTTP request headers, environment token vars, or raw payload bodies. | Logging all incoming request headers for debugging purposes. | Cloud Run `Authorization: Bearer <ID_TOKEN>` headers carry full identity credentials; logging headers breaches security boundaries. |
-| **7** | **Identity** | Return `model_version` (from `model-metadata.json`) and `code_revision` (`GIT_SHA`) in the `/health` payload. | Creating a dedicated `/version` route or relying on container file timestamps. | Consolidates operational status and provenance into the standard readiness probe without multiplying endpoints. |
+| **7** | **Identity** | Return `model_version` (from `model-metadata.json`) and `code_revision` (`GIT_SHA`) in the `/health` payload. | At Lab 5: a separate identity route; relying on container file timestamps. | Historical Lab 5 choice. Release preparation now adds `/version` as described below; `/health` retains its readiness behavior. |
 | **8** | **Expected** | Passed explicitly as CLI arguments to `check_service.py` (`--expected-model` and `--expected-revision`). | Hardcoding values in the test script or fetching them directly from the target `/health`. | Reading expected state from the target service creates circular logic where an invalid deployment validates itself. |
 | **9** | **Promise** | Proves the API conforms to the Lab 4 schema, serves the intended artifact, and rejects invalid inputs with HTTP 422. | Assuming a service is healthy because the Cloud Run instance status is green. | A green container state only means the process didn't crash; it does not prove model correctness or endpoint contracts. |
 | **10** | **Failure** | Build/run with mismatched `GIT_SHA`: `check_service.py` reports `FAIL revision`, and exits with code `1`. | Killing the container process or dropping network connectivity. | Proves that provenance discrepancies are caught immediately by the external check before routing real client traffic. |
@@ -551,11 +551,20 @@ into read-only authenticated checks; `--bonus` adds a local missing-model exampl
 The script never trains, reruns held-test scoring or changes cloud routing. Successful
 unit tests do not substitute for the actual Docker/cloud rehearsal.
 
-## Release interface note
+## Release identity endpoint: GET /version
 
-The course asks for a `/version` output in the final Release. This API currently
-exposes identity through `/health`; it has no `/version` route. The historical
-Cloud Run image reports model version and code revision but no loaded-model hash.
-Do not label `/health` evidence as a `/version` response. This interface difference
-must be resolved or explicitly disclosed before publishing `v1.0.0`; see the
-[release checklist](reports/release-readiness.md).
+The release source adds `GET /version` for the Week 5 identity output. It returns
+HTTP 200 with `code_revision`, `model_loaded`, `model_version` and `model_sha256`.
+The model identity is taken from the verified bytes loaded at startup, rather
+than rereading mutable files on each request. Without a loaded model, the model
+fields are `null` and `model_loaded` is `false`; `/health` still returns 503.
+A 200 from `/version` alone is not proof that predictions are available.
+
+```bash
+curl --fail-with-body http://127.0.0.1:8000/version
+```
+
+[Verification and deployment procedure](reports/version-endpoint.md).
+The historical Cloud Run reference has not been updated by this source change
+and does not expose `/version`. Capture a real response from the reviewed release
+image before claiming deployed `/version` verification in the Release notes.

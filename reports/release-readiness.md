@@ -21,9 +21,11 @@ course compliance. Deadline in the Week 5 brief: 22 November 2026 at 23:59.
 
 - [ ] Review the documentation changes on `release/v1.0.0`, push the branch and
   obtain CI results for its latest commit. Record any review observation and response.
-- [ ] Resolve or disclose the Week 5 `/version` requirement. The existing route is
-  `/health`; no `/version` route or instructor acceptance of substitution is established.
-  An intentional API change needs its own tests/review and deployment evidence.
+- [x] Implement the Week 5 `/version` identity endpoint with API tests; see the
+  [endpoint contract](version-endpoint.md). This is a source change, not a deployment.
+- [ ] Review/test the release image, deploy it deliberately, and retain its actual
+  `/version` response together with health/prediction and routing checks. The old
+  Cloud Run reference does not have this endpoint.
 - [ ] Export the final slides to `final-presentation.pdf` and inspect the PDF.
 - [ ] Package the trusted accepted model and metadata as a Release asset, verify
   their frozen hashes, and provide a `.sha256` checksum file. Keep binaries out of Git.
