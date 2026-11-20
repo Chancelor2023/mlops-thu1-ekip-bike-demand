@@ -207,3 +207,11 @@ has 34 matching pairs and one health timeout without a usable request ID. See
 by Jerry alone; independent diagnosis and peer runbook use remain unperformed.
 A separate pre-baseline health call took 46916.29 ms, cause unestablished; do not
 substitute that observation for the measured prediction-latency population.
+
+## Later demo check — 13 November 2026
+
+The [recorded demo rehearsal](reports/demo-rehearsal.md) observed production health
+200, a valid prediction 200 and invalid input 422 with the retained model/code.
+This is separate from the 9 November incident recovery and does not fill the
+independent peer runbook or blind-diagnosis gaps. Refresh the target checks before
+any new operation; this paragraph is not a claim of continuous availability.

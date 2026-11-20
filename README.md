@@ -1,15 +1,33 @@
-# Bike Demand: Week 1 starter
+# Bike Demand MLOps — Ekip
 
-Teams of 3–4 use one private GitHub repository throughout the course. Lab 1 is
-repository setup, Git workflow and quality checks. Lab 2 adds validated data,
-chronological splitting, a baseline comparison and local MLflow tracking.
-No Docker, cloud account or MLflow server is needed this week.
+An hourly bike-rental prediction service built over the five-week MLOps course:
+validated data, reproducible training, experiment tracking, a containerized API,
+CI, manual promotion controls, incident recovery and a final held-test evaluation.
 
-## Setup: Lab 1
+## Final system and evidence
 
-Install Git and [uv](https://docs.astral.sh/uv/getting-started/installation/)
-(`>=0.12.19,<0.13`). Python **3.12** is required; uv can download it. From the
-`bike-demand/` root:
+The retained model is **`baseline-4df84bfe8121`**. Its validation MAE is
+**86.84685685591091 rentals/hour**. Both measured candidates slightly improved
+validation MAE but exceeded the predeclared latency ratio of 1.25, so neither was
+promoted. Keeping the baseline follows that policy; it is not a claim that it has
+the lowest possible prediction error.
+
+After this selection, the saved model was evaluated on the held test once on
+13 November 2026: **MAE 93.73505906420367 rentals/hour**, over 4,376 hourly rows
+from July through December 2012, without retraining. This result describes the
+preselected model and was not used to choose another candidate.
+
+- [Final selection and evaluation](reports/final-evaluation/README.md)
+- [Pipeline, gate and measured candidate rejections](reports/lab-07-report.md)
+- [Operational runbook](RUNBOOK.md) and [incident/recovery record](reports/lab-08-incident.md)
+- [Demo preparation](reports/demo-guide.md) and [recorded rehearsals](reports/demo-rehearsal.md)
+- [Release readiness and outstanding deliverables](reports/release-readiness.md)
+
+## Install and check the repository
+
+Use Git, Python **3.12** and [uv](https://docs.astral.sh/uv/getting-started/installation/)
+**`>=0.12.19,<0.13`** (`0.12.23` was used in the recorded course runs).
+From the repository root:
 
 ```bash
 uv python install 3.12
@@ -17,67 +35,44 @@ uv sync --locked
 uv run --locked python -m bike_demand.preflight
 uv run --locked ruff check .
 uv run --locked ruff format --check .
-uv run --locked pytest -q -m infra
-uv run --locked pytest -q -m lab1
-```
-
-First setup requires internet for Python and the locked dependencies, unless
-these exact distributions are already cached. The frozen UCI CSV ships here;
-preflight does not download/repair it. `uv.lock` is shared across platforms;
-that is not evidence that every OS has been tested. macOS setup has been checked;
-Windows and Linux remain unverified. Remote CI is unavailable until a permitted
-repository is configured and a workflow actually runs on the checked revision.
-Do not regenerate the lock just to bypass an installation failure.
-
-## Expected failure and exercise: Lab 1
-
-`pytest -m infra` must pass immediately. `pytest -m lab1` has **one intentional
-behavior failure** in `src/bike_demand/team.py`: the helper
-`normalize_team_slug` does not yet meet the contract in `tests/lab1/test_team.py`
-(trim, lowercase, join whitespace with hyphens, reject blank names with
-`ValueError`). Read the assertion, diagnose the cause, make a small repair and add
-one useful test of your own. Do not weaken assertions, skip tests or disable
-checks. Sync or import errors, or failures outside `lab1`, are setup problems:
-diagnose them separately.
-
-Fill in `WORKING-AGREEMENT.md`. Use a task branch, open a pull request, and get a
-review from another member before merging. Rotate driver/reviewer roles and the
-main PR author between labs. Keep actual evidence in `reports/lab-01.md` and
-`reports/week-01-team.md`; templates contain no pre-filled results.
-
-## Expected failures: Lab 2
-
-The student export has bounded TODOs in `src/bike_demand/`:
-
-| File | Your task |
-| --- | --- |
-| `validate.py` | Categorical domains, finite normalised ranges, nonnegative counts, date windows |
-| `split.py` | Chronological nonempty/disjoint/complete partitions; sort `(dteday, hr, instant)` |
-| `train.py` | Ordered predictors, train-mean comparator, RF fit and validation MAE |
-
-`NotImplementedError("TODO(Week 1, Lab 2): ...")` and failing exercise tests are
-**expected before implementation**, not environment failures. Infra must pass
-immediately. Do not skip/mute exercise tests or fabricate metrics to get green.
-Tracking, metadata/history, configuration and input parsing are already supplied.
-Read the failing test, inspect the contract, implement one TODO, and rerun:
-
-```bash
-uv run --locked pytest -q -m exercise
-uv run --locked python -m bike_demand.validate --data data/raw/hour.csv
-uv run --locked python -m bike_demand.train --config configs/baseline.yaml
 uv run --locked pytest -q
 ```
 
-Keep `data/raw/hour.csv` unchanged; use copies and `tests/fixtures/` for deliberate
-faults. `missing-temp.csv` is the worked Fault A; design your own Fault B by
-breaking exactly one contract rule or split boundary on a tiny copy, with a valid
-control and a test of your own. The supplied `hum-out-of-range.csv` is another
-worked example, not your Fault B. Missing hours are valid. Features and splits are fixed in the config and
-code. Fit only on 2011 training rows; compare both predictors on the same
-2012 January–June validation rows. Hold July–December 2012 test rows throughout
-Weeks 1–4; do not compute test metrics. MAE is rentals/hour, not accuracy, and
-RF is not required to beat the comparator. The task uses supplied weather;
-it does not forecast future weather or station-level demand.
+First setup needs internet unless the exact Python and locked packages are cached.
+The frozen UCI CSV is included; preflight does not download or repair it. Do not
+regenerate the lock to bypass an installation failure. Windows Git Bash runs and
+Linux CI/container runs are recorded; a shared lock does not prove identical model
+bytes or timings on every machine.
+
+To run the demonstration with the retained model, follow the
+[demo guide](reports/demo-guide.md). The trusted `model.joblib` and
+`model-metadata.json` must be retrieved separately and verified against the frozen
+selection. They are intentionally excluded from Git. Training a fresh model is
+not a prerequisite for demonstrating the accepted model.
+
+## Data contract and training
+
+Labs 1 and 2 implemented the team helper, data validation, chronological splitting
+and baseline training. The starter's intentional failures have been repaired;
+failures in the current full suite should be investigated.
+
+Keep `data/raw/hour.csv` unchanged. There are 12 ordered predictors; fit on 2011
+training rows and compare against the train-mean baseline on January–June 2012
+validation rows. July–December 2012 was held out during Weeks 1–4 and scored only
+in the final evaluation linked above. MAE is rentals/hour, not classification
+accuracy. Supplied weather is an input; this is not a weather forecast or a
+station-level demand forecast.
+
+Optional development training, separate from serving the retained model:
+
+```bash
+uv run --locked python -m bike_demand.validate --data data/raw/hour.csv
+uv run --locked python -m bike_demand.train --config configs/baseline.yaml
+```
+
+This writes development artifacts and tracking records. It does not select a new
+accepted version. Do not rerun held-test scoring for a demo or release preparation.
+Use small fixtures for deliberately invalid data rather than modifying the CSV.
 
 ## Outputs and readback
 
@@ -100,7 +95,7 @@ uv run --locked mlflow server --backend-store-uri sqlite:///tracking/mlflow.db -
 
 `artifacts/`, `tracking/` and `.venv/` are ignored by Git. Team metrics may be
 committed as evidence; never commit credentials or individual private reports.
-CI currently checks only infrastructure/quality; expand it in Week 3.
+CI runs quality checks, the test groups and the full suite, followed by the container checks. Real candidate experiments and Cloud Run actions remain manual.
 
 ## Build, train and serve with Docker
 
@@ -210,7 +205,7 @@ Repository names (lowercase, hyphens, the same for the whole course):
   (1 = morning, 2 = afternoon).
 - Your private report repository: `mlops-<session>-<github-username>`, for example
   `mlops-thu1-minhtc`. You create it and invite the instructor (`minhtc-uca`). Start from the
-  [report template](../report-template/README.md) and commit to `main`; no report
+  [course report templates](https://github.com/minhtc-uca/mlops-course/tree/main/report-template) and commit to `main`; no report
   pull request or CI is used.
 
 Reports mix writing and images. Save screenshots in `reports/images/` and embed
@@ -230,7 +225,7 @@ This section defines what a verified deployment means, details the execution and
 
 ### 1. Definition of "Deployed" & Review Responsibilities
 
-- **What "Deployed" Promises:** A service is considered **deployed** if and only if the Docker image built from a known commit on `main` is started using the exact commands in this README, `/health` responds with HTTP 200 containing the expected `model_version` and `code_revision`, and the external verification script (`check_service.py`) terminates with exit code `0`. A running container alone is not a verified deployment[cite: 14].
+- **What "Deployed" Promises:** A service is considered **deployed** if and only if the Docker image built from a known commit on `main` is started using the exact commands in this README, `/health` responds with HTTP 200 containing the expected `model_version` and `code_revision`, and the external verification script (`check_service.py`) terminates with exit code `0`. A running container alone is not a verified deployment.
 - **Final Verification Roles:**
   - **Local target:** Verified independently by Romain or Mathis (who authored neither the start-up sequence nor the check script).
   - **Cloud Run target:** Verified by Jerry from Cloud Shell (holding project permissions), executed during a screen-sharing session with a teammate who validates the raw check output.
@@ -383,7 +378,7 @@ uv run --locked pytest -q -m regression -x
 
 ## Pipeline and gate: Lab 7
 
-The pipeline trains an isolated candidate, benchmarks it against the naive train-mean and current accepted model on the 2012-H1 validation split, and produces an explicit decision. The July–December 2012 test period is strictly held out and never evaluated.
+The pipeline trains an isolated candidate, benchmarks it against the naive train-mean and current accepted model on the 2012-H1 validation split, and produces an explicit decision. During Lab 7, July–December 2012 remained held out. The later final evaluation is documented separately and is not a gate input.
 
 ### Architecture & Candidate Isolation
 - **Candidate Isolation:** Candidate trainings write strictly to unique folders (`artifacts/candidates/<candidate_version>/`) and never overwrite the active model bundle (`artifacts/accepted/`).
@@ -500,7 +495,7 @@ proof and any promotion are performed manually and recorded in
 ## Monitoring, incident and recovery: Lab 8
 
 Status: live isolated incident and retained-state recovery observed on 2026-11-09,
-executed by Jerry alone; final peer review remains pending. Independent blind
+executed by Jerry alone; Romain subsequently left a positive COMMENTED review on [PR #40](https://github.com/Chancelor2023/mlops-thu1-ekip-bike-demand/pull/40#pullrequestreview-5870116665). This is not a formal APPROVED review. Independent blind
 diagnosis and peer runbook execution were not performed. Only one accepted model exists. The team chose to proceed with a retained-
 state recovery exercise without instructor confirmation; the two-model limitation
 remains explicit in the contract.
@@ -555,3 +550,12 @@ and `bash demo.sh --unattended --with-tests` for the local rehearsal. `--cloud` 
 into read-only authenticated checks; `--bonus` adds a local missing-model example.
 The script never trains, reruns held-test scoring or changes cloud routing. Successful
 unit tests do not substitute for the actual Docker/cloud rehearsal.
+
+## Release interface note
+
+The course asks for a `/version` output in the final Release. This API currently
+exposes identity through `/health`; it has no `/version` route. The historical
+Cloud Run image reports model version and code revision but no loaded-model hash.
+Do not label `/health` evidence as a `/version` response. This interface difference
+must be resolved or explicitly disclosed before publishing `v1.0.0`; see the
+[release checklist](reports/release-readiness.md).

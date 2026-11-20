@@ -100,17 +100,50 @@ an unexpected timeout stops the run and remains in the evidence.
 ## 5. Transfer authentication without displaying or saving it
 
 If gcloud is installed/authenticated on the presenting PC, obtain ID_TOKEN in a
-subshell via command substitution. Otherwise, use Cloud Shell privately to obtain
-`gcloud auth print-identity-token`, copy the token, then use silent input in Git Bash:
+subshell via command substitution. Otherwise, generate a fresh identity token in
+Cloud Shell privately immediately before the rehearsal. Copy only the complete
+token, then read the Windows clipboard from Git Bash without pasting the token
+as a shell command:
 
 ```bash
 (
-  read -r -s -p 'Paste fresh Cloud Run identity token, then Enter: ' ID_TOKEN
-  printf '\n'
+  set +x
+  ID_TOKEN="$(powershell.exe -NoProfile -NonInteractive \
+    -Command '((Get-Clipboard -Raw) -replace "\s", "")')"
+  ID_TOKEN="${ID_TOKEN//$'\r'/}"
   export ID_TOKEN
+  if ! ./.venv/Scripts/python.exe - <<'PY'
+import base64
+import json
+import os
+import re
+import time
+
+token = os.environ.get("ID_TOKEN", "")
+if not re.fullmatch(r"[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+", token):
+    raise SystemExit("STOP: clipboard does not contain a complete JWT")
+try:
+    payload = token.split(".")[1]
+    claims = json.loads(base64.urlsafe_b64decode(payload + "=" * (-len(payload) % 4)))
+    remaining = float(claims["exp"]) - time.time()
+except (ValueError, KeyError, TypeError):
+    raise SystemExit("STOP: unreadable token expiry")
+if remaining < 600:
+    raise SystemExit("STOP: obtain a fresh token with at least 10 minutes remaining")
+print("PASS: token structure and expiry checked without displaying it")
+PY
+  then
+    exit 1
+  fi
+  powershell.exe -NoProfile -NonInteractive -Command 'Set-Clipboard -Value ""'
   bash demo.sh --unattended --cloud
 )
 ```
+
+Decoding the expiry is only a local prerequisite check, not signature validation
+or proof of Cloud Run access. The actual authenticated HTTP response establishes
+whether access works. A long pause can consume the remaining lifetime; generate
+a fresh token before retrying and retain any failed attempt.
 
 Never send the token in chat, put it in a file, paste it into an export command saved
 in history, show it on the projector, or use `set -x`. Clear it from the clipboard
@@ -142,3 +175,9 @@ unit-test run does not establish that Docker Desktop, image startup, IAM, tokens
 or Cloud Run are working. Record the exact successful rehearsal revision and real
 outputs after executing these steps. Codex assisted with the correction and tests;
 Jerry executes and verifies the live rehearsal.
+
+## Recorded execution
+
+[The 13 November rehearsal record](demo-rehearsal.md) links the selected original
+client outputs, including the failed authentication attempt and the later successful
+cloud run. A successful historical rehearsal is not evidence of current availability.
