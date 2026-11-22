@@ -5,7 +5,7 @@
 > The experiment campaign stopped after two rejected candidates. Peer challenges
 > remain to be documented; no promotion was performed and the two-version
 > handoff to Lab 8 is incomplete.
-> Sections marked **TO FILL** must contain only observed results.
+> Unrecorded peer challenges are identified below; no results are reconstructed.
 
 ## Team and roles
 
@@ -37,7 +37,7 @@ this records the metadata event, not an exact command start time.
 
 ## Decisions applied
 
-- Data unchanged: train 2011, validation 2012-01..06, test 2012-07..12 never scored;
+- Data unchanged: train 2011, validation 2012-01..06, test 2012-07..12 not scored during Lab 7;
   same canonical CSV, same 12 ordered features. Only model settings vary.
 - Quality: `MAE_candidate < MAE_train_mean` and `MAE_candidate <= MAE_accepted + 1e-6`,
   accepted model re-evaluated on the same validation rows.
@@ -77,7 +77,12 @@ Local results on this branch (Linux x86_64, uv 0.12.23 as pinned by CI):
 | `pytest -m lab7` | 116 passed |
 | full suite | 193 passed, 0 unmarked tests |
 
-**TO FILL:** link to the green GitHub Actions run of the integration PR.
+Jerry's [approval of the integration PR](https://github.com/Chancelor2023/mlops-thu1-ekip-bike-demand/pull/34#pullrequestreview-5811964239)
+records the checked head `70d9c5824644ecb1dc68bb3929c59f478025b37f`.
+Later final-main checks at `da65ed82cbadbaa4ff7d37bc7d2b9e41b8663b63` also passed:
+[quality-and-tests](https://github.com/Chancelor2023/mlops-thu1-ekip-bike-demand/actions/runs/43442611997/job/131943794828)
+and [container](https://github.com/Chancelor2023/mlops-thu1-ekip-bike-demand/actions/runs/43442611884/job/131943794869).
+These later runs are not the historical 193-test local run above.
 
 ### Proof that the integration tests can fail
 
@@ -168,10 +173,10 @@ Defect PRs stay drafts titled `DO NOT MERGE: lab7 defect ...`.
 
 | Reviewer -> area | Defect | Expected | Observed | Explanation |
 |---|---|---|---|---|
-| Brett -> candidate isolation (Mathis) | TO FILL | | | |
-| Romain -> gate decisions (Brett) | TO FILL | | | |
-| Mathis -> preservation and promotion (Jerry) | TO FILL | | | |
-| Jerry -> integration tests and instructions (Romain) | TO FILL | | | |
+| Brett -> candidate isolation (Mathis) | No retained independent challenge proof linked here | Challenge should expose a real defect | Not established by this report | Do not infer completion from green CI |
+| Romain -> gate decisions (Brett) | No retained independent challenge proof linked here | Challenge should expose a real defect | Not established by this report | Separate from Romain's recorded integration defect experiments |
+| Mathis -> preservation and promotion (Jerry) | Review not completed before the team merged due to time constraints | Independent preservation challenge | Not demonstrated | Merge is not evidence of a completed challenge |
+| Jerry -> integration tests and instructions (Romain) | Quality assertions insufficiently specific; documentation corrections | Assert the actual quality details | Changes requested, then approved on corrected head | [Finding](https://github.com/Chancelor2023/mlops-thu1-ekip-bike-demand/pull/34#discussion_r4501482708), [approval](https://github.com/Chancelor2023/mlops-thu1-ekip-bike-demand/pull/34#pullrequestreview-5811964239); not a retained draft defect PR |
 
 Review finding from integration: the README "Pipeline and gate" draft described
 commands that do not exist (`promote --execute`, `promote --rollback`,
@@ -180,7 +185,7 @@ operator guide before review.
 
 ## Limits
 
-- CI never trains on the canonical data, measures latency or calls Cloud Run.
+- The regression test fits the baseline on canonical training rows and checks validation MAE. Lab 7 integration tests use synthetic data/stubs; CI does not run the real candidate campaign, score the held test, measure operational latency or call Cloud Run.
 - The gate's default timer measures local `model.predict`, not HTTP or cold starts.
 - The local promotion lock does not coordinate two laptops; one operator session (Jerry).
 - No tag `m4` after Lab 7 alone: it follows Labs 7 and 8.

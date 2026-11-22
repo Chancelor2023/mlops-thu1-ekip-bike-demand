@@ -201,6 +201,10 @@ def test_missing_or_wrong_checksum_prevents_model_load(monkeypatch, tmp_path, ch
     with TestClient(api.app) as client:
         assert client.get("/health").status_code == 503
         assert client.post("/predict", json=VALID_SAMPLE).status_code == 503
+        identity = client.get("/version").json()
+        assert identity["model_loaded"] is False
+        assert identity["model_version"] is None
+        assert identity["model_sha256"] is None
 
 
 def test_health_hash_identifies_exact_deserialized_bytes(monkeypatch, tmp_path):
@@ -222,3 +226,49 @@ def test_health_hash_identifies_exact_deserialized_bytes(monkeypatch, tmp_path):
     monkeypatch.setattr(api.joblib, "load", load_captured_bytes)
     with TestClient(api.app) as client:
         assert client.get("/health").json()["model_sha256"] == expected
+        identity = client.get("/version").json()
+        assert identity["model_loaded"] is True
+        assert identity["model_sha256"] == expected
+        assert (
+            identity["model_sha256"]
+            != hashlib.sha256(model_path.read_bytes()).hexdigest()
+        )
+
+
+def test_version_identifies_loaded_model_and_logs_request(
+    client_with_model, monkeypatch, capsys
+):
+    monkeypatch.setattr(api, "CODE_REVISION", "release-code-revision")
+    response = client_with_model.get("/version")
+    assert response.status_code == 200
+    assert response.json() == {
+        "code_revision": "release-code-revision",
+        "model_loaded": True,
+        "model_version": "test_v1",
+        "model_sha256": hashlib.sha256(b"").hexdigest(),
+    }
+    records = [json.loads(line) for line in capsys.readouterr().out.splitlines()]
+    record = next(item for item in records if item["path"] == "/version")
+    assert record["event"] == "version"
+    assert record["status"] == 200
+    assert record["code_revision"] == "release-code-revision"
+    assert record["model_version"] == "test_v1"
+    assert record["request_id"] == response.headers["X-Request-ID"]
+    health = client_with_model.get("/health").json()
+    for field in ("code_revision", "model_version", "model_sha256"):
+        assert response.json()[field] == health[field]
+
+
+def test_version_reports_code_without_claiming_a_missing_model(
+    client_without_model, monkeypatch
+):
+    monkeypatch.setattr(api, "CODE_REVISION", "code-without-model")
+    response = client_without_model.get("/version")
+    assert response.status_code == 200
+    assert response.json() == {
+        "code_revision": "code-without-model",
+        "model_loaded": False,
+        "model_version": None,
+        "model_sha256": None,
+    }
+    assert client_without_model.get("/health").status_code == 503

@@ -1,0 +1,21 @@
+{
+  "scope": "Local Docker image verification only; no cloud calls",
+  "checked_code_revision": "569f2920c0587912a5996bad70957a12fd6c8543",
+  "local_image_id": "sha256:e16f960549c636c1280ce8967ca1ec062b53841dab32b5c73f7def1c40249123",
+  "local_image_tags": [
+    "bike-demand:569f2920c0587912a5996bad70957a12fd6c8543"
+  ],
+  "platform": "linux/arm64",
+  "accepted_model_version": "baseline-4df84bfe8121",
+  "accepted_checksums": {
+    "model.joblib": "d24c050e3631d5b4c2feb8cb571bef6382d8c975c42a5c11edd28de78a0b8c07",
+    "model-metadata.json": "b09c2b06b0a90b829c3d1a89c3d544f9d0020f0a74b22a4931e0e676596dbd8f"
+  },
+  "mount_read_only": true,
+  "api_tests": "27 passed, 1 dependency deprecation warning",
+  "health_identity_verified": true,
+  "version_identity_verified": true,
+  "container_stop": "Reported by Jerry after capturing inspect/logs; inspect snapshot predates stop",
+  "retraining_performed": false,
+  "cloud_run_modified": false
+}

@@ -84,6 +84,15 @@ class PredictionResponse(BaseModel):
         return value
 
 
+class VersionResponse(BaseModel):
+    model_config = ConfigDict(extra="forbid")
+
+    code_revision: str
+    model_loaded: bool
+    model_version: str | None
+    model_sha256: str | None
+
+
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     app.state.model = None
@@ -155,6 +164,8 @@ async def log_requests(request: Request, call_next):
             event = "predicted"
         elif request.url.path == "/health":
             event = "health"
+        elif request.url.path == "/version":
+            event = "version"
 
         response.headers["X-Request-ID"] = request_id
         return response
@@ -197,6 +208,18 @@ def health():
         "code_revision": CODE_REVISION,
         "model_sha256": app.state.model_sha256,
     }
+
+
+@app.get("/version", response_model=VersionResponse)
+def version():
+    """Identify the running code and the verified model loaded at startup."""
+    loaded = app.state.model is not None
+    return VersionResponse(
+        code_revision=CODE_REVISION,
+        model_loaded=loaded,
+        model_version=app.state.model_version if loaded else None,
+        model_sha256=app.state.model_sha256 if loaded else None,
+    )
 
 
 @app.post("/predict", response_model=PredictionResponse)
